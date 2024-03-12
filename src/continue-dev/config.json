@@ -1,0 +1,70 @@
+{
+    "models": [
+      {
+        "title": "Mistral",
+        "provider": "ollama",
+        "model": "mistral:latest",
+        "apiBase": "http://localhost:11434/"
+      }
+    ],
+    "slashCommands": [
+      {
+        "name": "edit",
+        "description": "Edit selected code"
+      },
+      {
+        "name": "comment",
+        "description": "Write comments for the selected code"
+      },
+      {
+        "name": "share",
+        "description": "Export this session as markdown"
+      },
+      {
+        "name": "cmd",
+        "description": "Generate a shell command"
+      }
+    ],
+    "customCommands": [
+      {
+        "name": "test",
+        "prompt": "Write a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file.",
+        "description": "Write unit tests for highlighted code"
+      }
+    ],
+    "contextProviders": [
+      {
+        "name": "diff",
+        "params": {}
+      },
+      {
+        "name": "open",
+        "params": {}
+      },
+      {
+        "name": "terminal",
+        "params": {}
+      },
+      {
+        "name": "problems",
+        "params": {}
+      },
+      {
+        "name": "codebase",
+        "params": {}
+      },
+      {
+        "name": "folder",
+        "params": {}
+      }
+    ],
+    "tabAutocompleteModel": {
+      "title": "Mistral",
+      "provider": "ollama",
+      "model": "mistral:latest"
+    },
+    "allowAnonymousTelemetry": true,
+    "embeddingsProvider": {
+      "provider": "transformers.js"
+    }
+  }
