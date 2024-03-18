@@ -5,6 +5,12 @@
         "provider": "ollama",
         "model": "mistral:latest",
         "apiBase": "http://localhost:11434/"
+      },
+      {
+        "title": "Gemma2B",
+        "provider": "ollama",
+        "model": "gemma:2b",
+        "apiBase": "http://localhost:11434/"
       }
     ],
     "slashCommands": [
@@ -63,7 +69,7 @@
       "provider": "ollama",
       "model": "mistral:latest"
     },
-    "allowAnonymousTelemetry": true,
+    "allowAnonymousTelemetry": false,
     "embeddingsProvider": {
       "provider": "transformers.js"
     }
