@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    runtime: nvidia
+    environment:
+      - TRANSFORMERS_OFFLINE=1
+      - HF_DATASET_OFFLINE=1
+      - HUGGING_FACE_HUB_TOKEN=<your_hugging_face_token>
+      - HUGGING_FACE_CACHE="/models"
+    volumes:
+      - "./models:/models"
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    ports:
+      - 8000:8000
+    command: --model google/gemma-2b --tensor-parallel-size 2
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
