@@ -14,3 +14,6 @@ Usage of LLM for Everyday use
         - Setup + Documentation at [docs/ollama-open-webui.md](https://github.com/slabstech/llm-recipes/blob/main/docs/ollama-open-webui.md)
     - Code CoPilot : vscode + continue + ollama + mistral-7B
         - Setup document at [docs/code-pair.md](https://github.com/slabstech/llm-recipes/blob/main/docs/code-pair.md)
+
+Extra 
+ - [Clean install](https://github.com/slabstech/llm-recipes/blob/main/docs/clean-ubuntu-setup.md) of ubuntu + docker + nvidia requirements
