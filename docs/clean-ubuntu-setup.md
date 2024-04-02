@@ -60,3 +60,5 @@
 
 - llm-recipes library
     - git clone https://github.com/slabstech/llm-recipes
+
+- https://jupyter.org/install : pip install notebook/ jupyter notebook

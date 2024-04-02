@@ -17,3 +17,4 @@ Usage of LLM for Everyday use
 
 Extra 
  - [Clean install](https://github.com/slabstech/llm-recipes/blob/main/docs/clean-ubuntu-setup.md) of ubuntu + docker + nvidia requirements
+ 
