@@ -3,6 +3,9 @@ LLM Recipes
 Usage of LLM for Everyday use
 
 - v1
+    - Prompt Optimization - DSPy + Mixtral + Ollama/Mistral API
+        - Docs at [docs/dspy.md](https://github.com/slabstech/llm-recipes/blob/main/docs/dspy.md)
+        - Code examples at [src/dspy](https://github.com/slabstech/llm-recipes/tree/main/src/dspy)
     - Agents : autogen + vllm + gemma
         - [VLLM setup](https://github.com/slabstech/llm-recipes/blob/main/docs/vllm.md) 
     - Agents : autogen + ollama + gemma
