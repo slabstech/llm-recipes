@@ -12,6 +12,8 @@ Usage of LLM for Everyday use
         - Setup + Documentation at [docs/2024/agent-code.md](https://github.com/slabstech/llm-recipes/blob/main/docs/2024/agent-code.md) 
         - Code examples at [src/autogen](https://github.com/slabstech/llm-recipes/tree/main/src/autogen)
         - Output from examples at [docs/2024/agent-example-output.md](https://github.com/slabstech/llm-recipes/blob/main/docs/2024/agent-example-output.md)
+    - llama.cpp + Raspi 4
+        - [Docs](https://github.com/slabstech/llm-recipes/blob/main/docs/llama-cpp.md) for setup of Raspi 4 inference. 
 - v0
     - ChatUI  : ollama + open-webui + mistral-7B + docker
         - Setup + Documentation at [docs/ollama-open-webui.md](https://github.com/slabstech/llm-recipes/blob/main/docs/ollama-open-webui.md)
