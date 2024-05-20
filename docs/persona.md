@@ -15,6 +15,7 @@ An attempt to build a Digital twin of your Persona.
         - https://github.com/openai/tiktoken
         - https://github.com/karpathy/minbpe 
     - Finetune / post-training of LLM
+        - https://docs.runpod.io/tutorials/pods/fine-tune-llm-axolotl
 
 
 - Work
