@@ -25,6 +25,17 @@ Mistral
   "raw": true,
   "stream": false
 }'` 
+
+
+- HF
+  - pip install --upgrade huggingface_hub
+  - mkdir 7B-Instruct-v0.3
+  - mkdir -p ~/.cache/huggingface
+  - sudo chown -R $USER ~/.cache/huggingface
+  - sudo chmod -R 755 ~/.cache/huggingface
+  - Copy token from https://huggingface.co/settings/tokens
+  - huggingface-cli login
+
 - Reference
     - https://github.com/mistralai/mistral-inference
     - https://github.com/ollama/ollama/blob/main/docs/api.md#request-raw-mode
