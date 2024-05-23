@@ -30,3 +30,4 @@ Mistral
     - https://github.com/ollama/ollama/blob/main/docs/api.md#request-raw-mode
     - https://ollama.com/library/mistral
     - https://www.youtube.com/watch?v=YJeJiSWgtlE
+    - https://github.com/mistralai/cookbook/blob/main/function_calling.ipynb
