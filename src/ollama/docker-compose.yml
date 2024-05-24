@@ -1,6 +1,4 @@
-
 version: '3.8'
-
 services:
   ollama:
     volumes:
@@ -21,7 +19,7 @@ services:
               capabilities: [gpu]
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:git-26a187f
+    image: ghcr.io/open-webui/open-webui:git-be5534c
     container_name: open-webui
     volumes:
       - ./ollama/open-webui:/app/backend/data
