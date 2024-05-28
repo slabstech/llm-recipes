@@ -5,6 +5,7 @@ Demo's of LLM for Everyday use Run Locally
 - v2
     - Rest API + locall LLM  
         - [local_function_call_rest_api.ipynb](src/mistral/local_function_call_rest_api.ipynb) - using mistral-inference and Mistral-7B-Instruct-v0.3
+        - GPT2 from scratch : [llm.c](https://github.com/karpathy/llm.c/discussions/481) 
 - v1
     - Prompt Optimization - DSPy + Mixtral + Ollama/Mistral API
         - Docs at [dspy.md](docs/dspy.md)
