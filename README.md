@@ -3,8 +3,9 @@ LLM Recipes
 Demo's of LLM for Everyday use Run Locally
 
 - v2
-    - Rest API + locall LLM  
-        - [local_function_call_rest_api.ipynb](src/mistral/local_function_call_rest_api.ipynb) - using mistral-inference and Mistral-7B-Instruct-v0.3
+    - Rest API + local LLM  
+        - [local_function_call_rest_api.ipynb](src/mistral/local_function_call_rest_api.ipynb) - function calling using mistral-inference and Mistral-7B-Instruct-v0.3
+        - [ollama_mistral_function_calling.ipynb](src/mistral/ollama_mistral_function_calling.ipynb) - function calling using ollama + mistral7b (4bit) + tokenizer.v3
         - GPT2 from scratch : [llm.c](https://github.com/karpathy/llm.c/discussions/481) 
 - v1
     - Prompt Optimization - DSPy + Mixtral + Ollama/Mistral API
