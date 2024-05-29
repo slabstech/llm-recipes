@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  ollama:
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: raspi_ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
