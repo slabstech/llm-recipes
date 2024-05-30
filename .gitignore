@@ -1,4 +1,4 @@
-src/ollama/ollama
+tutorials/ollama/ollama
 pyautogenvenv/
 venv/
 # Byte-compiled / optimized / DLL files

@@ -4,19 +4,19 @@ Demo's of LLM for Everyday use Run Locally
 
 - v2
     - Rest API + local LLM  
-        - [local_function_call_rest_api.ipynb](src/mistral/local_function_call_rest_api.ipynb) - function calling using mistral-inference and Mistral-7B-Instruct-v0.3
-        - [ollama_mistral_function_calling.ipynb](src/mistral/ollama_mistral_function_calling.ipynb) - function calling using ollama + mistral7b (4bit) + tokenizer.v3
+        - [local_function_call_rest_api.ipynb](tutorials/mistral/local_function_call_rest_api.ipynb) - function calling using mistral-inference and Mistral-7B-Instruct-v0.3
+        - [ollama_mistral_function_calling.ipynb](tutorials/mistral/ollama_mistral_function_calling.ipynb) - function calling using ollama + mistral7b (4bit) + tokenizer.v3
         - GPT2 from scratch : [llm.c](https://github.com/karpathy/llm.c/discussions/481) 
-        - Setup [Raspi + ollama + mistral7B + RestAPi](src/raspi/README.md)
+        - Setup [Raspi + ollama + mistral7B + RestAPi](tutorials/raspi/README.md)
 - v1
     - Prompt Optimization - DSPy + Mixtral + Ollama/Mistral API
         - Docs at [dspy.md](docs/dspy.md)
-        - Code examples at [dspy](src/dspy)
+        - Code examples at [dspy](tutorials/dspy)
     - Agents : autogen + vllm + gemma
         - [VLLM setup](docs/vllm.md) 
     - Agents : autogen + ollama + gemma
         - Setup + Documentation at [agent-code.md](docs/2024/agent-code.md) 
-        - Code examples at [autogen](src/autogen)
+        - Code examples at [autogen](tutorials/autogen)
         - Output from examples at [agent-example-output.md](docs/2024/agent-example-output.md)
     - llama.cpp +  Phi model
         - [Docs](docs/llama-cpp.md) for setup of Phi model inference. 
