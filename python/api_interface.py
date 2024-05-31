@@ -3,21 +3,17 @@ from typing import List
 from mistral_common.tokens.tokenizers.mistral import MistralTokenizer
 from mistral_common.protocol.instruct.request import ChatCompletionRequest
 from mistral_common.protocol.instruct.tool_calls import Function, Tool
-import ollama
 from mistral_common.protocol.instruct.messages import UserMessage
 import json
 import requests
 import functools
 import os
 
-def load_openapi_spec(file_path):
-    parser = prance.ResolvingParser(file_path, backend='openapi-spec-validator')
-    spec = parser.specification
-    return spec
-
-def generate_tools(objs)-> List[Tool]:
+def generate_tools(objs, function_end_point)-> List[Tool]:
     params = ['operationId', 'description',  'parameters']
-    spec = load_openapi_spec('openapi.json')
+
+    parser = prance.ResolvingParser(function_end_point, backend='openapi-spec-validator')
+    spec = parser.specification
     user_tools = []
     for obj in objs:
         resource, field = obj
@@ -114,9 +110,10 @@ names_to_functions = {
 def execute_generator():
     queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]
     return_objs = [['pet','petId'], ['user', 'username'], ['store/order','orderId']]
+    function_end_point = 'https://petstore3.swagger.io/api/v3/openapi.json'
 
     user_messages=get_user_messages(queries)
-    user_tools = generate_tools(return_objs)
+    user_tools = generate_tools(return_objs, function_end_point)
 
     tokenizer = MistralTokenizer.v3()
     completion_request = ChatCompletionRequest(tools=user_tools, messages=user_messages,)
