@@ -8,6 +8,7 @@ from mistral_common.protocol.instruct.messages import UserMessage
 import json
 import requests
 import functools
+import os
 
 def load_openapi_spec(file_path):
     parser = prance.ResolvingParser(file_path, backend='openapi-spec-validator')
@@ -46,16 +47,25 @@ def get_user_messages(queries: List[str]) -> List[UserMessage]:
         user_messages.append(user_message)
     return user_messages
 
-def process_results(tool_calls, messages):
-    index = 0 
-    for tool_call in tool_calls:
-        function_name = tool_call["name"]
-        function_params = (tool_call["arguments"]) 
-        print(messages[index].content)
-        function_result = names_to_functions[function_name](**function_params)
-        print(function_result)
-        index = index + 1
+def process_results(result, messages):
 
+    tool_calls = result['response'].split("\n\n")
+    function_call = tool_calls[0].replace("[TOOL_CALLS] ","")
+    #print(tool_calls)
+    #print(function_call)
+    function_c = json.loads(function_call)
+    tool_calls = function_c
+    index = 0 
+    try:
+        for tool_call in tool_calls:
+            function_name = tool_call["name"]
+            function_params = (tool_call["arguments"]) 
+            print(messages[index].content)
+            function_result = names_to_functions[function_name](**function_params)
+            print(function_result)
+            index = index + 1
+    except:
+        print(function_name + " is not defined")
 
 def getPetById(petId: int) -> str:
     try:
@@ -111,18 +121,32 @@ def execute_generator():
     tokenizer = MistralTokenizer.v3()
     completion_request = ChatCompletionRequest(tools=user_tools, messages=user_messages,)
     tokenized = tokenizer.encode_chat_completion(completion_request)
-    tokens, text = tokenized.tokens, tokenized.text
-    print(text)
-    result = ollama.generate(model='mistral:7b', prompt=text, raw=True,stream=False)
-    print(result['response'])
-    tool_call = result['response'].split("\n\n")
-    function_call = tool_call[0].replace("[TOOL_CALLS] ","")
-    function_c = json.loads(function_call)
-    function_name = function_c[0]["name"]
-    function_params = (function_c[0]["arguments"]) 
-    print("\nfunction_name: ", function_name, "\nfunction_params: ", function_params)
+    _, text = tokenized.tokens, tokenized.text
+    #print(text)
+    ollama_endpoint_env = os.environ.get('OLLAMA_ENDPOINT')
 
-    tool_calls = json.loads(result[0])
-    tool_calls
+    model = "mistral:7b"
+    prompt = text 
+    if ollama_endpoint_env is None:
+        ollama_endpoint_env = 'http://localhost:11434'
+    ollama_endpoint = ollama_endpoint_env +  "/api/generate"  # replace with localhost
+
+    response = requests.post(ollama_endpoint,
+                      json={
+                          'model': model,
+                          'prompt': prompt,
+                          'stream':False,
+                          'raw': True
+                      }, stream=False
+                      )
     
-    process_results(tool_calls, user_messages)
+    response.raise_for_status()
+    result = response.json()
+
+    process_results(result, user_messages)
+
+def main():
+    execute_generator()
+
+if __name__ == "__main__":
+    main()

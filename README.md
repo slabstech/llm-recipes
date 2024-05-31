@@ -2,6 +2,17 @@ LLM Recipes
 
 Demo's of LLM for Everyday use Run Locally
 
+| Version |Concept | Tech | Status |
+|---|---|---|---|
+|v4| Image Generation + v3 | -- | Stable diffusion | 
+|v3| Image/Scene Recognition + v2 | -- | llava/moondream | 
+|v2| voice output + v1 | -- | tts| 
+|v1| voice input + v1 | In progress | whisper + ffpmeg |
+|v0|  [Text Query + API calls](python/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
+
+
+Tutorials
+
 - v2
     - Rest API + local LLM  
         - [local_function_call_rest_api.ipynb](tutorials/mistral/local_function_call_rest_api.ipynb) - function calling using mistral-inference and Mistral-7B-Instruct-v0.3
