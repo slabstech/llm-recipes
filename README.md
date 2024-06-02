@@ -41,3 +41,6 @@ Extra
  - [Clean install](docs/clean-ubuntu-setup.md) of ubuntu + docker + nvidia requirements
 - Hackathon - [May 25-26, 2024](docs/2024/hackathon-may-2024.md) - Real time - browsing Capacity  - 
     -   Create function with Rest api endpoint detection 
+
+    - !["Speech to Speech"](docs/speech-inference.png "Speech to Sppech")
+

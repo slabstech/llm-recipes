@@ -40,3 +40,4 @@ print(result["text"])
 - References
     - https://huggingface.co/NexaAIDev/Octopus-v2
     - moondream + octopus + phi-3
+    - https://github.com/snakers4/silero-vad/tree/master/examples/microphone_and_webRTC_integration
