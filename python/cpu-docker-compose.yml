@@ -1,0 +1,16 @@
+version: '3'
+services:
+  whisper-api:
+    image: slabstech/whisper-api-cpu
+    ports:
+      - "5000:5000"
+  ollama:
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama-w
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434

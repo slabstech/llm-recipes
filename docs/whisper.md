@@ -10,6 +10,9 @@ Whisper - Speect to text model
         - docker run -p 5000:5000 slabstech/whisper-api-gpu
 
 
+
+- Build Docker
+    - docker build --rm . -t slabstech/whisper-api-cpu -f Dockerfile
 - python python/whisper_api.py 
     - Replace the path the audio file
 - Inference

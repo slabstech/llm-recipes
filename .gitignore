@@ -1,4 +1,5 @@
 tutorials/ollama/ollama
+python/ollama
 src/ollama
 pyautogenvenv/
 venv/
