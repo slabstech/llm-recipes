@@ -2,11 +2,16 @@ Whisper - Speect to text model
 
 
 - Docker - Start server
+    - docker run -p 5000:5000 slabstech/whisper-api
+    TODO 
     - CPU
         - docker run -p 5000:5000 slabstech/whisper-api-cpu
     - GPU
         - docker run -p 5000:5000 slabstech/whisper-api-gpu
 
+
+- python python/whisper_api.py 
+    - Replace the path the audio file
 - Inference
     curl -F "file=@/path/to/filename.mp3" http://localhost:5000/whisper
         - Ex : curl -F "file=@/home/sachin/code/whisper/test1.flac" http://localhost:5000/whisper
