@@ -53,3 +53,30 @@ Bedrock Studio / Sagemaker studio
 Organizer 
 lilzheng AT amazon DOT de
 
+--
+
+https://aws.amazon.com/blogs/aws/tackle-complex-reasoning-tasks-with-mistral-large-now-available-on-amazon-bedrock/
+
+
+- postgresl + pg_vector extension : RAG
+Document extractor : 
+
+==
+
+Go to Model access and enable the required mistral model
+https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/modelaccess
+
+
+Get AWS CLI credentials
+
+copy the parameters
+
+export AWS_DEFAULT_REGION="us-west-2"
+export AWS_ACCESS_KEY_ID="KEYIDASDASD"
+export AWS_SECRET_ACCESS_KEY="SECREATEACESASDASKEY"
+export AWS_SESSION_TOKEN="sesioandateoadlkalsda"
+
+add to bash and execute the notebook
+
+
+--
