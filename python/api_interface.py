@@ -8,6 +8,8 @@ import json
 import requests
 import functools
 import os
+import pyaudio
+import wave
 
 def generate_tools(objs, function_end_point)-> List[Tool]:
     params = ['operationId', 'description',  'parameters']
@@ -44,25 +46,24 @@ def get_user_messages(queries: List[str]) -> List[UserMessage]:
     return user_messages
 
 def process_results(result, messages):
-
-    tool_calls = result['response'].split("\n\n")
-    function_call = tool_calls[0].replace("[TOOL_CALLS] ","")
-    print(tool_calls)
-    print(function_call)
-    function_c = json.loads(function_call)
-    tool_calls = function_c
+    #print(result)
+    result_format = result['response'].split("\n\n")
+    #print(result_format)
+    result_tool_calls = result_format[0].replace("[TOOL_CALLS] ","")
+    tool_calls = json.loads(result_tool_calls)
     index = 0 
-    try:
-        for tool_call in tool_calls:
+    for tool_call in tool_calls:
+        try:
+
             function_name = tool_call["name"]
             function_params = (tool_call["arguments"]) 
             print(messages[index].content)
             function_result = names_to_functions[function_name](**function_params)
             print(function_result)
             index = index + 1
-    except:
-        print(function_name + " is not defined")
-
+        except:
+            print(function_name + " is not defined")
+            continue
 def getPetById(petId: int) -> str:
     try:
         method = 'GET'
@@ -143,7 +144,8 @@ def execute_generator(queries, return_objs):
 def voice_query():
     url = "http://localhost:5000/whisper"
     #files = {'file': open('/path/to/filename.mp3', 'rb')}
-    files = {'file': open('../data/test1.flac', 'rb')}
+    #files = {'file': open('../data/test1.flac', 'rb')}
+    files = {'file': open('output.wav', 'rb')}
     response = requests.post(url, files=files)
 
     response_query = ""
@@ -155,10 +157,57 @@ def voice_query():
         return response_query    
     else:
         print(f"Error: {response.status_code} - {response.text}")
-        
+
+def voice_capture():
+
+
+    # Set audio parameters
+    CHUNK = 1024
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 16000
+    RECORD_SECONDS = 7
+
+    # Initialize PyAudio
+    p = pyaudio.PyAudio()
+
+    # Open audio stream
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK)
+
+    print("Recording...")
+
+    # Create a list to store audio frames
+    frames = []
+
+    # Record audio for the specified duration
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        data = stream.read(CHUNK)
+        frames.append(data)
+
+    print("Finished recording.")
+
+    # Stop and close the audio stream
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    # Save the recorded audio to a WAV file
+    wf = wave.open("output.wav", 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
+
 def main():
+    voice_capture()
     voice_response = voice_query()
-    print("speech recognition output " + voice_response)
+    print("speech recognition output- " + voice_response)
     queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]
     queries.append(voice_response)
     return_objs = [['pet','petId'], ['user', 'username'], ['store/order','orderId']]

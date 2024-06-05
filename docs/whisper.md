@@ -10,6 +10,9 @@ Whisper - Speect to text model
         - docker run -p 5000:5000 slabstech/whisper-api-gpu
 
 
+ - pyaudio required additional tools
+    - sudo apt-get install python3-dev portaudio19-dev
+
 
 - Build Docker
     - docker build --rm . -t slabstech/whisper-api-cpu -f Dockerfile
