@@ -47,8 +47,8 @@ def process_results(result, messages):
 
     tool_calls = result['response'].split("\n\n")
     function_call = tool_calls[0].replace("[TOOL_CALLS] ","")
-    #print(tool_calls)
-    #print(function_call)
+    print(tool_calls)
+    print(function_call)
     function_c = json.loads(function_call)
     tool_calls = function_c
     index = 0 
@@ -107,9 +107,7 @@ names_to_functions = {
 }
 
 
-def execute_generator():
-    queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]
-    return_objs = [['pet','petId'], ['user', 'username'], ['store/order','orderId']]
+def execute_generator(queries, return_objs):
     function_end_point = 'https://petstore3.swagger.io/api/v3/openapi.json'
 
     user_messages=get_user_messages(queries)
@@ -142,8 +140,30 @@ def execute_generator():
 
     process_results(result, user_messages)
 
-def main():
-    execute_generator()
+def voice_query():
+    url = "http://localhost:5000/whisper"
+    #files = {'file': open('/path/to/filename.mp3', 'rb')}
+    files = {'file': open('../data/test1.flac', 'rb')}
+    response = requests.post(url, files=files)
 
+    response_query = ""
+    if response.status_code == 200:
+        query = json.loads(response.text)
+        for result in query['results']:
+            transcript = result['transcript']
+            response_query = response_query + transcript
+        return response_query    
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        
+def main():
+    voice_response = voice_query()
+    print("speech recognition output " + voice_response)
+    queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]
+    queries.append(voice_response)
+    return_objs = [['pet','petId'], ['user', 'username'], ['store/order','orderId']]
+
+    execute_generator(queries, return_objs)
+    
 if __name__ == "__main__":
     main()
