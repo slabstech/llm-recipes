@@ -2,6 +2,8 @@ LLM Recipes
 
 Demo's of LLM for Everyday use Run Locally
 
+[Speech to Speech Inference Demo](docs/demo-speech-to-speech-inference.md)
+
 | Version |Concept | Tech | Status |
 |---|---|---|---|
 |v4| Image Generation + v3 | -- | Stable diffusion | 
@@ -9,23 +11,6 @@ Demo's of LLM for Everyday use Run Locally
 |v2| voice output + v1 | -- | tts| 
 |v1| voice input + v1 | In progress | whisper + ffpmeg |
 |v0|  [Text Query + API calls](python/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
-
-Run Speech to text 
-
-`
-- docker compose -f python/docker-compose.yml up -d
-- docker ps
-    - find container-id of ollama
-- docker exec -it <container_id_or_name> /bin/bash
-    - ollama pull mistral:7b
-- create virtual environment
-    - python -m venv venv
-    - source venv/bin/activate
-    - pip install -r requirements.txt
-    
-- python python/api_interface.py
-- python python/whisper_api.py
-`
 
 
 Tutorials
