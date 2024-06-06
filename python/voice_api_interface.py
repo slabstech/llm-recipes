@@ -8,6 +8,8 @@ import json
 import requests
 import functools
 import os
+import pyaudio
+import wave
 
 def generate_tools(objs, function_end_point)-> List[Tool]:
     params = ['operationId', 'description',  'parameters']
@@ -139,8 +141,72 @@ def execute_generator(queries, return_objs):
 
     process_results(result, user_messages)
 
+def voice_query():
+    url = "http://localhost:5000/whisper"
+    files = {'file': open('output.wav', 'rb')}
+    response = requests.post(url, files=files)
+
+    response_query = ""
+    if response.status_code == 200:
+        query = json.loads(response.text)
+        for result in query['results']:
+            transcript = result['transcript']
+            response_query = response_query + transcript
+        return response_query    
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+
+def voice_capture():
+
+    # Set audio parameters
+    CHUNK = 1024
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 16000
+    RECORD_SECONDS = 7
+
+    # Initialize PyAudio
+    p = pyaudio.PyAudio()
+
+    # Open audio stream
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK)
+
+    print("Recording...")
+
+    # Create a list to store audio frames
+    frames = []
+
+    # Record audio for the specified duration
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        data = stream.read(CHUNK)
+        frames.append(data)
+
+    print("Finished recording.")
+
+    # Stop and close the audio stream
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    # Save the recorded audio to a WAV file
+    wf = wave.open("output.wav", 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
+
 def main():
-    queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]
+    voice_capture()
+    voice_response = voice_query()
+    print("speech recognition output- " + voice_response)
+    queries = []
+    queries.append(voice_response)
     return_objs = [['pet','petId'], ['user', 'username'], ['store/order','orderId']]
 
     execute_generator(queries, return_objs)

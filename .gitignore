@@ -1,4 +1,6 @@
 tutorials/ollama/ollama
+python/ollama
+output.wav
 src/ollama
 pyautogenvenv/
 venv/
