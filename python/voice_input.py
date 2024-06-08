@@ -2,7 +2,7 @@ import os
 import pyaudio
 import wave
 
-def voice_capture():
+def voice_capture(voice_input_file_name):
 
     # Set audio parameters
     CHUNK = 1024
@@ -39,7 +39,7 @@ def voice_capture():
     p.terminate()
 
     # Save the recorded audio to a WAV file
-    wf = wave.open("voice_input.wav", 'wb')
+    wf = wave.open(voice_input_file_name, 'wb')
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))
     wf.setframerate(RATE)
@@ -48,7 +48,8 @@ def voice_capture():
 
 
 def main():
-    voice_capture()
+    voice_input_file_name = "voice_input.wav"
+    voice_capture(voice_input_file_name)
 
 if __name__ == "__main__":
     main()
