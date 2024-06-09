@@ -1,0 +1,19 @@
+FROM python:3.8-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install coqui-tts
+
+# Download and extract the desired model(s)
+RUN mkdir -p /root/.local/share/tts/tts_models/en/vctk/vits && \
+    wget -O - https://github.com/coqui-ai/TTS/releases/download/v0.11.0/vctk-vits.zip | bsdtar -xvf- -C /root/.local/share/tts/tts_models/en/vctk/vits
+
+
+WORKDIR /app
+
+ENTRYPOINT ["tts-server"]
+CMD ["--model_name", "tts_models/en/vctk/vits"]
+
+
