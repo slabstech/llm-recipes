@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install coqui-tts
+RUN pip3 install TTS
 
 # Download and extract the desired model(s)
 RUN mkdir -p /root/.local/share/tts/tts_models/en/vctk/vits && \
