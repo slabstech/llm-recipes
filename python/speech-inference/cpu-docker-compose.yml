@@ -14,3 +14,9 @@ services:
     image: ollama/ollama:latest
     ports:
       - 11434:11434
+  tts:
+    image: coqui/tts:latest
+    volumes:
+      - ./data:/root/.local/share/tts
+    command: tts-server --model_name tts_models/en/vctk/vits
+

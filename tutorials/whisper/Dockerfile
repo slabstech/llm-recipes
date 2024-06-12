@@ -1,14 +1,13 @@
 FROM python:3.10-slim
 
-WORKDIR /python-docker
+WORKDIR /app
 
 COPY requirements.txt requirements.txt
-RUN apt-get update && apt-get install git -y
-RUN pip3 install -r requirements.txt
-RUN pip3 install "git+https://github.com/openai/whisper.git" 
-RUN apt-get install -y ffmpeg
+RUN apt-get update && apt-get install git ffmpeg -y --no-install-recommends
+RUN pip3 install   -r requirements.txt \
+ && pip3 install  "git+https://github.com/openai/whisper.git" 
 
-COPY . .
+COPY app.py /app
 
 EXPOSE 5000
 

@@ -62,6 +62,9 @@ def process_results(result, messages):
         except:
             print(function_name + " is not defined")
             continue
+    query_result = "The answer is - "
+    return query_result
+
 def getPetById(petId: int) -> str:
     try:
         method = 'GET'
@@ -137,7 +140,8 @@ def execute_generator(queries, return_objs):
     response.raise_for_status()
     result = response.json()
 
-    process_results(result, user_messages)
+    query_result = process_results(result, user_messages)
+    return query_result
 
 def main():
     queries = ["What's the status of my Pet 1?", "Find information of user user1?" ,  "What's the status of my Store Order 3?"]

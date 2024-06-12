@@ -8,12 +8,15 @@ Demo's of LLM for Everyday use Run Locally
 |---|---|---|---|
 |v4| Image Generation + v3 | -- | Stable diffusion | 
 |v3| Image/Scene Recognition + v2 | -- | llava/moondream | 
-|v2| voice output + v2 | In progress | tts| 
-|v1| [voice input + v1](python/voice_api_interface.py) | Complete | whisper + ffpmeg + v0 |
-|v0|  [Text Query + API calls](python/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
+|v2| [Speech output + v2](python/speech-inference/speech-to-speech-inference.py) | Complete | coqui tts + v1 | 
+|v1| [Speech input + v1](python/speech-inference/voice_api_interface.py) | Complete | whisper + ffpmeg + v0 |
+|v0|  [Text Query + API calls](python/speech-inference/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
 
 Tutorials
 
+- v2
+    - Voice Output + v1
+        - [speech-to-speech-inference.ipynb](python/speech-inference/speech-to-speech-inference.ipynb) - Coqui tts + voice clone
 - v1
     - Voice Input + v0
         - [aws-bedrock-mistral-whisper.ipynb](tutorials/mistral/aws-bedrock-mistral-whisper.ipynb) - Whisper + AWS Bedrock + Mistral + RestAPI

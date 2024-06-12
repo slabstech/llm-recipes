@@ -1,5 +1,6 @@
 AWS GenAi workshop - June 5
 
+Code Samples - https://github.com/aws-samples/amazon-bedrock-workshop
 
 Amazon Bedrock
 1. Curated dataset
