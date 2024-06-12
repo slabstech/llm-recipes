@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN apt-get update && apt-get install git ffmpeg -y --no-install-recommends
-RUN pip3 install --no-cache-dir --prefix=/install  -r requirements.txt \
- && pip3 install --no-cache-dir --prefix=/install "git+https://github.com/openai/whisper.git" \ 
- && rm -rf /root/.cache
+RUN pip3 install   -r requirements.txt \
+ && pip3 install  "git+https://github.com/openai/whisper.git" 
 
 COPY app.py /app
 
