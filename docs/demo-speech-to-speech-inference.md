@@ -10,7 +10,7 @@ I am happy to present my experiments with Generative AI with focus on local/on-p
 We will demo an Alexa/Siri like service with end to end processing done locally. We will showcase Speech to Speech Inference.
 
 ## System Diagram
-!["Speech to Speech"](speech-inference.png "Speech to Sppech")
+!["Speech to Speech"](images/speech-inference.png "Speech to Sppech")
 
 
 
