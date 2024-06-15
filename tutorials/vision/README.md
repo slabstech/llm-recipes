@@ -37,3 +37,5 @@ Vision Models
 
 Reference
     -  https://github.com/vikhyat/moondream
+    - https://github.com/ollama/ollama/blob/main/docs/api.md#pull-a-model
+    - 

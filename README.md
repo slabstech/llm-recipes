@@ -1,5 +1,6 @@
-LLM Recipes
+Assistant
 
+On-device assistant with Speech, Vision, Text queries 
 Demo's of LLM for Everyday use Run Locally
 
 [Speech to Speech Inference Demo](docs/demo-speech-to-speech-inference.md)
