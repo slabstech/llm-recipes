@@ -1,27 +1,29 @@
 Assistant
 
-On-device assistant with Speech, Vision, Text queries 
-Demo's of LLM for Everyday use Run Locally
-
-[Speech to Speech Inference Demo](docs/demo-speech-to-speech-inference.md)
+On-device assistant with Speech, Vision, Text search
+ 
 
 | Version |Concept | Tech | Status |
 |---|---|---|---|
-|v4| Image Generation + v3 | -- | Stable diffusion | 
-|v3| Image/Scene Recognition + v2 | In progress | llava/moondream | 
+|v5| Image Generation + v3 | -- | Stable diffusion | 
+|v4| Mobile Interface + v3 | -- | Android App + local server | 
+|v3| [Image/Scene Recognition + v2](assistant/assitant-tutorial.ipynb) | In progress | llava/moondream | 
 |v2| [Speech output + v2](assistant/speech-to-speech-inference.py) | Complete | coqui tts + v1 | 
 |v1| [Speech input + v1](assistant/voice_api_interface.py) | Complete | whisper + ffpmeg + v0 |
 |v0|  [Text Query + API calls](assistant/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
+
+
+
+Demo's of LLM for Everyday use Run Locally
 
 Tutorials
 - v3
     - Vision /Image Recognition
         - [vision-search.ipynb](tutorials/vision/vision-search.ipynb) : moondream2/llava + ollama
-    - Vision Image Description/recognition + v2
-        - [vision-speech-inference.ipynb](tutorials/vision/vision-speech-inference.ipynb) : moondream2/llava + whisper + mistral
 - v2
     - Voice Output + v1
         - [speech-to-speech-inference.ipynb](assistant/speech-to-speech-inference.ipynb) - Coqui tts + voice clone
+            - [Speech to Speech Inference Demo](docs/demo-speech-to-speech-inference.md)
 - v1
     - Voice Input + v0
         - [aws-bedrock-mistral-whisper.ipynb](tutorials/mistral/aws-bedrock-mistral-whisper.ipynb) - Whisper + AWS Bedrock + Mistral + RestAPI
@@ -29,7 +31,7 @@ Tutorials
     - Rest API + local LLM  
         - [local_function_call_rest_api.ipynb](tutorials/mistral/local_function_call_rest_api.ipynb) - function calling using mistral-inference and Mistral-7B-Instruct-v0.3
         - [ollama_mistral_function_calling.ipynb](tutorials/mistral/ollama_mistral_function_calling.ipynb) - function calling using ollama + mistral7b (4bit) + tokenizer.v3
-        - [aws-bedrock-mistral.ipynb](tutorials/mistral/aws-bedrock-mistral.ipynb)[AWS Bedrock + Mistral Large + Function call]
+        - [aws-bedrock-mistral.ipynb](tutorials/mistral/aws-bedrock-mistral.ipynb)AWS Bedrock + Mistral Large + Function call
 - Base Setup
     - ChatUI  : ollama + open-webui + mistral-7B + docker
         - Setup + Documentation at [ollama-open-webui.md](docs/ollama-open-webui.md)
@@ -37,6 +39,8 @@ Tutorials
         - Setup document at [code-pair.md](docs/code-pair.md)
 
 Extra 
+ - Mobile Interface - Android Multi-modal app search
+    - []
  - [Clean install](docs/clean-ubuntu-setup.md) of ubuntu + docker + nvidia requirements
  - Experiments
     - GPT2 from scratch : [llm.c](https://github.com/karpathy/llm.c/discussions/481) 
