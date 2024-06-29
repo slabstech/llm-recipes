@@ -97,3 +97,12 @@ You'll find the problem,  trace the project from start to end.
 Make hand made diagrams,  no substitute for deep learning
 
 --
+
+
+- Reference
+    - Tello SDK = https://github.com/cocpy/Tello-Python/blob/master/tello/tello.py
+    - DJI - Tello SDK - https://github.com/dji-sdk/Tello-Python
+    - Multiple Swarm - https://github.com/TelloSDK/Multi-Tello-Formation
+    - https://www.instructables.com/Tello-Drone-Python-Programming-Control-Drone-With-/
+    - https://pypi.org/project/djitellopy/
+    - https://djitellopy.readthedocs.io/en/latest/
