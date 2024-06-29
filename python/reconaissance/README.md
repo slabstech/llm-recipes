@@ -1,5 +1,10 @@
 Drishti - Reconaissance
 
+Use Drones to create real-time insights of battlefield. Tactical use in confined spaces to identify enemy logistics.
+
+We use Open source code, Open Weight LLM/VLM modls to obtain additional info using the images.
+
+Create 2D map, identify the resources.
 
 
 - Strategy 1  
@@ -49,7 +54,7 @@ Drishti - Reconaissance
         - Build Autonomous capacity for the drone to take dynamic commands . Update firmware with new code .
         - Codestral for code generation / use in Fill in Middle . For Navigatio commands
         - Generate code for robot navigation
-        - Test changes in Docker environment
+        - Test changes in Docker environments
 
     - Task 6 - Strategy Simulator 
         - Autogen agent built with different prompt for Roles 
@@ -62,7 +67,12 @@ Drishti - Reconaissance
         - Puzzles for encryption or secret passing on unencrypted  amatuer radio. 
 
     - Task 7 - LLM Agent Setup
+        - Radio Operator
+        - Logistics
+        - Food
+        - Doctor 
         -
+        - How does it respond to different scenarios .
 
 --- 
 
