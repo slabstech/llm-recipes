@@ -6,6 +6,7 @@ We use Open source code, Open Weight LLM/VLM modls to obtain additional info usi
 
 Create 2D map, identify the resources.
 
+!["Battlefield"](reconaissance.drawio.png "Digital Battlefield") 
 
 - Strategy 1  
     - Kamikaze drone with on device reconnaissance. 
@@ -94,4 +95,5 @@ Slow down,  notev every step.
 You'll find the problem,  trace the project from start to end. 
 
 Make hand made diagrams,  no substitute for deep learning
+
 --
