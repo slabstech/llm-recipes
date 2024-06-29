@@ -24,7 +24,7 @@ def start_360_capture(file_name_for_video):
     keepRecording = False
     recorder.join()
 
-def videoRecorderfile_name_for_video
+def videoRecorder(file_name_for_video):
 
     height, width, _ = frame_read.frame.shape
     video = cv2.VideoWriter(file_name_for_video, cv2.VideoWriter_fourcc(*'XVID'), 30, (width, height))
