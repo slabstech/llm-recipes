@@ -2,7 +2,7 @@ import time, cv2
 from threading import Thread
 from djitellopy import Tello
 
-def start_360_capture():
+def start_360_capture(file_name_for_video):
     tello = Tello()
 
     tello.connect()
@@ -11,7 +11,7 @@ def start_360_capture():
     tello.streamon()
     frame_read = tello.get_frame_read()
 
-    recorder = Thread(target=videoRecorder)
+    recorder = Thread(target=videoRecorder(file_name_for_video))
     recorder.start()
 
     tello.takeoff()
@@ -24,10 +24,10 @@ def start_360_capture():
     keepRecording = False
     recorder.join()
 
-def videoRecorder():
+def videoRecorderfile_name_for_video
 
     height, width, _ = frame_read.frame.shape
-    video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, (width, height))
+    video = cv2.VideoWriter(file_name_for_video, cv2.VideoWriter_fourcc(*'XVID'), 30, (width, height))
 
     while keepRecording:
         video.write(frame_read.frame)
@@ -36,7 +36,8 @@ def videoRecorder():
     video.release()
 
 def main():
-    start_360_capture()
+    file_name_for_video = "drone_360_video.avi"
+    start_360_capture(file_name_for_video)
 
 if __name__ == "__main__":
     main()
