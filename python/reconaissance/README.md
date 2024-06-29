@@ -106,3 +106,4 @@ Make hand made diagrams,  no substitute for deep learning
     - https://www.instructables.com/Tello-Drone-Python-Programming-Control-Drone-With-/
     - https://pypi.org/project/djitellopy/
     - https://djitellopy.readthedocs.io/en/latest/
+    - https://github.com/damiafuentes/DJITelloPy

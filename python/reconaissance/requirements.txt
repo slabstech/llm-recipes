@@ -1,5 +1,11 @@
+av==12.2.0
 certifi==2024.6.2
 charset-normalizer==3.3.2
+djitellopy==2.5.0
 idna==3.7
+numpy==2.0.0
+opencv-python==4.10.0.84
+pillow==10.3.0
+pygame==2.6.0
 requests==2.32.3
 urllib3==2.2.2
