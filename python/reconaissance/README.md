@@ -59,6 +59,41 @@ Make hand made diagrams,  no substitute for deep learning
     - Server - ThinkPad p1
 
 
+- Tasks for Hackathon 
+
+
+
+Task 1 - drone control
+Hover up, take 360 turn and video capture.
+Hover down.  Send the video to server
+
+Repeat every x / 10 mins
+
+
+Task 2 - Video processing 
+Take input video 
+Process into frames/ images 
+
+Stitch images, process images via vision recognition models. 
+Store metadata into a file .
+
+
+Task 3 - Meta data processing 
+Fuse the metadata, remove duplicate identifier. 
+Use an llm to generate additonal insights.
+
+
+Task 4 - Speech Interaction 
+Ask voice queries to gather more information 
+From the data. 
+
+Create additonal commands to drone for navigation.  Search a different area, return to base, repeat the search with different camera angle. 
+
+Task 5 - Drone control program
+Build Autonomous capacity for the drone to take dynamic commands . Update firmware with new code .
+
+
+
 
 = Setup
     = sudo tailscale up
