@@ -4,24 +4,35 @@ import numpy as np
 from ultralytics import YOLO
 import logging
 
+import cv2
+import time
+import torch
+ 
 logging.getLogger('ultralytics').setLevel(logging.WARNING)
 logging.getLogger('supervision').setLevel(logging.WARNING)
 
-ROOT_PATH = "/home/gaganyatri/Downloads"
-VIDEO_PATH = os.path.join(ROOT_PATH, "IMG_9537.MOV")
+#ROOT_PATH = "/home/gaganyatri/Downloads"
+#VIDEO_PATH = os.path.join(ROOT_PATH, "IMG_9537.MOV")
+
+
+import time, cv2
+from threading import Thread
+from djitellopy import Tello
+
+from record_video import start_360_capture
+
 def load_model():
     model = YOLO("yolov10l.pt", verbose=False)
-
-    video_info = sv.VideoInfo.from_video_path(VIDEO_PATH)
-    print(video_info)
     return model
 
 
 def process_frame(model, frame: np.ndarray, _) -> np.ndarray:
     results = model(frame, imgsz=frame.shape[:2])[0]
+    results_dict = results.boxes.data
+    results_dict.pred = [results_dict]
     boxes = results.boxes.cpu().numpy()
     detections = results.boxes.data.cpu().cpu().numpy() #sv.Detections.from_yolov5(results.boxes.data) #from_yolov8(results)
-    dets = sv.Detections.from_yolov5(results.boxes.data)
+    dets = sv.Detections.from_yolov5(results_dict)
     box_annotator = sv.BoxAnnotator(thickness=4, text_thickness=4, text_scale=2)
     # box_annotator = sv.BoundingBoxAnnotator(thickness=4, text_thickness=4, text_scale=2)
 
@@ -33,22 +44,13 @@ def process_frame(model, frame: np.ndarray, _) -> np.ndarray:
     return frame, results.boxes.xywh
 
 
-import cv2
-import time
-import torch
-source_path=VIDEO_PATH 
-
-# video_info = sv.VideoInfo.from_video_path(source_path)
-# output_path = "output_video.mp4"
-# video_writer = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), video_info.fps, (video_info.width, video_info.height))
-
 
 def select_object_to_track(detected_objects):
     if len(detected_objects):
         return detected_objects[0]
     return None
 
-def track_object(bbox):
+def track_object(video_info, bbox):
     frame_center_x = video_info.width // 2
     frame_center_y = video_info.height // 2
 
@@ -97,6 +99,10 @@ def track_object(bbox):
 def main():
     print("run tracking")
     model =load_model()
+    file_name_for_video = "drone_360_video.avi"
+    start_360_capture(file_name_for_video)
+    video_info = sv.VideoInfo.from_video_path(file_name_for_video)
+
     for index, frame in enumerate(
         sv.get_video_frames_generator(source_path=source_path)
         ):
@@ -107,9 +113,8 @@ def main():
         
         if type(object_to_track) is torch.Tensor:
             if len(object_to_track):
-                track_object(object_to_track)
+                track_object(video_info,object_to_track)
     
-
 
 if __name__ == "__main__":
     main()
