@@ -10,6 +10,7 @@ def image_capture(file_name_for_image):
     frame_read = tello.get_frame_read()
 
     tello.takeoff()
+    tello.move_up(75)
     max_time = 10
     counter = 0
     #tello.rotate_clockwise(360)
