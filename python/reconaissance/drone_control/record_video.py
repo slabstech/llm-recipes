@@ -9,23 +9,20 @@ def image_capture(file_name_for_image):
     tello.streamon()
     frame_read = tello.get_frame_read()
 
-    tello.takeoff()
+    #tello.takeoff()
     counter = 0
-    tello.rotate_counter_clockwise(360)
+    #tello.rotate_counter_clockwise(360)
     while True:
         # Capture frame-by-frame
-
-        # Save the frame as an image every second
-        if time.time() % 1 < 0.01:
-            file_name_for_image = f'image22_{counter}.jpg'
-            cv2.imwrite(file_name_for_image, frame_read.frame)
-            counter += 1
-        if counter > 10:
+        file_name_for_image = f'image_a_{counter}.jpg'
+        cv2.imwrite(file_name_for_image, frame_read.frame)
+        counter += 1
+        if counter > 20:
             break
-
+        time.sleep(1)  # Add a 1 second sleep
 
     tello.streamoff()
-    tello.land()
+    #tello.land()
 
 
 def main():
