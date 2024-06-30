@@ -107,3 +107,5 @@ Make hand made diagrams,  no substitute for deep learning
     - https://pypi.org/project/djitellopy/
     - https://djitellopy.readthedocs.io/en/latest/
     - https://github.com/damiafuentes/DJITelloPy
+
+    - jupyter nbconvert --to slides --no-input presentation.ipynb
