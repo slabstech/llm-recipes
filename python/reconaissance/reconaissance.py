@@ -1,24 +1,11 @@
 #from drone_control.record_video import start_360_capture
 from drone_control.take_picture import image_capture
 from drone_control.vision_query import explain_image
-from battlefield.build_map import show_map
 from drone_control.model_setup import load_model
 import json
-import datetime
 import os
 import requests
-from PIL import Image
-
-
-def get_image_exif():
-    # Open the image file
-    with Image.open('drone_control/picture.png') as img:
-        # Get the image metadata
-        metadata = img.info
-
-    # Print the metadata
-    print(metadata)
-
+import time
 
 def get_drone_video():
     print("getting drone video")
@@ -32,32 +19,10 @@ def get_drone_picture():
     image_capture(file_name_for_image)
     return file_name_for_image
     
-def store_image_metadata(image_metadata, drone_picture):
-        # Get the current time
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Create a dictionary to store the data
-    data = {
-        "time": current_time,
-        "drone_picture": drone_picture,
-        "image_metadata": image_metadata
-    }
-
-    # Write the data to a JSON file
-    with open('data.json', 'a') as f:
-        json.dump(data, f)
-        f.write('\n')
-        #show_map()
-
-def process_metadata():
-    generate_insights("ss")
-
-
-def generate_insights(image_metadata):
-    # Mistral API endpoint
-#    image_metadata = '{"time": "2024-06-29 19:14:36", "drone_picture": "drone_control/picture.png", "image_metadata": "\nThe image shows a group of people standing in an airport terminal. There are at least six individuals visible, with some closer to the foreground and others further back. They appear to be waiting or preparing for their flights, as they stand near chairs and dining tables that can be seen throughout the scene. The chairs and tables suggest that this is likely a waiting area within the terminal."}'
+def generate_insights(metadata_file_name):
     # Load data from JSON file
-    with open('data.json', 'r') as f:
+    with open(metadata_file_name, 'r') as f:
         data = json.load(f)
 
     prompt = f"Please analyze the following json data : {data}, return short info if there is any difference across time"
@@ -88,22 +53,46 @@ def generate_insights(image_metadata):
         print(f"Error: {response.status_code} - {response.text}")
 
     print(response_data)
+    metadata_file_name = metadata_file_name.replace('.json', '')
+
+    insight_file_name = f'{metadata_file_name}_insight.json' 
     # Open the file in append mode ('a')
-    with open('response_data.txt', 'a') as file:
+    with open(insight_file_name, 'a') as file:
     # Write the response data to the file
         file.write(str(response_data))
-    return response_data
+    return insight_file_name
     
-def loop_images():
+def loop_images(directory):
     model = "moondream"
     prompt = "What is in this image?"
     url = "http://localhost:11434"
-    for i in range(1, 10):  # adjust the range as needed
-        drone_picture = f"drone_control/image_set_1/image_a_{i}.jpg"
-        image_metadata = explain_image(drone_picture, model, prompt, url)
-        print("process - " + drone_picture)
-        print(image_metadata) 
 
+    # Initialize an empty list to store the metadata
+    metadata_list = []
+    # get a list of all files in the directory
+    files = os.listdir(directory)
+
+    current_epoch = int(time.time())
+    # filter the list to only include image files (you can add more extensions if needed)
+    image_files = [f for f in files if f.endswith('.jpg') or f.endswith('.png')]
+
+    # process each image
+    for image_file in image_files:
+        drone_picture = os.path.join(directory, image_file)
+        image_metadata = explain_image(drone_picture, model, prompt, url)
+            # Add the metadata to the list, including a timestamp
+        metadata_list.append({
+            'filename': drone_picture,
+            'timestamp': time.time(),
+            'metadata': image_metadata
+        })
+
+    metadata_file_name = f'{current_epoch}_image_metadata.json' 
+        # After the loop, write the list to a JSON file
+    with open(metadata_file_name, 'w') as f:
+        json.dump(metadata_list, f)
+        
+    return metadata_file_name
 
 def main():
     #drone_video = get_drone_video()
@@ -115,13 +104,12 @@ def main():
 
     drone_picture = "drone_control/picture.png"
     """
-    loop_images()
+    #directory = "/home/gaganyatri/code/hackathon/defense_hack/dataset/image_set_1"
+    #metada_file_name=  loop_images(directory)
     
-#    store_image_metadata(image_metadata, drone_picture)
+    metadata_file_name = "1719715998_image_metadata.json"
     
-
-#    process_metadata()
-    # get_image_exif()
+    insight_file_name = generate_insights(metadata_file_name)
 
 if __name__ == "__main__":
     main()
