@@ -1,4 +1,4 @@
-from drone_control.record_video import start_360_capture
+#from drone_control.record_video import start_360_capture
 from drone_control.take_picture import image_capture
 from drone_control.vision_query import explain_image
 from battlefield.build_map import show_map
@@ -94,6 +94,16 @@ def generate_insights(image_metadata):
         file.write(str(response_data))
     return response_data
     
+def loop_images():
+    model = "moondream"
+    prompt = "What is in this image?"
+    url = "http://localhost:11434"
+    for i in range(1, 10):  # adjust the range as needed
+        drone_picture = f"drone_control/image_set_1/image_a_{i}.jpg"
+        image_metadata = explain_image(drone_picture, model, prompt, url)
+        print("process - " + drone_picture)
+        print(image_metadata) 
+
 
 def main():
     #drone_video = get_drone_video()
@@ -105,18 +115,12 @@ def main():
 
     drone_picture = "drone_control/picture.png"
     """
-    """
-    model = "moondream"
-    prompt = "What is in this image?"
-            
-    url = "http://localhost:11434"
-        
-    image_metadata = explain_image(drone_picture, model, prompt, url)    
+    loop_images()
     
-    store_image_metadata(image_metadata, drone_picture)
-    """
+#    store_image_metadata(image_metadata, drone_picture)
+    
 
-    process_metadata()
+#    process_metadata()
     # get_image_exif()
 
 if __name__ == "__main__":
