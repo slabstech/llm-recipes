@@ -69,26 +69,14 @@ def explain_images_directory(directory, model, prompt, url):
     return metadata_file_name
 
 def main():
+ 
+    # Load the prompt from a JSON file
+    with open('prompt.json', 'r') as f:
+        prompt_data = json.load(f)
 
-    model = "moondream:latest"
-    prompt = "What is in this image?"
-
-    adv_prompt = 'Analyze the image and return a JSON object containing the following information: ' + \
-    '    { ' + \
-    ' "objects": [ ' + \
-    '{ + ' + \
-    '  "name": "object name",+ ' \
-    '  "count": number of instances, '+ \
-    '  "description": "brief description" '+ \
-    '} ' + \
-    '], ' + \
-    '"scene": "overall description of the scene", ' + \
-    '"colors": ["dominant colors in the image"] ' + \
-    '} ' + \
-    ' Ensure the output is valid JSON format. ' 
-
-    prompt = adv_prompt            
-    url = "http://localhost:11434"
+    model = prompt_data['model']
+    prompt = prompt_data['prompt']
+    url = model = prompt_data['url']
         
     image_inference = explain_image("../../docs/images/speech-inference.png", model, prompt, url)    
     print(image_inference)
