@@ -39,12 +39,28 @@ def explain_image(image_path, model, prompt, ollama_url):
 
 def main():
 
-    model = "moondream"
+    model = "moondream:latest"
     prompt = "What is in this image?"
-            
+
+    adv_prompt = 'Analyze the image and return a JSON object containing the following information: ' + \
+    '    { ' + \
+    ' "objects": [ ' + \
+    '{ + ' + \
+    '  "name": "object name",+ ' \
+    '  "count": number of instances, '+ \
+    '  "description": "brief description" '+ \
+    '} ' + \
+    '], ' + \
+    '"scene": "overall description of the scene", ' + \
+    '"colors": ["dominant colors in the image"] ' + \
+    '} ' + \
+    ' Ensure the output is valid JSON format. ' 
+
+    prompt = adv_prompt            
     url = "http://localhost:11434"
         
-    explain_image("../../docs/speech-inference.png", model, prompt, url)    
+    image_inference = explain_image("../../docs/images/speech-inference.png", model, prompt, url)    
+    print(image_inference)
 
 if __name__ == "__main__":
     main()
