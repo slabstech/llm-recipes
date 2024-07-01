@@ -1,11 +1,10 @@
 #from drone_control.record_video import start_360_capture
 from drone_control.take_picture import image_capture
-from drone_control.vision_query import explain_image
+from drone_control.vision_query import explain_images_directory
+
 from drone_control.model_setup import load_model
-import json
-import os
-import requests
-import time
+
+from battlefield.data_insights import generate_insights
 
 def get_drone_video():
     print("getting drone video")
@@ -20,94 +19,8 @@ def get_drone_picture():
     return file_name_for_image
     
 
-def generate_insights(metadata_file_name):
-    # Load data from JSON file
-    with open(metadata_file_name, 'r') as f:
-        data = json.load(f)
+   
 
-    prompt = f"Please analyze the following json data : {data}, return short info if there is any difference across time"
-
-    ollama_url = "http://localhost:11434"
-    model_name = "mistral"
-
-    command = "/api/generate"
-    url = ollama_url + command
-    model = model_name + ":latest"
-    payload = {"model": model, "prompt":prompt}
-    
-    headers = {
-        "Content-Type": "application/json"
-    }
-    
-    response = requests.post(url, json=payload, headers=headers)
-
-    response_data = ""
-    if response.status_code == 200:
-        for chunk in response.iter_lines():
-            if chunk:
-                data = chunk.decode('utf-8')
-                data_list = json.loads(data)
-                content = data_list['response']
-                response_data += content
-    else:
-        print(f"Error: {response.status_code} - {response.text}")
-
-    metadata_file_name = metadata_file_name.replace('.json', '')
-
-    insight_file_name = f'{metadata_file_name}_insight.json' 
-    # Open the file in append mode ('a')
-    with open(insight_file_name, 'a') as file:
-    # Write the response data to the file
-        file.write(str(response_data))
-    return insight_file_name
-    
-def loop_images(directory):
-    model = "moondream"
-    prompt = "What is in this image?"
-
-    adv_prompt = 'Analyze the image and return a JSON object containing the following information: ' + \
-    '    { ' + \
-    ' "objects": [ ' + \
-    '{ + ' + \
-    '  "name": "object name",+ ' \
-    '  "count": number of instances, '+ \
-    '  "description": "brief description" '+ \
-    '} ' + \
-    '], ' + \
-    '"scene": "overall description of the scene", ' + \
-    '"colors": ["dominant colors in the image"] ' + \
-    '} ' + \
-    ' Ensure the output is valid JSON format. ' 
-
-    prompt = adv_prompt
-    url = "http://localhost:11434"
-
-    # Initialize an empty list to store the metadata
-    metadata_list = []
-    # get a list of all files in the directory
-    files = os.listdir(directory)
-
-    current_epoch = int(time.time())
-    # filter the list to only include image files (you can add more extensions if needed)
-    image_files = [f for f in files if f.endswith('.jpg') or f.endswith('.png')]
-
-    # process each image
-    for image_file in image_files:
-        drone_picture = os.path.join(directory, image_file)
-        image_metadata = explain_image(drone_picture, model, prompt, url)
-            # Add the metadata to the list, including a timestamp
-        metadata_list.append({
-            'filename': drone_picture,
-            'timestamp': time.time(),
-            'metadata': image_metadata
-        })
-
-    metadata_file_name = f'{current_epoch}_image_metadata.json' 
-        # After the loop, write the list to a JSON file
-    with open(metadata_file_name, 'w') as f:
-        json.dump(metadata_list, f)
-        
-    return metadata_file_name
 
 def main():
     #drone_video = get_drone_video()
@@ -120,7 +33,7 @@ def main():
     load_model( ollama_url, model_name )
 
     directory = "/home/gaganyatri/code/hackathon/defense_hack/dataset/image_set_1"
-    metadata_file_name=  loop_images(directory)
+    metadata_file_name=  explain_images_directory(directory)
         
     insight_file_name = generate_insights(metadata_file_name)
 
