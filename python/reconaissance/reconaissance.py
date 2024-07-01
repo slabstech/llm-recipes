@@ -52,7 +52,6 @@ def generate_insights(metadata_file_name):
     else:
         print(f"Error: {response.status_code} - {response.text}")
 
-    print(response_data)
     metadata_file_name = metadata_file_name.replace('.json', '')
 
     insight_file_name = f'{metadata_file_name}_insight.json' 
@@ -65,6 +64,22 @@ def generate_insights(metadata_file_name):
 def loop_images(directory):
     model = "moondream"
     prompt = "What is in this image?"
+
+    adv_prompt = 'Analyze the image and return a JSON object containing the following information: ' + \
+    '    { ' + \
+    ' "objects": [ ' + \
+    '{ + ' + \
+    '  "name": "object name",+ ' \
+    '  "count": number of instances, '+ \
+    '  "description": "brief description" '+ \
+    '} ' + \
+    '], ' + \
+    '"scene": "overall description of the scene", ' + \
+    '"colors": ["dominant colors in the image"] ' + \
+    '} ' + \
+    ' Ensure the output is valid JSON format. ' 
+
+    prompt = adv_prompt
     url = "http://localhost:11434"
 
     # Initialize an empty list to store the metadata
@@ -97,18 +112,16 @@ def loop_images(directory):
 def main():
     #drone_video = get_drone_video()
     #drone_picture = get_drone_picture()    
-    """
+    
     ollama_url = "http://localhost:11434"
-    model_name = "mistral"
+    model_name = "moondream:latest"
+    load_model( ollama_url, model_name )
+    model_name = "mistral:latest"
     load_model( ollama_url, model_name )
 
-    drone_picture = "drone_control/picture.png"
-    """
-    #directory = "/home/gaganyatri/code/hackathon/defense_hack/dataset/image_set_1"
-    #metada_file_name=  loop_images(directory)
-    
-    metadata_file_name = "1719715998_image_metadata.json"
-    
+    directory = "/home/gaganyatri/code/hackathon/defense_hack/dataset/image_set_1"
+    metadata_file_name=  loop_images(directory)
+        
     insight_file_name = generate_insights(metadata_file_name)
 
 if __name__ == "__main__":
