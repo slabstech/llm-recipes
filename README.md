@@ -1,18 +1,24 @@
-Assistant
+LLM Recipes
 
-On-device assistant with Speech, Vision, Text search
+- Assistant
+    - On-device assistant with Speech, Vision, Text search
  
 
 !["Multi-modal On-device"](docs/images/on-device.drawio.png "Multi-modal On-device") 
+
+- Reconaissance
+    - Use Drones to create real-time insights of Warehouse, Home securiy
+
+!["Reconassiance"](python/reconaissance/reconaissance.drawio.png "Reconaissance")
 
 | Version |Concept | Tech | Status |
 |---|---|---|---|
 |v0.6| Image Generation + v0.4 | -- | Stable diffusion | 
 |v0.5| Mobile Interface + v0.4 | -- | Android App + local server | 
-|v0.4| [Image/Scene Recognition + v0.3](assistant/assitant-tutorial.ipynb) | In progress | llava/moondream | 
-|v0.3| [Speech output + v0.2](assistant/speech-to-speech-inference.py) | Complete | coqui tts + v1 | 
-|v0.2| [Speech input + v0.1](assistant/voice_api_interface.py) | Complete | whisper + ffpmeg + v0 |
-|v0.1| [Text Query + API calls](assistant/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
+|v0.4| [Image/Scene Recognition + v0.3](python/reconaissance/reconaissance.py) | complete | llava/moondream | 
+|v0.3| [Speech output + v0.2](python/assistant/speech-to-speech-inference.py) | Complete | coqui tts + v1 | 
+|v0.2| [Speech input + v0.1](python/assistant/voice_api_interface.py) | Complete | whisper + ffpmeg + v0 |
+|v0.1| [Text Query + API calls](python/assistant/api_interface.py)| Complete | mistral7B-v0.3 + ollama + RestAPI| 
 
 
 Demo's of LLM for Everyday use Run Locally
