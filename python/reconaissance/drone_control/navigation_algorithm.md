@@ -36,7 +36,45 @@ Build a map around the drone.
 
 Function expand map (path, global map)
 Move in + plus path to extend the map, based on previous path created.  
-Always return to starting based on vision odometry 
+Always return to starting based on vision odometry  
+
+
+360 classification - work plan 
+
+Part 1 
+
+Take 12 photos as 1 sec interval
+
+Send images to image processors 
+
+Image processor will write description
+
+
+Make this code work.
+
+Part 2 
+
+Take photos from dronr without launch .
+Move drone with uand 30ndeg every second 
+Save images to file.
+
+Merge 1 - Connect part 1 and part 2
+
+
+Part 3
+
+Launch drone.
+Make 12 turn and take photos.
+
+
+Merge 2 - connect part 3 with merge 1
+
+
+Part 4 - advanced 
+Trial with ros2 nodes, drone as a node, image processors as a node , report generator as a mode.
+
+
+
 
 
 
