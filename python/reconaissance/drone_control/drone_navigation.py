@@ -1,3 +1,6 @@
+from djitellopy import Tello
+import time
+import cv2
 class DroneNavigation:
     def __init__(self, drone):
         self.drone = drone
@@ -9,23 +12,29 @@ class DroneNavigation:
         vlm_understanding = True  # Replace with actual VLM understanding check
         return light_condition and vlm_understanding
 
-    def take_photo(self):
+    def take_photo(self, file_name_for_image, frame_read):
         # This is a placeholder. You'll need to implement the actual photo taking.
-        pass
+        cv2.imwrite(file_name_for_image, frame_read.frame)
 
     def verify_navigation(self):
         # This is a placeholder. You'll need to implement the actual navigation verification.
         return True
 
     def create_360_map(self):
-        for _ in range(12):
-            self.take_photo()
-            if not self.verify_navigation():
-                return False
+        frame_read = self.drone.get_frame_read()
+        #tello.rotate_clockwise(360)
+        current_epoch = int(time.time())
+
+        for counter in range(12):
+            time.sleep(1)
+            file_name_for_image = f'image_{current_epoch}_b_{counter}.jpg'
+            self.take_photo(frame_read, file_name_for_image)
+
+#            if not self.verify_navigation():
+#                return False
             self.drone.turn(30)
-            self.take_photo()
-            if not self.verify_navigation():
-                return False
+#            if not self.verify_navigation():
+#                return False
         return True
 
     def expand_map(self, path):
@@ -56,31 +65,32 @@ class DroneNavigation:
 
         self.drone.stream_off()
 
-class Drone:
+class Drone(Tello):
     def __init__(self):
-        # This is a placeholder. You'll need to implement the actual drone initialization.
-        pass
+        super().__init__()
+        self.connect()
+        self.streamon()
 
     def stream_on(self):
-        # This is a placeholder. You'll need to implement the actual stream on.
-        pass
+        self.streamon()
 
     def stream_off(self):
-        # This is a placeholder. You'll need to implement the actual stream off.
-        pass
+        self.streamoff()
 
     def takeoff(self):
-        # This is a placeholder. You'll need to implement the actual takeoff.
-        pass
+        self.takeoff()
 
     def turn(self, degrees):
-        # This is a placeholder. You'll need to implement the actual turn.
-        pass
+        self.rotate_clockwise(degrees)
 
     def move(self, path):
         # This is a placeholder. You'll need to implement the actual move.
         pass
 
+    def land(self):
+        self.streamoff()
+        self.land()
+    
     def return_to_start(self):
         # This is a placeholder. You'll need to implement the actual return to start.
         pass
@@ -93,4 +103,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
