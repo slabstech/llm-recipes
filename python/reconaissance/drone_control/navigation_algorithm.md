@@ -73,6 +73,15 @@ Merge 2 - connect part 3 with merge 1
 Part 4 - advanced 
 Trial with ros2 nodes, drone as a node, image processors as a node , report generator as a mode.
 
+--
+
+mock drone camera for Recon Algo 
+
+Mock drone video capture as webcam cv2 capture.
+Improve the algorithm and then use drone fit testing. 
+Turn function,  move laptop manual to simluate use case
+
+Camera should be mocked by Webcam to reduce dependency issue. 
 
 
 
