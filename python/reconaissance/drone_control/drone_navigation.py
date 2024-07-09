@@ -2,6 +2,7 @@ from djitellopy import Tello
 import time
 import cv2
 import numpy as np
+import threading
 
 from vision_query import VisionQuery  # Assuming vision_query.py is in the same directory
 
@@ -30,11 +31,20 @@ class ImageProcessor:
 class DroneNavigation:
     def __init__(self, drone):
         self.drone = drone
+        self.image_processor = ImageProcessor()
         self.global_map = {}
         self.frame_read = None
 
-    def is_environment_suitable_for_navigation(self):
 
+    def start(self):
+        # Start the drone navigation in the main thread
+        self.navigate()
+
+        # Start the image processing in a separate thread
+        image_processing_thread = threading.Thread(target=self.image_processor.process_images)
+        image_processing_thread.start()
+
+    def is_environment_suitable_for_navigation(self):
         frame = self.frame_read.frame
         light_condition = self.drone.check_light_condition(frame)
         vlm_understanding = True  # Replace with actual VLM understanding check
@@ -142,7 +152,9 @@ class Drone(Tello):
 def main():
     drone = Drone()
     drone_navigation = DroneNavigation(drone)
-    drone_navigation.navigate()
+ #   drone_navigation.navigate()
+    drone_navigation.start()
+
 
 if __name__ == "__main__":
     main()
