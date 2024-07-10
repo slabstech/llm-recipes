@@ -19,3 +19,8 @@ References
 
 - https://hack-now-2024.devpost.com/
 - https://de.nttdata-solutions.com/hack-now-2024
+
+- Examples
+  - https://github.com/kwonathan/language-models-trajectory-generators
+  - https://github.com/johanndiep/mistral_hackathon
+  - https://www.youtube.com/watch?v=_vsRd8RsCKo 
