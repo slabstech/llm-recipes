@@ -21,6 +21,9 @@ LLM Recipes
 
 
 Tutorials
+- v6
+    - GUI - Graphical User Interface 
+      - [UI](ui/README.md) : typescript + docker/ollama
 - v5
     - Indoor Maps for Drone
 - v4
