@@ -1,0 +1,29 @@
+services:
+  ollama:
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama-warehouse-gpu
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+#  frontend:
+#  build:
+#    context: ./frontend  # Path to your frontend directory
+#    dockerfile: Dockerfile  # Path to your Dockerfile
+#  container_name: frontend-cpu
+#  ports:
+#    - 8000:8000  # Map the container port to the host
+#  depends_on:
+#    - ollama  # Ensure that the ollama service is started before the frontend service
+#  extra_hosts:
+#    - host.docker.internal:host-gateway
