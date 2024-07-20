@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the package.json and yarn.lock files to the container at /app
 COPY package*.json ./
 
+RUN npm install -g typescript vite
 # Install the project dependencies
 RUN npm install
 
