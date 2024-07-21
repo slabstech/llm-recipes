@@ -1,0 +1,20 @@
+services:
+  ollama:
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama-warehouse-cpu
+    # pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
+  frontend:
+    image: slabstech/warehouse-ui
+    container_name: frontend-cpu
+    ports:
+      - 8000:80  # Map the container port to the host
+    depends_on:
+      - ollama  # Ensure that the ollama service is started before the frontend service
+    extra_hosts:
+      - host.docker.internal:host-gateway

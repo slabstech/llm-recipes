@@ -1,5 +1,24 @@
 ## Autonomous Warehouse
 
+- Voice Dispatcher - for [AI - Agents 2.0 Hackathon](https://lu.ma/ai-agents-2.0)
+
+!["Voice Dispatcher"](docs/images/dispatcher.drawio.png "Voice Dispatcher") 
+
+- [Version 1](version-1.md)
+
+- [Frontend](frontend/README.md)
+
+- [devpost tracker](https://devpost.com/software/drishti-09zpyk)
+
+- Docker Setup
+  - For CPU
+    - docker compose -f cpu-compose.yml up -d       
+  - For GPU
+    - docker compose -f gpu-compose.yml up -d      
+
+ - Build Frontend Docker
+  - cd frontend
+  - docker build --rm . -t slabstech/warehouse-ui -f Dockerfile 
 
 - Ideas 
 
@@ -15,12 +34,16 @@
     - What technological solutions can be developed to reduce food waste and promote sustainability in retail? Consider using state-of-the-art industrial cameras, AI algorithms for image recognition and innovative systems for identifying and managing food that needs to be consumed urgently.
     - Challenge Partner: SICK AG
 
+
+- Commands
+ - gh api --method=PUT 'repos/{owner}/{repo}/collaborators/USER'
+
 References 
 
 - https://hack-now-2024.devpost.com/
 - https://de.nttdata-solutions.com/hack-now-2024
 
-- Examples
-  - https://github.com/kwonathan/language-models-trajectory-generators
-  - https://github.com/johanndiep/mistral_hackathon
-  - https://www.youtube.com/watch?v=_vsRd8RsCKo 
+- Harware
+  - https://github.com/BasedHardware
+  - https://github.com/MULTI-ON
+  - https://www.wur.nl/en/research-results/research-institutes/plant-research/greenhouse-horticulture/show-greenhouse/autonomous-greenhouse-challenge-4th-edition.htm

@@ -1,0 +1,58 @@
+# Node modules
+node_modules
+
+# Build output
+dist
+
+# Environment files
+.env
+.env.*
+
+# Version control
+.git
+.gitignore
+
+# Editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker files (optional, depending on your setup)
+Dockerfile
+cpu-compose.yml
+gpu-compose.yml
+# README and other documentation
+README.md
+*.md
+
+# Package manager files
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Vite config (optional, include if you want to rebuild in container)
+# vite.config.ts
+# vite.config.js
