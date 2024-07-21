@@ -1,8 +1,14 @@
 ## Autonomous Warehouse
 
+- Voice Dispatcher - for [AI - Agents 2.0 Hackathon](https://lu.ma/ai-agents-2.0)
+
+!["Voice Dispatcher"](docs/images/dispatcher.drawio.png "Voice Dispatcher") 
+
 - [Version 1](version-1.md)
 
 - [Frontend](frontend/README.md)
+
+- [devpost tracker](https://devpost.com/software/drishti-09zpyk)
 
 - Docker Setup
   - For CPU
@@ -10,6 +16,9 @@
   - For GPU
     - docker compose -f gpu-compose.yml up -d      
 
+ - Build Frontend Docker
+  - cd frontend
+  - docker build --rm . -t slabstech/warehouse-ui -f Dockerfile 
 
 - Ideas 
 
@@ -34,4 +43,7 @@ References
 - https://hack-now-2024.devpost.com/
 - https://de.nttdata-solutions.com/hack-now-2024
 
-test
+- Harware
+  - https://github.com/BasedHardware
+  - https://github.com/MULTI-ON
+  - https://www.wur.nl/en/research-results/research-institutes/plant-research/greenhouse-horticulture/show-greenhouse/autonomous-greenhouse-challenge-4th-edition.htm
