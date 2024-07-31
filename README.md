@@ -13,6 +13,8 @@ LLM Recipes
 
 | Version |Concept | Tech | Status |
 |---|---|---|---|
+|v0.7| [On-device Mobile](tutorial/android/) | In progress | Android + TF lite  | 
+|v0.6| [UI](UI) | In progress | Typescript | 
 |v0.5| [Indoor Maps + v0.4](python/reconaissance/reconaissance.py) | In progress | ROS2  | 
 |v0.4| [Image/Scene Recognition + v0.3](python/assistant/vision_query.py) | complete | llava/moondream | 
 |v0.3| [Speech output + v0.2](python/assistant/speech-to-speech-inference.py) | Complete | coqui tts + v1 | 
@@ -21,6 +23,9 @@ LLM Recipes
 
 
 Tutorials
+- v7
+    - Mobile - On device Inference
+        - [Android](tutorials/android/README.md)
 - v6
     - GUI - Graphical User Interface 
       - [UI](ui/README.md) : typescript + docker/ollama
