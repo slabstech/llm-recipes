@@ -2,7 +2,7 @@ version: '3.8'
 services:
   ollama:
     volumes:
-      - ./ollama/ollama:/root/.ollama
+      - ~/ollama/ollama:/root/.ollama
     container_name: ollama
     pull_policy: always
     tty: true
@@ -22,7 +22,7 @@ services:
     image: ghcr.io/open-webui/open-webui:git-be5534c
     container_name: open-webui
     volumes:
-      - ./ollama/open-webui:/app/backend/data
+      - ~/ollama/open-webui:/app/backend/data
     depends_on:
       - ollama
     ports:

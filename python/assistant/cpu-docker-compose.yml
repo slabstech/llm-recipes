@@ -6,7 +6,7 @@ services:
       - "5000:5000"
   ollama:
     volumes:
-      - ./ollama/ollama:/root/.ollama
+      - ~/ollama/ollama:/root/.ollama
     container_name: ollama-w
     pull_policy: always
     tty: true
