@@ -2,8 +2,21 @@ Segment Anythinh2
 
 
 
-- Source
-  - 
+- Source - https://github.com/facebookresearch/segment-anything-2
+  - git clone https://github.com/facebookresearch/segment-anything-2.git
+  - cd segment-anything-2
+  - pip install -e .
+  - python setup.py build_ext --inplace
+  - pip install supervision
+
+Download the weights
+- wget -q https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_tiny.pt
+
+- pip install notebook
+
+- Download the notebook
+- wget https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/how-to-segment-videos-with-sam-2.ipynb
+
 - Video Segmentation
   - https://blog.roboflow.com/sam-2-video-segmentation/
 
@@ -25,6 +38,12 @@ Segment Anythinh2
   - sudo apt-get update
   - sudo apt-get -y install cuda-toolkit-12-6 
   - sudo apt-get install -y nvidia-open
+
+export CUDA_HOME=/usr/local/cuda-12.6
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+
 
 - Fresh CUDA - Re Install
   - sudo apt-get remove --purge '^cuda-.*'
