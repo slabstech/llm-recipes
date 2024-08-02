@@ -2,9 +2,12 @@ Segment Anythinh2
 
 
 
+wget https://github.com/slabstech/llm-recipes/raw/ondevice-inference/tutorials/sam2/sam2-automatic.ipynb
 - Source - https://github.com/facebookresearch/segment-anything-2
   - git clone https://github.com/facebookresearch/segment-anything-2.git
   - cd segment-anything-2
+  - python3.10 -m venv venv
+  - source venv/bin/activate
   - pip install -e .
   - python setup.py build_ext --inplace
   - pip install supervision
@@ -49,3 +52,24 @@ export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
   - sudo apt-get remove --purge '^cuda-.*'
   - sudo apt-get remove --purge '^libnvidia-.*'
   - sudo apt-get remove --purge '^cuda-.*'
+
+
+Access Jupyter notebook from remote server
+
+- On Remote server
+    - Create python  virtual environment
+        - python -m venv venv
+    - Enable virtual environment
+        - source -m venv venv
+    - Install Jupyter notebook
+        - pip install notebook
+    - Enable security for jupyter server
+        - jupyter server password
+            - Enter new password
+    -  Start notebook 
+        - jupyter notebook --no-browser --port=8888
+
+- On Local Machine
+    - ssh -L 8888:localhost:8888 remote-user@remote-server
+
+    - vistit localhost:8888 on the browser
