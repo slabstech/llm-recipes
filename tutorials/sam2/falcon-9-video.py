@@ -5,9 +5,23 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 from sam2.build_sam import build_sam2_video_predictor
+import cv2
 
 HOME = os.getcwd()
 print("HOME:", HOME)
+
+def show_mask_on_image(img, mask, obj_id=None, color=(0, 255, 0)):
+    # Create a copy of the image to draw on
+    img_with_mask = img.copy()
+    
+    # Find the contours of the mask
+    contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Draw the contours on the image
+    cv2.drawContours(img_with_mask, contours, -1, color, 2)
+    if obj_id is not None:
+        # Add the object ID to the image
+        cv2.putText(img_with_mask, str(obj_id), (contours[0][0][0][0], contours[0][0][0][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+    return img_with_mask
 
 def show_mask(mask, ax, obj_id=None, random_color=False):
     if random_color:
@@ -55,20 +69,51 @@ def function_2(predictor, video_dir, frame_names, out_director):
             for i, out_obj_id in enumerate(out_obj_ids)
         }
 
-    # render the segmentation results every few frames
+    '''
     vis_frame_stride = 1
+
+    for out_frame_idx in range(0, len(frame_names), vis_frame_stride):
+        img = cv2.imread(os.path.join(video_dir, frame_names[out_frame_idx]))
+        for out_obj_id, out_mask in video_segments[out_frame_idx].items():
+            img = show_mask_on_image(img, out_mask, obj_id=out_obj_id)
+        cv2.imwrite(os.path.join(out_director, f'frame_{out_frame_idx}.png'), img)
+    # render the segmentation results every few frames
+    '''
+    vis_frame_stride = 1
+    
     plt.close("all")
     for out_frame_idx in range(0, len(frame_names), vis_frame_stride):
         plt.figure(figsize=(6, 4))
-        plt.title(f"frame {out_frame_idx}")
+        #plt.title(f"frame {out_frame_idx}")
         plt.imshow(Image.open(os.path.join(video_dir, frame_names[out_frame_idx])))
         for out_obj_id, out_mask in video_segments[out_frame_idx].items():
             show_mask(out_mask, plt.gca(), obj_id=out_obj_id)
+        plt.axis("off")
         plt.savefig(os.path.join(out_director, f'frame_{out_frame_idx}.png'))
     predictor.reset_state(inference_state)
     plt.close("all")
+    
 
+def merge_frames_into_video(frame_dir, output_video_path, fps=30):
+    # Get a list of all image files in the directory
+    frame_files = [f for f in os.listdir(frame_dir) if f.endswith('.jpg') or f.endswith('.png')]
+    frame_files.sort()  # Sort the files to ensure they are in the correct order
 
+    # Read the first frame to get the frame size
+    first_frame = cv2.imread(os.path.join(frame_dir, frame_files[0]))
+    height, width, _ = first_frame.shape
+
+    # Define the codec and create a VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+
+    # Loop through the frames and write them to the video
+    for frame_file in frame_files:
+        frame = cv2.imread(os.path.join(frame_dir, frame_file))
+        out.write(frame)
+
+    # Release the VideoWriter object
+    out.release()
 
 def main():
     # use bfloat16 for the entire notebook
@@ -94,9 +139,10 @@ def main():
     ]
     frame_names.sort(key=lambda p: int(os.path.splitext(p)[0]))
 
+    out_director = "videos/output_720_1"
+    function_2(predictor, video_dir, frame_names, out_director )
 
-    function_2(predictor, video_dir, frame_names,out_director = "videos/output_720_1")
-
+    merge_frames_into_video(out_director, 'output_video.mp4', fps=2)
 
 if __name__ == "__main__":
     main()
