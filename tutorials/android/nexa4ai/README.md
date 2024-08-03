@@ -1,6 +1,8 @@
 Nexa4AI
 
 
+- Octopus_v4 - Graph paper - https://arxiv.org/pdf/2404.19296
+
 - Run the model locally
     - Setup environment
         - python -m venv venv
@@ -11,6 +13,25 @@ Nexa4AI
         - huggingface-cli download NexaAIDev/Octopus-v4
     - python octopus_v2.py
 
+- GGUF model
+    - Octopus-v4-Q4_0.gguf
+
+        - llama.cpp
+            - git clone https://github.com/ggerganov/llama.cpp --depth 1
+            - cd llama.cpp
+            - make
+            - wget https://huggingface.co/NexaAIDev/octopus-v4-gguf/raw/main/Octopus-v4-Q4_0.gguf
+            - ./llama-cli -m Octopus-v4-Q4_0.gguf -n 256 -p "<|system|>You are a router. Below is the query from the users, please call the correct function and generate the parameters to call the function.<|end|><|user|>Tell me the result of derivative of x^3 when x is 2?<|end|><|assistant|>"
+
+
+        - Ollama - NOt used
+        - git clone https://github.com/ollama/ollama.git ollama
+
+        - wget https://huggingface.co/NexaAIDev/octopus-v4-gguf/raw/main/Octopus-v4-Q4_0.gguf
+
+    - 
+    - https://huggingface.co/NexaAIDev/octopus-v4-gguf
+    - https://huggingface.co/NexaAIDev/gemma-2-2b-it-GGUF
 
 - Octopus -v4 - Docker not working
     - docker pull nexaai/octopus4
