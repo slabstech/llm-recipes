@@ -73,3 +73,20 @@ Access Jupyter notebook from remote server
     - ssh -L 8888:localhost:8888 remote-user@remote-server
 
     - vistit localhost:8888 on the browser
+
+
+---
+
+
+Sam + Florence
+
+docker run -it -p 7860:7860 --platform=linux/amd64 --gpus all \
+        registry.hf.space/skalskip-florence-sam:latest python app.py
+
+git clone https://huggingface.co/spaces/SkalskiP/florence-sam
+
+cd florence-sam
+
+pip install -r local-requirements.txt
+
+python app.py
