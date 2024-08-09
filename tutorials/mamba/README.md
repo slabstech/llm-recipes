@@ -7,10 +7,21 @@ Codestral Mamba
     - python3.10 -m venv venv
     - source venv/bin/activate
     - pip install mistral-inference
+    - pip install wheel
+    - pip install --upgrade pip
     - pip install packaging mamba-ssm causal-conv1d transformers
     - 
+    - pip install -U "huggingface_hub[cli]"
+    - huggingface-cli login --token $HF_WRTE
+    - huggingface-cli download mistralai/Mamba-Codestral-7B-v0.1
     - https://github.com/mistralai/mistral-inference
+    - export CODESTRAL_MAMBA=/home/ssf79/.cache/huggingface/hub/models--mistralai--Mamba-Codestral-7B-v0.1/snapshots/d4521ac4b7658f796233ce47e8e695933f3cd48a
+    - mistral-chat $CODESTRAL_MAMBA --instruct --max_tokens 256
 
+  
+    - vllm image build
+	- git clone https://github.com/mistralai/mistral-inference.git
+ 	- docker build deploy --build-arg MAX_JOBS=8
 
   - https://mistral.ai/news/codestral-mamba/
   - https://docs.vllm.ai/en/latest/models/supported_models.html
