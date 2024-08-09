@@ -26,3 +26,7 @@ model = torch.nn.DataParallel(model, device_ids=device_ids)
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_vocab_path, from_slow=True, legacy=False)
 
 input_ids = tokenizer("Hey how are you doing?", return_tensors= "pt").cuda()
+
+
+out = model.generate(input_ids, max_new_tokens=10)
+print(tokenizer.batch_decode(out))
