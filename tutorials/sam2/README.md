@@ -1,6 +1,12 @@
 Segment Anythinh2
 
 
+- Grounded SAM2 : Grounded DINO with SAM2
+  - https://github.com/IDEA-Research/Grounded-SAM-2
+  - https://github.com/IDEA-Research/Grounded-Segment-Anything
+  - https://huggingface.co/IDEA-Research/grounding-dino-tiny
+  - https://github.com/IDEA-Research/Grounded-SAM-2/blob/main/grounded_sam2_local_demo.py
+
 
 wget https://github.com/slabstech/llm-recipes/raw/ondevice-inference/tutorials/sam2/sam2-automatic.ipynb
 - Source - https://github.com/facebookresearch/segment-anything-2
