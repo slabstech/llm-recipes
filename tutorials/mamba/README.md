@@ -1,5 +1,16 @@
 Codestral Mamba
 
+Using Transformers
+
+pip install -U "huggingface_hub[cli]"
+huggingface-cli login --token $HF_TOKEN
+huggingface-cli download 'mistralai/Mamba-Codestral-7B-v0.1' --local_dir . --revision="refs/pr/9" --exclude consolidated.safetensors
+pip install transformers torch sentencepiece protobuf
+
+
+python codestral-mamba.py
+
+
 - Run with continue
 
 - Setup
@@ -18,6 +29,20 @@ Codestral Mamba
     - export CODESTRAL_MAMBA=/home/ssf79/.cache/huggingface/hub/models--mistralai--Mamba-Codestral-7B-v0.1/snapshots/d4521ac4b7658f796233ce47e8e695933f3cd48a
     - mistral-chat $CODESTRAL_MAMBA --instruct --max_tokens 256
 
+
+
+pip install -U "huggingface_hub[cli]"
+huggingface-cli login --token $HF_TOKEN
+huggingface-cli download 'mistralai/Mamba-Codestral-7B-v0.1' --local_dir . --revision="refs/pr/9" --exclude consolidated.safetensors
+pip install transformers torch
+
+
+
+    - With vllm
+	- pip install vllm
+	- python -u -m vllm.entrypoints.openai.api_server \
+       --host 0.0.0.0 \
+       --model mistralai/Mamba-Codestral-7B-v0.1
   
     - vllm image build
 	- git clone https://github.com/mistralai/mistral-inference.git
