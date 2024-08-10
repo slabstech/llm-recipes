@@ -1,0 +1,5 @@
+gradio==4.41.0
+transformers
+torch
+sentencepiece
+protobuf
