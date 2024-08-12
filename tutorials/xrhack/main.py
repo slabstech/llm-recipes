@@ -1,15 +1,14 @@
 import cv2
 import time
 import requests 
-import json 
-import requests
 import base64
 import json 
-import time
 import os
+import threading
+import asyncio
+import aiohttp
 
-
-def explain_image(image_path, model, prompt, ollama_url):
+async def explain_image(image_path, model, prompt, ollama_url):
         
     with open(image_path, "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read())
@@ -30,23 +29,23 @@ def explain_image(image_path, model, prompt, ollama_url):
         "Content-Type": "application/json"
     }
     
-    response = requests.post(url, json=payload, headers=headers)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=payload, headers=headers) as response:
 
-    response_data = ""
-    if response.status_code == 200:
-        for chunk in response.iter_lines():
-            if chunk:
-                data = chunk.decode('utf-8')
-                data_list = json.loads(data)
-                content = data_list['message']['content']
-                response_data += content
-    else:
-        print(f"Error: {response.status_code} - {response.text}")
-    return response_data
+            response_data = ""
+            if response.status_code == 200:
+                async for chunk in response.iter_lines():
+                    if chunk:
+                        data = chunk.decode('utf-8')
+                        data_list = json.loads(data)
+                        content = data_list['message']['content']
+                        response_data += content
+            else:
+                print(f"Error: {response.status_code} - {await response.text()}")
+            return response_data
 
 
-
-def processVideoStream():
+async def processVideoStream():
     # Replace '0' with the appropriate device index for your capture card
     cap = cv2.VideoCapture(0)
 
@@ -54,6 +53,7 @@ def processVideoStream():
     if not cap.isOpened():
         print("Error: Could not open video device.")
         exit()
+
 
     while True:
         # Capture frame-by-frame
@@ -67,22 +67,14 @@ def processVideoStream():
         # Display the resulting frame
         cv2.imshow('Read video', frame)
 
-        elapsed_time = time.time() - start_time
-        if elapsed_time > 3:
-            # Save the current frame
-            cv2.imwrite('saved_frame.jpg', frame)
-            print("Frame saved as 'saved_frame.jpg'")
-            '''
-                    # Send a GET request for the next command
-            response = requests.get('http://your-server.com/next-command')
+        cv2.imwrite('saved_frame.jpg', frame)
+        print("Frame saved as 'saved_frame.jpg'")
 
-            # Check the status code for the response
-            if response.status_code == 200:
-                print("Next command received successfully")
-                # You can process the response data here
-            else:
-                print("Failed to get next command")
-            '''
+        asyncio.create_task(getCommand())
+
+        elapsed_time = time.time() - start_time
+        if elapsed_time > 10:
+            # Save the current frame
             break
 
         # Press 'q' to exit the loop
@@ -94,7 +86,7 @@ def processVideoStream():
     cv2.destroyAllWindows()
 
 
-def getCommand():
+async def getCommand():
         # Load the prompt from a JSON file
     with open('prompt.json', 'r') as f:
         prompt_data = json.load(f)
@@ -103,14 +95,13 @@ def getCommand():
     prompt = prompt_data['prompt']
     url = prompt_data['url']
         
-    image_inference = explain_image("saved_frame.jpg", model, prompt, url)    
+    image_inference = await explain_image("saved_frame.jpg", model, prompt, url)    
     print(image_inference)
 
-def main():
-    processVideoStream()
-    getCommand()
+async def main():
+    await asyncio.create_task(getCommand())
+    await processVideoStream()
 
 
 if __name__ == "__main__":
-    main()
-
+    asyncio.run(main())
