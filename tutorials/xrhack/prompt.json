@@ -1,0 +1,5 @@
+{
+    "model" : "moondream:latest",
+    "url" : "http://localhost:11434",
+    "prompt" : "explain the image"
+}
