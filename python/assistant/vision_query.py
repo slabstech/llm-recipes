@@ -76,7 +76,7 @@ def main():
 
     model = prompt_data['model']
     prompt = prompt_data['prompt']
-    url = model = prompt_data['url']
+    url = prompt_data['url']
         
     image_inference = explain_image("../../docs/images/speech-inference.png", model, prompt, url)    
     print(image_inference)

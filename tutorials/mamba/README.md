@@ -4,7 +4,7 @@ Using Transformers
 
 pip install -U "huggingface_hub[cli]"
 huggingface-cli login --token $HF_TOKEN
-huggingface-cli download 'mistralai/Mamba-Codestral-7B-v0.1' --local_dir . --revision="refs/pr/9" --exclude consolidated.safetensors
+huggingface-cli download 'mistralai/Mamba-Codestral-7B-v0.1' --local-dir codestral-7B --revision="refs/pr/9" --exclude consolidated.safetensors
 pip install transformers torch sentencepiece protobuf
 
 
