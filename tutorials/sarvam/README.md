@@ -25,8 +25,12 @@ With Ollama
     - python -m venv venv
     - source venv/bin/activate
     - pip install requirements-ollama.txt
-      
-    - python sarvam_ollama.py
+
+    - Download Model 
+        -  python -m sarvam_ollama load_sarvam
+    - Execute Code
+        - python sarvam_ollama.py
+
 
 
 
