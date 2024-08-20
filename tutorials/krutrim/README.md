@@ -9,6 +9,7 @@ Ola Krutrim Cloud
 - Add - ssh keys
 - Add Compute
     - CPU Only 
-
+    - Get Machine Details - https://cloud.olakrutrim.com/console/machines?section=listMachine
+    
 - Connect via SSH
     - ssh -i <path to your private key file> ubuntu@ <Public IP>
