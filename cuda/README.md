@@ -2,6 +2,10 @@ CUDA
 
 - Write a Simple Calculator in CUDA
 
+  - Square Program  
+    - make square
+    - ./square
+
 - Write a Scientific Calculator in CUDA
 
 
