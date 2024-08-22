@@ -16,3 +16,8 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 
 https://huggingface.co/spaces/gaganyatri/codestral-api
+
+
+make vhanges to enables Zero GPU
+
+https://huggingface.co/zero-gpu-explorers

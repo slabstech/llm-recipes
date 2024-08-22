@@ -1,4 +1,5 @@
 import gradio as gr
+import spaces
 from transformers import AutoTokenizer, Mamba2ForCausalLM
 
 model_id = 'gaganyatri/codestral-7B'
@@ -8,7 +9,8 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, from_slow=True, legacy=False
 
 model = Mamba2ForCausalLM.from_pretrained(model_id)
 
-# Define the chatbot function
+
+@spaces.GPU(duration=30)
 def chat(input_text):
     input_ids = tokenizer.encode(input_text, return_tensors='pt')
     output = model.generate(input_ids, max_length=2500)
