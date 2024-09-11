@@ -1,6 +1,23 @@
 Pixtral - Vision Language Model
 
+- Setup 
+  - pip install vllm
 
+- pip install --upgrade mistral_common
+
+
+
+- git clone https://github.com/patrickvonplaten/vllm.git
+- cd vllm
+- python3.10 -m venv venv
+- source venv/bin/activate
+- pip install -e .
+
+- https://github.com/patrickvonplaten/vllm/tree/pixtral
+
+- https://huggingface.co/spaces/gaganyatri/pixtral-demo
+
+git clone git@hf.co:spaces/gaganyatri/pixtral-demo
 
 - HF 
     - https://huggingface.co/mistralai/Pixtral-12B-2409
@@ -37,3 +54,8 @@ Pixtral - Vision Language Model
     - Announcement
         - https://github.com/mistralai/mistral-common/releases/tag/v1.4.0
         - https://github.com/vllm-project/vllm/pull/8377/files
+
+    - https://docs.vllm.ai/en/latest/getting_started/installation.html
+
+    - CUDA latest - 12.6 - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
+    
