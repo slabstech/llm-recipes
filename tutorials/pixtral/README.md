@@ -2,6 +2,30 @@ Pixtral - Vision Language Model
 
 
 
+- HF 
+    - https://huggingface.co/mistralai/Pixtral-12B-2409
+
+- vllm
+    - vllm serve mistralai/Pixtral-12B-2409 --tokenizer_mode mistral --limit_mm_per_prompt 'image=4' --max_num_batched_tokens 16384
+
+    - curl --location 'http://<your-node-url>:8000/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer token' \
+--data '{
+    "model": "mistralai/Pixtral-12B-2409",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+            {"type" : "text", "text": "Describe this image in detail please."},
+            {"type": "image_url", "image_url": {"url": "https://s3.amazonaws.com/cms.ipressroom.com/338/files/201808/5b894ee1a138352221103195_A680%7Ejogging-edit/A680%7Ejogging-edit_hero.jpg"}},
+            {"type" : "text", "text": "and this one as well. Answer in French."},
+            {"type": "image_url", "image_url": {"url": "https://www.wolframcloud.com/obj/resourcesystem/images/a0e/a0ee3983-46c6-4c92-b85d-059044639928/6af8cfb971db031b.png"}}
+        ]
+      }
+    ]
+  }'
+
 
 
 - Reference
@@ -12,3 +36,4 @@ Pixtral - Vision Language Model
         - 
     - Announcement
         - https://github.com/mistralai/mistral-common/releases/tag/v1.4.0
+        - https://github.com/vllm-project/vllm/pull/8377/files
