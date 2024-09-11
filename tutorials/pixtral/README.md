@@ -2,6 +2,8 @@ Pixtral - Vision Language Model
 
 - Setup 
   - pip install vllm
+pip install --upgrade pip
+pip install --upgrade setuptools
 
 - pip install --upgrade mistral_common
 
@@ -58,4 +60,3 @@ git clone git@hf.co:spaces/gaganyatri/pixtral-demo
     - https://docs.vllm.ai/en/latest/getting_started/installation.html
 
     - CUDA latest - 12.6 - https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
-    
