@@ -147,7 +147,7 @@ def advanced_example():
 
 
 
-
+'''
 def precompute_freqs_cis_2d(
      dim: int,
      height: int,
@@ -174,3 +174,11 @@ def precompute_freqs_cis_2d(
          dim=-1,
      )
      return torch.polar(torch.ones_like(freqs_2d), freqs_2d)
+'''
+def main():
+
+    simple_example()
+    
+
+if __name__ == "__main__":
+    main()
