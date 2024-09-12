@@ -1,5 +1,9 @@
 Hackathons
 
+- Upcoming
+    - Wanddb - HAckerCup - [Oct 16](https://github.com/wandb/aihackercup)
+    - Nvidia Hack AI -[Oct 3](https://hackaichallenge.devpost.com/)
+
 - HackNow 2024 - [July, 2024](python/reconaissance/README.md) -     
     - Supermarket Analytics for Total Food Waste Elimination
 - Europe Defense Tech - [June 28-29, 2024](python/reconaissance/README.md) 
