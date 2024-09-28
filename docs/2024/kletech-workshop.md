@@ -62,3 +62,27 @@ Workshop - LLM Usage with Local
 - **Indian**: sarvam.ai, ai4bharat
 
 </details>
+
+
+- Demo
+  - gaganyatri.in 
+  - text
+  - vision
+  - json - analysis 
+- food guardian 
+- ai.town riddler 
+
+- Video - stream to YouTube 
+- Drone - product - dji neo- follow me
+ - todo - djintello - track person- object detection
+
+
+llm - open source projects
+- openweb-ui : chatgpt ui
+- ollama : model engine 
+- vscode + continue: dev co pilot 
+- vlmm serving : h100 todo 
+- gaganyatri.in : explain in detail 
+
+- edge ai - deploy small model locally,  mobile via executorch for Llama 3.2 1b 
+- mobile app - cloud api, on device model 
