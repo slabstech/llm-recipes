@@ -4,7 +4,7 @@ services:
     volumes:
       - ~/ollama/ollama:/root/.ollama
     container_name: ollama
-    pull_policy: always
+    #pull_policy: always
     tty: true
     restart: unless-stopped
     image: ollama/ollama:latest
@@ -19,14 +19,14 @@ services:
               capabilities: [gpu]
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:git-be5534c
+    image: ghcr.io/open-webui/open-webui:latest
     container_name: open-webui
     volumes:
       - ~/ollama/open-webui:/app/backend/data
     depends_on:
       - ollama
     ports:
-      - 3000:8080
+      - 8080:8080
     environment:
       - '/ollama/api=http://ollama:11434/api'
     extra_hosts:
