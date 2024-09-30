@@ -1,11 +1,7 @@
 import requests
 import json
 
-
 def execute_prompt(url, prompt):
-
-
-
     #url = "http://localhost:11434/api/generate"
     headers = {"Content-Type": "application/json"}
     data = {
