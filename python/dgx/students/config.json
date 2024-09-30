@@ -1,0 +1,31 @@
+{
+    "models": [
+      {
+        "title": "nemo-local",
+        "provider": "ollama",
+        "model": "mistral-nemo:latest",
+        "apiBase": "http://localhost:11434/"
+      },
+      {
+        "title": "nemo-dgx",
+        "provider": "ollama",
+        "model": "mistral-nemo:latest",
+        "apiBase": "http://10.2.0.7:11434/"
+      }
+    ],
+    "customCommands": [
+      {
+        "name": "test",
+        "prompt": "{{{ input }}}\n\nWrite a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file.",
+        "description": "Write unit tests for highlighted code"
+      }
+    ],
+    "allowAnonymousTelemetry": false,
+    "embeddingsProvider": {
+      "provider": "free-trial"
+    },
+    "reranker": {
+      "name": "free-trial"
+    },
+    "docs": []
+  }
