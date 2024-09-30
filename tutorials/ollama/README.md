@@ -1,5 +1,12 @@
 Ollama
 
+
+ - Run CPU only 
+
+ docker compose -f cpu.yml up -d 
+
+
+
 - Create ollama model
     - ollama create sarvam-2b -f Modelfile
     - ollama cp sarvam-2b gaganyatri/sarvam-2b-v0.5
