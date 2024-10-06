@@ -7,6 +7,8 @@ LLM Recipes
 !["Multi-modal On-device"](docs/images/on-device.drawio.png "Multi-modal On-device") 
 
 
+[Discord Server](https://discord.gg/h8ygUwvw)
+
 
 | Version |Concept | Tech | Status |
 |---|---|---|---|
