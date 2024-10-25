@@ -2,6 +2,11 @@ Sarvam AI
 
 Using local indic LLM
 
+- sarvam-1
+    - https://huggingface.co/sarvamai/sarvam-1
+    - [Collab Demo](https://colab.research.google.com/drive/1nGstaG4grFdUvLFdKCrBSq5UAZBoUO32?usp=sharing)
+
+
 - With Ollama
     - sarvam-2b 
         - Ollama - https://ollama.com/gaganyatri/sarvam-2b-v0.5
