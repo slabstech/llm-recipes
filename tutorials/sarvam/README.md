@@ -8,6 +8,22 @@ Using local indic LLM
 
     - Spaces - [Huggingface](https://huggingface.co/spaces/gaganyatri/sarvam-1-demo?logs=container)
 
+- How to build a Instruction following model using Base model
+
+
+- TODO
+    - Part A
+        - Download model from HuggingFace
+        - Fine tune dataset with saamvad ?
+            - English - Hindi
+        - Download finetuned model
+        - Convert model to ollama
+        - Deploy with gradio for sarvam-1
+    - Part B
+        - Download weights
+        - make gguf file for ollama with llama.cpp
+        - upload gguf to ollama
+
 - With Ollama
     - sarvam-2b 
         - Ollama - https://ollama.com/gaganyatri/sarvam-2b-v0.5
