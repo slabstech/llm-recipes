@@ -6,6 +6,7 @@ Using local indic LLM
     - https://huggingface.co/sarvamai/sarvam-1
     - [Collab Demo](https://colab.research.google.com/drive/1nGstaG4grFdUvLFdKCrBSq5UAZBoUO32?usp=sharing)
 
+    - Spaces - [Huggingface](https://huggingface.co/spaces/gaganyatri/sarvam-1-demo?logs=container)
 
 - With Ollama
     - sarvam-2b 
