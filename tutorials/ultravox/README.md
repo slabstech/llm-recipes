@@ -1,5 +1,12 @@
 UltraVox - Speech Language Model
 
+
+Run with vLLM
+ - just python -m vllm.entrypoints.openai.api_server  --model=fixie-ai/ultravox-v0_4  \
+     --enable-chunked-prefill=False --max-model-len 8192  \
+     --served-model-name fixie-ai/ultravox
+     
+
 llama3 + Whisper Small
 
 - Reference

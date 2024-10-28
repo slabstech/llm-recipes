@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  ollama:
+    volumes:
+      - ~/ollama/ollama:/root/.ollama
+    container_name: ollama
+    #pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:0.4.0-rc5
+    ports:
+      - 11434:11434
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]

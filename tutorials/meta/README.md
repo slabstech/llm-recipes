@@ -1,5 +1,11 @@
 Meta Models
 
+
+- Ollama support with docker- ollama/ollama:0.4.0-rc5
+
+- 8Gb Download - https://ollama.com/x/llama3.2-vision
+
+
 - llama3.2 
     - 1b instruct for mobile - meta-llama/Llama-3.2-1B-Instruct
     - 11b vision - meta-llama/Llama-3.2-11B-Vision-Instruct
