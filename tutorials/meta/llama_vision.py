@@ -1,7 +1,7 @@
 from PIL import Image
 import base64
 import io
-import ollama
+from ollama import Client
 def image_to_base64(image_path):
     # Open the image file
     with Image.open(image_path) as img:
@@ -19,7 +19,8 @@ def image_to_base64(image_path):
 def test_code():
     image_path = '/home/gaganyatri/Downloads/books-rec-1.jpeg'  # Replace with your image path
     base64_image = image_to_base64(image_path)
-    response = ollama.chat(
+    client = Client(host='http://localhost:21434')
+    response = client.chat(
     model="x/llama3.2-vision:latest",
     messages=[{
     "role": "user",
