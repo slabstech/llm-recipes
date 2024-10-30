@@ -8,7 +8,7 @@ import os
 import numpy as np
 
 # Initialize the Spirit LM model with the modified class
-spirit_lm = Spiritlm("spirit-lm-base-7b")
+spirit_lm = Spiritlm("spirit-lm-expressive-7b")
 
 def generate_output(input_type, input_content_text, input_content_audio, output_modality, temperature, top_p, max_new_tokens, do_sample, speaker_id):
     generation_config = GenerationConfig(
