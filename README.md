@@ -40,5 +40,4 @@ LLM Recipes
 !["Reconassiance"](python/reconaissance/reconaissance.drawio.png "Reconaissance")
 
 - Upcoming Challenges
-    - Wanddb - HAckerCup - [Oct 16](https://github.com/wandb/aihackercup)
-    - Nvidia Hack AI -[Oct 3](https://hackaichallenge.devpost.com/)
+    - [Hackathons](docs/hackathons.md)
