@@ -1,11 +1,7 @@
 Coqui-tts Server
 
-- pip install coqui-tts
+- docker pull ghcr.io/coqui-ai/tts:latest
 
-
-- docker pull coqui-ai/tts
-
-- docker run --gpus all -it -p 5002:5002 --restart unless-stopped coqui-ai/tts
-
+- docker run --gpus all -it -p 5002:5002 ghcr.io/coqui-ai/tts:latest
 
 - python tts_run.py
