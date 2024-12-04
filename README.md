@@ -10,7 +10,7 @@ LLM Recipes
 [Discord Server](https://discord.gg/h8ygUwvw)
 
 
-| Version |Concept | Tech | Status |
+| Version |Concept | Status | Tech |
 |---|---|---|---|
 |v0.8| [Quantisation](tutorial/llama.cpp/) | In progress | llama.cpp  | 
 |v0.7| [On-device Mobile](tutorial/android/) | In progress | Android + TF lite  | 
