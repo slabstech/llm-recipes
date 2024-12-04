@@ -1,15 +1,30 @@
 services:
-  parler-tts:
-    build: .
-    image: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
-    ports:
-      - "8000:8000"
+  parler-tts-server:
+    image: fedirz/parler-tts-server
+    build:
+      dockerfile: Dockerfile
+      context: .
+      platforms:
+        - linux/amd64
+      tags:
+        - fedirz/parler-tts-server
+    develop:
+      watch:
+        - path: ./parler_tts_server
+          action: rebuild
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
+    restart: unless-stopped
+    ports:
+      - 8000:8000
     environment:
-      - TZ=UTC
-      - MODEL_NAME=ai4bharat/indic-parler-tts
-      - PYTHONUNBUFFERED=1
+      - MODEL=ai4bharat/indic-parler-tts
+    healthcheck:
+      test: curl --fail http://0.0.0.0:8000/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     deploy:
       resources:
         reservations:
@@ -17,12 +32,3 @@ services:
             - driver: nvidia
               device_ids: ['0']
               capabilities: [gpu]
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "nvidia-smi"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-volumes:
-  huggingface_cache:

@@ -1,0 +1,28 @@
+services:
+  parler-tts:
+    build: .
+    image: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+    ports:
+      - "8000:8000"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - TZ=UTC
+      - MODEL_NAME=ai4bharat/indic-parler-tts
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nvidia-smi"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  huggingface_cache:
