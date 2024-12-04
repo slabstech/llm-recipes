@@ -1,13 +1,13 @@
 services:
   parler-tts-server:
-    image: fedirz/parler-tts-server
+    image: slabstech/parler-tts-server
     build:
       dockerfile: Dockerfile
       context: .
       platforms:
         - linux/amd64
       tags:
-        - fedirz/parler-tts-server
+        - slabstech/parler-tts-server
     develop:
       watch:
         - path: ./parler_tts_server
