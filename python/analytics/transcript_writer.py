@@ -1,12 +1,31 @@
-import torch
-from accelerate import Accelerator
-import transformers
 import pickle
 
+import ollama
 from tqdm.notebook import tqdm
 import warnings
 
 warnings.filterwarnings('ignore')
+from pdf_parser import process_extracted_text
+
+class OllamaPipeline:
+    def __init__(self, model_name):
+        self.model_name = model_name
+
+    def __call__(self, prompt, **kwargs):
+        max_tokens = kwargs.get('max_tokens', 100)
+        temperature = kwargs.get('temperature', 0.7)
+
+        response = ollama.chat(model=self.model_name, messages=[
+            {'role': 'user', 'content': prompt}
+        ], options={
+            'num_predict': max_tokens,
+            'temperature': temperature
+        })
+
+        return [{'generated_text': response['message']['content']}]
+
+    def generate(self, prompt, **kwargs):
+        return self(prompt, **kwargs)
 
 
 
@@ -67,14 +86,46 @@ def read_file_to_string(filename):
         return None
     
 def main():
-    INPUT_PROMPT = 'clean_extracted_text.txt'
+    INPUT_PROMPT = read_file_to_string('clean_extracted_text.txt')
     SYSTEM_PROMPT = get_prompt_for_analysis()
-    MODEL = "meta-llama/Llama-3.1-70B-Instruct"
-    outputs = hf_pipeline(MODEL, INPUT_PROMPT, SYSTEM_PROMPT)
+    MODEL = "qwen2.5:latest"
+
+    outputs = process_extracted_text('clean_extracted_text.txt', SYS_PROMPT=SYSTEM_PROMPT)
+    # Usage example
+    #pipeline = OllamaPipeline("qwen2.5")
+    #result = pipeline("Explain the concept of machine learning")
+    #print(result[0]['generated_text'])
+
+    
+    #outputs = hf_pipeline(MODEL, INPUT_PROMPT, SYSTEM_PROMPT)
+    #outputs = ollama_pipeline(MODEL, INPUT_PROMPT, SYSTEM_PROMPT)
+    print(outputs)
+    
     save_string_pkl = outputs[0]["generated_text"][-1]['content']
     print(outputs[0]["generated_text"][-1]['content'])
-    with open('./resources/data.pkl', 'wb') as file:
+    with open('data.pkl', 'wb') as file:
         pickle.dump(save_string_pkl, file)
+    
+
+def ollama_pipeline(MODEL, SYSTEM_PROMPT, INPUT_PROMPT):
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": INPUT_PROMPT},
+    ]
+
+
+    max_tokens=8126
+    temperature=1
+
+
+    response = ollama.chat(model=MODEL, messages=messages, options={
+            'num_predict': max_tokens,
+            'temperature': temperature
+        })
+
+    return [{'generated_text': response['message']['content']}]
+
+    #return response
 
 def hf_pipeline(MODEL, INPUT_PROMPT, SYSTEM_PROMPT):
     pipeline = transformers.pipeline(

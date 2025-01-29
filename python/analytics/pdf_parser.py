@@ -1,9 +1,7 @@
 import PyPDF2
 from typing import Optional
 import os
-import torch
-from accelerate import Accelerator
-from transformers import AutoModelForCausalLM, AutoTokenizer
+
 import requests
 import ollama
 
@@ -135,21 +133,10 @@ def download_online_pdf(url, local_filename):
     else:
         print(f'Failed to download file. Status code: {response.status_code}')
         
-
-def main():
-
-    # URL of the PDF file to download
-    pdf_web_url = 'https://slabstech.com/assets/pdf/onwards.pdf'
-    # Local filename to save the downloaded PDF
-    local_filename = 'onwards.pdf'
-
-    # Download the PDF file
-    #download_online_pdf(pdf_web_url, local_filename)
-
-    #parser_data(pdf_path=local_filename) 
-
-    INPUT_FILE = "extracted_text.txt"  # Replace with your file path
+def process_extracted_text(file_name, SYS_PROMPT):
+    INPUT_FILE = file_name  # Replace with your file path
     CHUNK_SIZE = 1000  # Adjust chunk size if needed
+    
 
     with open(INPUT_FILE, 'r', encoding='utf-8') as file:
         text = file.read()
@@ -165,27 +152,53 @@ def main():
     chunks = create_word_bounded_chunks(text, CHUNK_SIZE)
     num_chunks = len(chunks)
     print(num_chunks)
-    processed_text =process_chunks_to_output(output_file=output_file, chunks=chunks)
+    processed_text =process_chunks_to_output(output_file=output_file, chunks=chunks, SYS_PROMPT=SYS_PROMPT)
 
     print(f"\nProcessing complete!")
     print(f"Input file: {INPUT_FILE}")
     print(f"Output file: {output_file}")
     print(f"Total chunks processed: {num_chunks}")
+    return processed_text
 
+
+def main():
+
+    # URL of the PDF file to download
+    pdf_web_url = 'https://slabstech.com/assets/pdf/onwards.pdf'
+    # Local filename to save the downloaded PDF
+    local_filename = 'onwards.pdf'
+
+    # Download the PDF file
+    #download_online_pdf(pdf_web_url, local_filename)
+
+    #parser_data(pdf_path=local_filename) 
+    extracted_file_name = "extracted_text.txt"
+    SYS_PROMPT = get_prompt_for_analysis()
+    #process_extracted_text(extracted_file_name, SYS_PROMPT)
+    
     # Preview the beginning and end of the complete processed text
+
+    show_preview_output()
+    
+def show_preview_output():
+    INPUT_FILE = "clean_extracted_text.txt"  # Replace with your file path
+
+    with open(INPUT_FILE, 'r', encoding='utf-8') as file:
+        text = file.read()
     print("\nPreview of final processed text:")
     print("\nBEGINNING:")
-    print(processed_text[:1000])
+    print(text[:1000])
     print("\n...\n\nEND:")
-    print(processed_text[-1000:])
+    print(text[-1000:])
 
 
-def process_chunks_to_output(output_file,chunks):
+def process_chunks_to_output(output_file,chunks ,SYS_PROMPT):
     processed_text = ''
+
     with open(output_file, 'w', encoding='utf-8') as out_file:
         for chunk_num, chunk in enumerate(tqdm(chunks, desc="Processing chunks")):
             # Process chunk and append to complete text
-            processed_chunk = process_text_chunk(chunk, chunk_num)
+            processed_chunk = process_text_chunk(chunk, SYS_PROMPT,  chunk_num)
             processed_text += processed_chunk + "\n"
             
             # Write chunk immediately to file
@@ -240,38 +253,9 @@ def create_word_bounded_chunks(text, target_chunk_size):
     
     return chunks
 
-def process_chunk_pytorch(text_chunk, chunk_num):
-    SYS_PROMPT = get_prompt_for_analysis()
-    """Process a chunk of text and return both input and output for verification"""
-    conversation = [
-        {"role": "system", "content": SYS_PROMPT},
-        {"role": "user", "content": text_chunk},
-    ]
-    
-    prompt = tokenizer.apply_chat_template(conversation, tokenize=False)
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    
-    with torch.no_grad():
-        output = model.generate(
-            **inputs,
-            temperature=0.7,
-            top_p=0.9,
-            max_new_tokens=512
-        )
-    
-    processed_text = tokenizer.decode(output[0], skip_special_tokens=True)[len(prompt):].strip()
-    
-    # Print chunk information for monitoring
-    #print(f"\n{'='*40} Chunk {chunk_num} {'='*40}")
-    print(f"INPUT TEXT:\n{text_chunk[:500]}...")  # Show first 500 chars of input
-    print(f"\nPROCESSED TEXT:\n{processed_text[:500]}...")  # Show first 500 chars of output
-    print(f"{'='*90}\n")
-    
-    return processed_text
 
-
-def process_text_chunk(text_chunk, chunk_num):
-    SYS_PROMPT = get_prompt_for_analysis()
+def process_text_chunk(text_chunk, SYS_PROMPT,  chunk_num):
+    
     """Process a chunk of text and return both input and output for verification"""
     conversation = [
         {"role": "system", "content": SYS_PROMPT},
