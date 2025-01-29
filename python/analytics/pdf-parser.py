@@ -5,6 +5,7 @@ import torch
 from accelerate import Accelerator
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import requests
+import ollama
 
 from tqdm.notebook import tqdm
 import warnings
@@ -143,10 +144,160 @@ def main():
     local_filename = 'onwards.pdf'
 
     # Download the PDF file
-    download_online_pdf(pdf_web_url, local_filename)
+    #download_online_pdf(pdf_web_url, local_filename)
 
-    parser_data(pdf_path=local_filename) 
+    #parser_data(pdf_path=local_filename) 
+
+    INPUT_FILE = "extracted_text.txt"  # Replace with your file path
+    CHUNK_SIZE = 1000  # Adjust chunk size if needed
+
+    with open(INPUT_FILE, 'r', encoding='utf-8') as file:
+        text = file.read()
+
+    # Calculate number of chunks
+    num_chunks = (len(text) + CHUNK_SIZE - 1) // CHUNK_SIZE
+    print(num_chunks)
+
+    # Cell 6: Process the file with ordered output
+    # Create output file name
+    output_file = f"clean_{os.path.basename(INPUT_FILE)}"
+
+    chunks = create_word_bounded_chunks(text, CHUNK_SIZE)
+    num_chunks = len(chunks)
+    print(num_chunks)
+    processed_text =process_chunks_to_output(output_file=output_file, chunks=chunks)
+
+    print(f"\nProcessing complete!")
+    print(f"Input file: {INPUT_FILE}")
+    print(f"Output file: {output_file}")
+    print(f"Total chunks processed: {num_chunks}")
+
+    # Preview the beginning and end of the complete processed text
+    print("\nPreview of final processed text:")
+    print("\nBEGINNING:")
+    print(processed_text[:1000])
+    print("\n...\n\nEND:")
+    print(processed_text[-1000:])
+
+
+def process_chunks_to_output(output_file,chunks):
+    with open(output_file, 'w', encoding='utf-8') as out_file:
+        for chunk_num, chunk in enumerate(tqdm(chunks, desc="Processing chunks")):
+            # Process chunk and append to complete text
+            processed_chunk = process_text_chunk(chunk, chunk_num)
+            processed_text += processed_chunk + "\n"
+            
+            # Write chunk immediately to file
+            out_file.write(processed_chunk + "\n")
+            out_file.flush()
     
+def get_prompt_for_analysis():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    SYS_PROMPT = """
+    You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a podcast writer.
+
+    The raw data is messed up with new lines, Latex math and you will see fluff that we can remove completely. Basically take away any details that you think might be useless in a podcast author's transcript.
+
+    Remember, the podcast could be on any topic whatsoever so the issues listed above are not exhaustive
+
+    Please be smart with what you remove and be creative ok?
+
+    Remember DO NOT START SUMMARIZING THIS, YOU ARE ONLY CLEANING UP THE TEXT AND RE-WRITING WHEN NEEDED
+
+    Be very smart and aggressive with removing details, you will get a running portion of the text and keep returning the processed text.
+
+    PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES
+
+    ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS about my questions ok?
+    Here is the text:
+    """
+
+def create_word_bounded_chunks(text, target_chunk_size):
+    """
+    Split text into chunks at word boundaries close to the target chunk size.
+    """
+    words = text.split()
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    
+    for word in words:
+        word_length = len(word) + 1  # +1 for the space
+        if current_length + word_length > target_chunk_size and current_chunk:
+            # Join the current chunk and add it to chunks
+            chunks.append(' '.join(current_chunk))
+            current_chunk = [word]
+            current_length = word_length
+        else:
+            current_chunk.append(word)
+            current_length += word_length
+    
+    # Add the last chunk if it exists
+    if current_chunk:
+        chunks.append(' '.join(current_chunk))
+    
+    return chunks
+
+def process_chunk_pytorch(text_chunk, chunk_num):
+    SYS_PROMPT = get_prompt_for_analysis()
+    """Process a chunk of text and return both input and output for verification"""
+    conversation = [
+        {"role": "system", "content": SYS_PROMPT},
+        {"role": "user", "content": text_chunk},
+    ]
+    
+    prompt = tokenizer.apply_chat_template(conversation, tokenize=False)
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    
+    with torch.no_grad():
+        output = model.generate(
+            **inputs,
+            temperature=0.7,
+            top_p=0.9,
+            max_new_tokens=512
+        )
+    
+    processed_text = tokenizer.decode(output[0], skip_special_tokens=True)[len(prompt):].strip()
+    
+    # Print chunk information for monitoring
+    #print(f"\n{'='*40} Chunk {chunk_num} {'='*40}")
+    print(f"INPUT TEXT:\n{text_chunk[:500]}...")  # Show first 500 chars of input
+    print(f"\nPROCESSED TEXT:\n{processed_text[:500]}...")  # Show first 500 chars of output
+    print(f"{'='*90}\n")
+    
+    return processed_text
+
+
+def process_text_chunk(text_chunk, chunk_num):
+    SYS_PROMPT = get_prompt_for_analysis()
+    """Process a chunk of text and return both input and output for verification"""
+    conversation = [
+        {"role": "system", "content": SYS_PROMPT},
+        {"role": "user", "content": text_chunk},
+    ]
+
+    # Prepare the prompt
+    prompt = ollama.apply_chat_template(conversation)
+
+    # Generate the response using Ollama
+    response = ollama.generate(
+        prompt,
+        temperature=0.7,
+        top_p=0.9,
+        max_new_tokens=512
+    )
+
+    processed_text = response['choices'][0]['text'].strip()
+
+    # Print chunk information for monitoring
+    #print(f"\n{'='*40} Chunk {chunk_num} {'='*40}")
+    print(f"INPUT TEXT:\n{text_chunk[:500]}...")  # Show first 500 chars of input
+    print(f"\nPROCESSED TEXT:\n{processed_text[:500]}...")  # Show first 500 chars of output
+    print(f"{'='*90}\n")
+
+    return processed_text
+
 
 if __name__ == "__main__":
     main()
