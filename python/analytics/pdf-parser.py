@@ -181,6 +181,7 @@ def main():
 
 
 def process_chunks_to_output(output_file,chunks):
+    processed_text = ''
     with open(output_file, 'w', encoding='utf-8') as out_file:
         for chunk_num, chunk in enumerate(tqdm(chunks, desc="Processing chunks")):
             # Process chunk and append to complete text
@@ -192,7 +193,6 @@ def process_chunks_to_output(output_file,chunks):
             out_file.flush()
     
 def get_prompt_for_analysis():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     SYS_PROMPT = """
     You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a podcast writer.
@@ -212,6 +212,7 @@ def get_prompt_for_analysis():
     ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS about my questions ok?
     Here is the text:
     """
+    return SYS_PROMPT
 
 def create_word_bounded_chunks(text, target_chunk_size):
     """
@@ -278,18 +279,23 @@ def process_text_chunk(text_chunk, chunk_num):
     ]
 
     # Prepare the prompt
-    prompt = ollama.apply_chat_template(conversation)
+    #prompt = ollama.apply_chat_template(conversation)
 
-    # Generate the response using Ollama
-    response = ollama.generate(
-        prompt,
-        temperature=0.7,
-        top_p=0.9,
-        max_new_tokens=512
-    )
+    response = ollama.chat(model='qwen2.5:latest', messages=conversation)
+    #print(response['message']['content'])
 
+    '''
+        # Generate the response using Ollama
+        response = ollama.generate(
+            prompt,
+            temperature=0.7,
+            top_p=0.9,
+            max_new_tokens=512
+        )
+    
     processed_text = response['choices'][0]['text'].strip()
-
+    '''
+    processed_text = response['message']['content']
     # Print chunk information for monitoring
     #print(f"\n{'='*40} Chunk {chunk_num} {'='*40}")
     print(f"INPUT TEXT:\n{text_chunk[:500]}...")  # Show first 500 chars of input
