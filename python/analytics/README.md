@@ -1,5 +1,7 @@
 Analytics
 
+- Read [setup.md](setup.md) to build End-to-End platform for Notebook LLM
+
 - Code security analysis
 - Book Editor : Editor for manuscript
   - Parse PDFs and provide suggestions to improvement
