@@ -7,6 +7,8 @@ import warnings
 warnings.filterwarnings('ignore')
 from pdf_parser import process_extracted_text
 
+from utils import process_text_chunk
+
 class OllamaPipeline:
     def __init__(self, model_name):
         self.model_name = model_name

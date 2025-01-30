@@ -30,4 +30,5 @@ Analytics
 - Reference
   - NotebookLLM
   - NotebookLaama - https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/NotebookLlama
-
+  - code security
+    - https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/github_triage
