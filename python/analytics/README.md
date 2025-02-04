@@ -2,6 +2,11 @@ Analytics
 
 - Read [setup.md](setup.md) to build End-to-End platform for Notebook LLM
 
+- Steps
+  - PDF parser - temperature 0 ,
+  - transcript writer - temperature 1 , large context
+
+
 - Code security analysis
 - Book Editor : Editor for manuscript
   - Parse PDFs and provide suggestions to improvement
