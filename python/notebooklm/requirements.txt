@@ -2,6 +2,7 @@ beautifulsoup4==4.12.3
 ollama==0.4.7
 numpy==2.2.2
 PyPDF2==3.0.1
+pydub==0.25.1
 rich>=13.0.0
 requests==2.32.3
 tqdm==4.67.1

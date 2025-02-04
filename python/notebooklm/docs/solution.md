@@ -4,8 +4,14 @@ Solution
   - Build with code and open weight models
   - Use existing 3rd party software
 
-- Compare the outputs from both approaches to improve product
-  - build an eval to measure what can be improved 
+- Frameworks
+  - Parler-tts
+    - Convert Speech to text, add voice description for speaker
+  - AudioGen
+    - Create background score 
+    - https://facebookresearch.github.io/audiocraft/docs/AUDIOGEN.html
+    - https://arxiv.org/abs/2209.15352
+    - https://www.jetson-ai-lab.com/tutorial_audiocraft.html
 
 - Steps
   - Input Document
@@ -22,4 +28,12 @@ Solution
     - How closely does it resemble the script provided.
 
 
+
+- Compare the outputs from both approaches to improve product
+  - build an eval to measure what can be improved 
+
 - https://www.perplexity.ai/search/create-an-audio-drama-with-an-THqHhQeqRXGPaqaB8ar6Vg
+
+- Errors
+  - AudioGen - numpy compatibility
+    -  pip install "numpy<2"
