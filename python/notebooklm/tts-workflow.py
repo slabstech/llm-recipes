@@ -13,8 +13,8 @@ from pydub import AudioSegment
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-parler_model = ParlerTTSForConditionalGeneration.from_pretrained("parler-tts/parler-tts-mini-v1").to(device)
-parler_tokenizer = AutoTokenizer.from_pretrained("parler-tts/parler-tts-mini-v1")
+#parler_model = ParlerTTSForConditionalGeneration.from_pretrained("parler-tts/parler-tts-mini-v1").to(device)
+#parler_tokenizer = AutoTokenizer.from_pretrained("parler-tts/parler-tts-mini-v1")
 
 speaker_1_description = """
         Laura's voice is expressive and dramatic in delivery, speaking at a moderately fast pace with a very close recording that almost has no background noise.
@@ -128,9 +128,43 @@ def main():
     podcast_ast_short = podcast_ast_short.strip()
     
     #generate_podcast(podcast_ast)
-    generate_podcast(podcast_ast_short)
+    #generate_podcast(podcast_ast_short)
+    tts_server("hello world")
     #test_parler_audio()
-   
+import requests
+
+def tts_server(text):
+    # Define the API endpoint
+    # Define the URL for the TTS API
+    url = 'http://localhost:5002/api/tts'
+
+    # Define the multiline text
+    text = "This is the first line"
+
+    # Prepare the parameters for the GET request
+    params = {
+        'text': text
+    }
+
+    # Make the GET request
+    response = requests.get(url, params=params)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Save the audio response as a WAV file
+        # Create a file-like object with the audio data
+        byte_io = io.BytesIO(response.content)
+        wavfile.write(byte_io)
+        byte_io.seek(0)
+    
+        # Convert to AudioSegment
+        final_audio = AudioSegment.from_wav(byte_io)
+    
+        final_audio.export("_podcast.mp3", 
+                format="mp3", 
+                bitrate="192k",
+                parameters=["-q:a", "0"])
+
    
 if __name__ == "__main__":
     main()
