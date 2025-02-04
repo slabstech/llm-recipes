@@ -12,6 +12,9 @@ Solution
     - https://facebookresearch.github.io/audiocraft/docs/AUDIOGEN.html
     - https://arxiv.org/abs/2209.15352
     - https://www.jetson-ai-lab.com/tutorial_audiocraft.html
+  - MagNet
+    - https://huggingface.co/facebook/audio-magnet-small
+    - https://github.com/facebookresearch/audiocraft/blob/main/demos/magnet_demo.ipynb
 
 - Steps
   - Input Document
