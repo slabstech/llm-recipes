@@ -5,6 +5,9 @@ Setup
   - source venv/bin/activate
   - pip install -r requirements.txt
 
+  - For JupyterNotebook
+    - pip install -r tts-requirements.txt
+
 - Setup ollama
   - docker compose up -d llm-compose.yml
     - ollama pull deepseek-r1:7b

@@ -3,6 +3,7 @@ NotebookLM - Self-hosted
 - GoAudio 
   - [Challenge](challenge.md)
   - [Solution](solution.md)
+  - How to [sync audio](audio-sync.md)
 - Read [setup.md](setup.md) to build End-to-End platform for Notebook LLM
 
 - Steps
@@ -34,6 +35,10 @@ NotebookLM - Self-hosted
   - Implement idea via python CLI first and beta testing
   - Add UX when user testing is completing
 
+
+- Download models
+  - huggingface-cli download parler-tts/parler-tts-mini-v1
+  - huggingface-cli download  suno/bark
 
 - Reference
   - NotebookLLM
