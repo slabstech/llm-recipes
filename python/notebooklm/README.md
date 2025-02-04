@@ -1,10 +1,10 @@
 NotebookLM - Self-hosted 
 
 - GoAudio 
-  - [Challenge](challenge.md)
-  - [Solution](solution.md)
-  - How to [sync audio](audio-sync.md)
-- Read [setup.md](setup.md) to build End-to-End platform for Notebook LLM
+  - [Challenge](docs/challenge.md)
+  - [Solution](docs/solution.md)
+  - How to [sync audio](docs/audio-sync.md)
+- Read [setup.md](docs/setup.md) to build End-to-End platform for Notebook LLM
 
 - Steps
   - PDF parser - temperature 0 ,
