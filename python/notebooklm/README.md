@@ -1,5 +1,8 @@
-Analytics
+NotebookLM - Self-hosted 
 
+- GoAudio 
+  - [Challenge](challenge.md)
+  - [Solution](solution.md)
 - Read [setup.md](setup.md) to build End-to-End platform for Notebook LLM
 
 - Steps
