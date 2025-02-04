@@ -71,6 +71,7 @@ protobuf==4.25.6
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pycparser==2.22
+pydub==0.25.1
 Pygments==2.19.1
 pyloudnorm==0.1.1
 pyparsing==3.2.1
