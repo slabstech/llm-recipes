@@ -5,7 +5,7 @@ services:
       - ~/.cache/huggingface:/root/.cache/huggingface
     restart: unless-stopped
     ports:
-      - 5002:5002
+      - 8000:8000
     deploy:
       resources:
         reservations:

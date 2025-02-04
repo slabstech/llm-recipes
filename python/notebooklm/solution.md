@@ -20,3 +20,6 @@ Solution
   - Use Whisper API for verifying output of TTS
     - Identify missing information and provide feedback to TTS generator 
     - How closely does it resemble the script provided.
+
+
+- https://www.perplexity.ai/search/create-an-audio-drama-with-an-THqHhQeqRXGPaqaB8ar6Vg

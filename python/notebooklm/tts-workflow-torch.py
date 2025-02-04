@@ -1,5 +1,8 @@
+from transformers import BarkModel, AutoProcessor, AutoTokenizer
+import torch
 import json
 import numpy as np
+from parler_tts import ParlerTTSForConditionalGeneration
 from tqdm import tqdm
 from IPython.display import Audio
 import IPython.display as ipd
@@ -7,8 +10,11 @@ import soundfile as sf
 import io
 from scipy.io import wavfile
 from pydub import AudioSegment
-import requests
 
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+parler_model = ParlerTTSForConditionalGeneration.from_pretrained("parler-tts/parler-tts-mini-v1").to(device)
+parler_tokenizer = AutoTokenizer.from_pretrained("parler-tts/parler-tts-mini-v1")
 
 speaker_1_description = """
         Laura's voice is expressive and dramatic in delivery, speaking at a moderately fast pace with a very close recording that almost has no background noise.
@@ -16,6 +22,57 @@ speaker_1_description = """
 speaker_2_description = """
         Michael's voice is deep and resonant, with a calm and authoritative tone. He speaks at a steady pace, ensuring clarity and precision in his delivery. The recording is clear with minimal background noise, providing a professional and engaging listening experience.
     """
+
+def test_parler_audio():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    # Load model and tokenizer
+    model = ParlerTTSForConditionalGeneration.from_pretrained("parler-tts/parler-tts-mini-v1").to(device)
+    tokenizer = AutoTokenizer.from_pretrained("parler-tts/parler-tts-mini-v1")
+
+    # Define text and description
+    text_prompt = """
+    Exactly! And the distillation part is where you take a LARGE-model,and compress-it down into a smaller, more efficient model that can run on devices with limited resources.
+    """
+    description = """
+    Laura's voice is expressive and dramatic in delivery, speaking at a fast pace with a very close recording that almost has no background noise.
+    """
+    # Tokenize inputs
+    input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
+    prompt_input_ids = tokenizer(text_prompt, return_tensors="pt").input_ids.to(device)
+
+    # Generate audio
+    generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+    audio_arr = generation.cpu().numpy().squeeze()
+
+# Save audio to file
+    output_file = "output_audio.wav"
+    sf.write(output_file, audio_arr, model.config.sampling_rate)
+
+    # Play audio in notebook
+    #ipd.Audio(audio_arr, rate=model.config.sampling_rate)
+
+
+def generate_speaker_audio(text, speaker_description):
+    """Generate audio using ParlerTTS for Speaker 1"""
+    input_ids = parler_tokenizer(speaker_description, return_tensors="pt").input_ids.to(device)
+    prompt_input_ids = parler_tokenizer(text, return_tensors="pt").input_ids.to(device)
+    generation = parler_model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+    audio_arr = generation.cpu().numpy().squeeze()
+    return audio_arr, parler_model.config.sampling_rate
+
+def numpy_to_audio_segment(audio_arr, sampling_rate):
+    """Convert numpy array to AudioSegment"""
+    # Convert to 16-bit PCM
+    audio_int16 = (audio_arr * 32767).astype(np.int16)
+    
+    # Create WAV file in memory
+    byte_io = io.BytesIO()
+    wavfile.write(byte_io, sampling_rate, audio_int16)
+    byte_io.seek(0)
+    
+    # Convert to AudioSegment
+    return AudioSegment.from_wav(byte_io)
 
 
 
@@ -66,40 +123,12 @@ def main():
     ]
 """
 
-    tts_server("hello world")
-    #test_parler_audio()
-
-def tts_server(text):
-    url = 'http://localhost:8000/v1/audio/speech'
-
-    payload = {
-        'input': text
-    }
-
-    # Make the POST request
-    response = requests.post(url, json=payload)
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Save the audio response as a WAV file
-        # Create a file-like object with the audio data
-        with open('audio.mp3', 'wb') as f:
-            f.write(response.content)
-        '''
-        byte_io = io.BytesIO(response.content)
-        audio_int16 = (audio_arr * 32767).astype(np.int16)
-        rate = 44100
-        wavfile.write(byte_io, rate, )
-        byte_io.seek(0)
+    # Remove leading and trailing whitespace
+    podcast_ast = podcast_ast.strip()
+    podcast_ast_short = podcast_ast_short.strip()
     
-        # Convert to AudioSegment
-        final_audio = AudioSegment.from_wav(byte_io)
-    
-        final_audio.export("_podcast.mp3", 
-                format="mp3", 
-                bitrate="192k",
-                parameters=["-q:a", "0"])
-        '''
-
+    generate_podcast(podcast_ast)
+    generate_podcast(podcast_ast_short)
    
 if __name__ == "__main__":
     main()
