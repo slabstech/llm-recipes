@@ -3,9 +3,12 @@ from audiocraft.models import AudioGen
 from audiocraft.data.audio import audio_write
 import time
 
+import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
+
 def generate_sound(description):
     model = AudioGen.get_pretrained('facebook/audiogen-medium')
-    model.set_generation_params(duration=5)  # generate 5 seconds.
+    model.set_generation_params(duration=3)  # generate 5 seconds.
     wav = model.generate(description)  # generates 3 samples.
     audio_write(f'abc', wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
     
@@ -19,7 +22,7 @@ for idx, one_wav in enumerate(wav):
     time.sleep(1)
 '''
 def main():
-    generate_sound("dog barks and the door closes")
+    generate_sound("dog barks")
 
 if __name__ == "__main__":
     main()
