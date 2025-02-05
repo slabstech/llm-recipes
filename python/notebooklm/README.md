@@ -4,6 +4,16 @@
 
 NotebookLM is a self-hosted platform designed to create, manage, and enhance audiobooks. This platform leverages various tools and models to parse, transcribe, and improve manuscripts, ultimately providing high-quality audio content.
 
+!["Audiobook Generator"](docs/images/audiobook-flow.jpg "Audiobook generator") 
+
+
+
+- python audiobook.py
+  - converts script pdf into structured scene json using mistral-large API.  
+  - triggers Text to Speech server for speech/dialogs and store audio files in resources folder
+  - triggers Text to Sound server for background sound/music and store audio files in resources folder
+  - Combines generated audio from speech and sound modules and creates audibook for the provided script
+
 ## Features
 
 ### GoAudio
@@ -59,3 +69,28 @@ For more detailed information, refer to the following documents:
 - [Solution](docs/solution.md)
 - [Audio Sync](docs/audio-sync.md)
 - [Setup Guide](docs/setup.md)
+
+
+-----
+
+AI product experiment - Audiobook creator
+
+https://github.com/slabstech/llm-recipes/tree/reasoning-context/python%2Fnotebooklm
+contains the source code for the audiobook generator solution.
+
+Current Status
+1. Script parser - convert to scene structured json
+2. TTS server - Parler-tts server to generate speech for dialogs in scenes
+3. AudioGen module - Audiocraft/magnet background sound creator
+4. Basic audiobook - linear worflow for full audio creation without scene logic
+
+Documents
+1. Approach: steps followed to solve the problem
+https://github.com/slabstech/llm-recipes/blob/reasoning-context/python%2Fnotebooklm%2Fdocs%2Fapproach-challenge.md
+
+2. Production Workflow : next steps to create production grade audiobook system.  https://github.com/slabstech/llm-recipes/blob/reasoning-context/python%2Fnotebooklm%2Fdocs%2Fworkflow.md
+
+
+An experiment to build a production grade audiobook content generator system to help publishers build on their IP and reach larger audience.
+
+---
