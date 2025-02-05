@@ -7,3 +7,4 @@ clean_clean_extracted_text.txt
 venv-transformer
 *.wav
 Skript-GoAudio-Eng.pdf
+structured_scene.json

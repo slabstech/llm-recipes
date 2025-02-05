@@ -109,6 +109,8 @@ def parser_data(pdf_path):
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(extracted_text)
         print(f"\nExtracted text has been saved to {output_file}")
+    
+    return extracted_text
 
 
 def download_online_pdf(url, local_filename):
