@@ -1,34 +1,61 @@
-NotebookLM - Self-hosted 
+# NotebookLM - Self-hosted Audiobook Platform
 
-- GoAudio 
-  - [Challenge](docs/challenge.md)
-  - [Solution](docs/solution.md)
-  - How to [audio sync](docs/audio-sync.md)
-- Read [setup.md](docs/setup.md) to build End-to-End platform for Notebook LLM
+## Overview
 
-- Steps
-  - PDF parser - temperature 0 ,
-  - transcript writer - temperature 1 , large context
+NotebookLM is a self-hosted platform designed to create, manage, and enhance audiobooks. This platform leverages various tools and models to parse, transcribe, and improve manuscripts, ultimately providing high-quality audio content.
 
-- Book Editor : Editor for manuscript
-  - Parse PDFs and provide suggestions to improvement
-  - Update PDF via markdown and self correct the manuscript
-  - Use Online API and Offline modesl for evaluation
+## Features
 
-- Extra - Notebookllama
-  - Create on-demand audio for explaining topics via streaming
-  - Make mini-steps to branch information when new question are requested/asked
-  - Implement idea via python CLI first and beta testing
-  - Add UX when user testing is completing
+### GoAudio
 
+- **Challenge**: Understand the challenges involved in audio synchronization and transcription. [Read more](docs/challenge.md)
+- **Solution**: Learn about the solutions we've implemented to overcome these challenges. [Read more](docs/solution.md)
+- **Audio Sync**: Detailed guide on how to synchronize audio with text. [Read more](docs/audio-sync.md)
 
-- Download models
-  - huggingface-cli download parler-tts/parler-tts-mini-v1
-  - huggingface-cli download facebook/audiogen-medium
+### Setup
 
-- Reference
-  - NotebookLLM
-  - NotebookLaama - https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/NotebookLlama
-  - code security
-    - https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/github_triage
+Follow the [setup guide](docs/setup.md) to build an End-to-End platform for Notebook LLM.
 
+### Steps
+
+1. **PDF Parser**: Parse PDFs with a temperature setting of 0.
+2. **Transcript Writer**: Transcribe audio with a temperature setting of 1 and a large context.
+
+### Book Editor
+
+The Book Editor is designed to help authors improve their manuscripts:
+
+- **PDF Parsing**: Parse PDFs and provide suggestions for improvement.
+- **PDF Update**: Update PDFs via markdown and self-correct the manuscript.
+- **Evaluation**: Use Online API and Offline models for evaluation.
+
+### Extra - NotebookLLama
+
+- **On-Demand Audio**: Create on-demand audio for explaining topics via streaming.
+- **Mini-Steps**: Branch information when new questions are requested/asked.
+- **Implementation**: Implement ideas via a Python CLI first and conduct beta testing.
+- **UX**: Add UX features when user testing is complete.
+
+## Download Models
+
+To get started, download the following models using the Hugging Face CLI:
+
+```sh
+huggingface-cli download parler-tts/parler-tts-mini-v1
+huggingface-cli download facebook/audiogen-medium
+```
+
+## Reference
+
+- **NotebookLLM**: Core documentation for NotebookLLM.
+- **NotebookLlama**: Additional resources and use cases. [Learn more](https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/NotebookLlama)
+- **Code Security**: Best practices for code security. [Learn more](https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/github_triage)
+
+## Documentation
+
+For more detailed information, refer to the following documents:
+
+- [Challenge](docs/challenge.md)
+- [Solution](docs/solution.md)
+- [Audio Sync](docs/audio-sync.md)
+- [Setup Guide](docs/setup.md)
