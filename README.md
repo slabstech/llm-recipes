@@ -12,7 +12,7 @@ LLM Recipes
 
 | Version |Concept | Status | Tech |
 |---|---|---|---|
-|v0.8| [NoteBook LLama](python/analytics) | In-Progress | python + tts  | 
+|v0.8| [NoteBook LLama](python/notebooklm) | In-Progress | python + tts  | 
 |v0.8| [Quantisation](tutorial/llama.cpp/) | Paused | llama.cpp  | 
 |v0.7| [On-device Mobile](tutorial/android/) | Paused | Android + TF lite  | 
 |v0.6| [UI](UI) | Complete | Typescript -  [link](https://sanjeevini.me) | 
@@ -35,7 +35,7 @@ LLM Recipes
 
 - Applications 
     - Reconnaisance with Drone
-    - Use Drones to create real-time insights of Warehouse, Home securiy
+        - Use Drones to create real-time insights of Warehouse, Home securiy
 
 
 !["Reconassiance"](python/reconaissance/reconaissance.drawio.png "Reconaissance")
