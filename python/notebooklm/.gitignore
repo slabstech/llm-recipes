@@ -1,0 +1,10 @@
+extracted_text.txt
+onwards.pdf
+clean_extracted_text.txt
+data.pkl
+clean_clean_extracted_text.txt
+*.mp3
+venv-transformer
+*.wav
+structured_scene.json
+narrator_dialog.json

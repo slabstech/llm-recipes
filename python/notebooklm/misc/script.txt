@@ -1,0 +1,4 @@
+# Comments start with #
+Character1: Hello, how are you?
+Character2: I'm doing well, thank you!
+Character1: That's great to hear!
