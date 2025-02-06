@@ -2,8 +2,6 @@
 
 ## Overview
 
-**TODO - 4th February**
-
 ### Objectives
 
 - Create a magnet Docker container

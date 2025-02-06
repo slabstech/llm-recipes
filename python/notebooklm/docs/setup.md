@@ -6,7 +6,6 @@ This guide will walk you through setting up your environment and necessary tools
 
 - **Python** installed on your system (preferably Python 3.8 or later)
 - **Docker** installed and running
-- **Jupyter Notebook** (if you prefer using a notebook environment)
 
 ## Step-by-Step Setup
 
@@ -32,7 +31,7 @@ This guide will walk you through setting up your environment and necessary tools
    pip install -r requirements.txt
    ```
 
-4. **For Jupyter Notebook Users:**
+4. **For Pytorch Users:**
    ```sh
    pip install -r tts-requirements.txt
    ```
@@ -44,12 +43,23 @@ This guide will walk you through setting up your environment and necessary tools
    docker compose up -d llm-compose.yml
    ```
 
-2. **Pull Necessary Models:**
+2. **Pull Necessary LLM Models:**
    ```sh
    ollama pull deepseek-r1:7b
    ollama pull qwen2.5
    ```
 
+
+3. **Pull Necessary TTS and Audio Models:**
+   To get started, download the following models using the Hugging Face CLI:
+
+   ```sh
+   huggingface-cli download parler-tts/parler-tts-mini-v1
+   huggingface-cli download facebook/audiogen-medium
+   huggingface-cli download facebook/audio-magnet-medium
+   ```
+
+<!-- 
 ### 3. Run the PDF Parser and Prepare Data for TTS
 
 1. **Run the PDF Parser:**
@@ -66,8 +76,8 @@ This guide will walk you through setting up your environment and necessary tools
    ```sh
    python tts-script.py
    ```
-
-### 5. Additional Tips
+-->
+### 4. Additional Tips
 
 - **Environment Variables:**
   Ensure any required environment variables are set. You can use a `.env` file or set them directly in your terminal.
