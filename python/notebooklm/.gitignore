@@ -8,3 +8,4 @@ venv-transformer
 *.wav
 Skript-GoAudio-Eng.pdf
 structured_scene.json
+narrator_dialog.json

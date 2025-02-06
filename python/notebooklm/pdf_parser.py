@@ -5,7 +5,7 @@ import requests
 from tqdm.notebook import tqdm
 import warnings
 
-from utils.utils import process_text_chunk
+from utils import process_text_chunk
 
 warnings.filterwarnings('ignore')
 
