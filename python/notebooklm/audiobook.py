@@ -1,7 +1,7 @@
 from utils.pdf_parser import parser_data
 import os
 from mistralai import Mistral
-
+import json
 def llm_parser(text, prompt):
     try:
         data = text
@@ -36,7 +36,14 @@ def llm_parser(text, prompt):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
+# Function to clean dialogue
+def clean_dialogue(dialogue):
+    cleaned_dialogue = []
+    for line in dialogue:
+        for character, text in line.items():
+            cleaned_text = text.strip()
+            cleaned_dialogue.append({character: cleaned_text})
+    return cleaned_dialogue
 
 def get_structured_scene(scene_text):
     prompt_for_scene = """
@@ -47,10 +54,47 @@ Scene Title: Provide a descriptive title for each scene.
 Background Music: Describe the background music or ambient sounds for each scene.
 Sound Effects: List the specific sound effects that occur during each scene.
 Dialogue: List the dialogue lines with the speaker's name clearly indicated.
+Do not provide additional strings to json
+Ex. 
+{
+    "scenes": [
+      {
+        "scene_title": "Forest Clearing",
+        "background_music": "Soft, ambient forest sounds with wind whistling, leaves rustling, and birds chirping sporadically.",
+        "sound_effects": [
+          "A branch cracks in the distance.",
+          "Echo of the cracking sound."
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "So, Leo, what were you trying to show me here?"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Patience, Emma. It's a bit... how should I say... next-level cool."
+          },
+        ]
+      }
+    ]
+  }
 """
-    structure_json = llm_parser(scene_text, prompt=prompt_for_scene)
+    extracted_json = llm_parser(scene_text, prompt=prompt_for_scene)
+    # File path for the JSON file
+    file_path = 'structured_scene.json'
+
+    # Write the cleaned JSON data back to the file
+    with open(file_path, 'w') as json_file:
+        json.dump(extracted_json, json_file, indent=4)
+
+ 
+    # Read the JSON data from the file
+    with open(file_path, 'r') as json_file:
+        structure_json = json.load(json_file)
 
     return structure_json
+
+
 
 def main():
     print("Audiobook Creation from Script")
