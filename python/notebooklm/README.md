@@ -1,8 +1,18 @@
-# NotebookLM - Self-hosted Audiobook Platform
+# NotebookLM - Self-hosted Audiobook Generation Platform
+
+<div style="display: flex;">
+  <div style="flex: 1; padding: 10px;">
+    <img src="docs/images/book-1.jpg" alt="Music from Book" style="width: 100%;">
+  </div>
+  <div style="flex: 1; padding: 10px;">
+    <img src="docs/images/book-2.jpg" alt="Voices from Book" style="width: 100%;">
+  </div>
+</div>
 
 ## Overview
 
 NotebookLM is a self-hosted platform designed to create, manage, and enhance audiobooks. This platform leverages various tools and models to parse, transcribe, and improve manuscripts, ultimately providing high-quality audio content.
+
 
 !["Audiobook Generator"](docs/images/audiobook-flow.jpg "Audiobook generator") 
 
