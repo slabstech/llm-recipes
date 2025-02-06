@@ -2,10 +2,10 @@
 
 <div style="display: flex;">
   <div style="flex: 1; padding: 10px;">
-    <img src="docs/images/book-1.jpg" alt="Music from Book" style="width: 100%;">
+    <img src="docs/images/book-1.jpg" alt="Music from Book" style="width: 50%;">
   </div>
   <div style="flex: 1; padding: 10px;">
-    <img src="docs/images/book-2.jpg" alt="Voices from Book" style="width: 100%;">
+    <img src="docs/images/book-2.jpg" alt="Voices from Book" style="width: 50%;">
   </div>
 </div>
 
