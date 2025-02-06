@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.11">
+  <diagram name="Page-1" id="xuAlltVhSJeQr6Tyt7DL">
+    <mxGraphModel dx="1364" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7l51cUJREPRZ6b69_pdL-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="90" y="3" width="270" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-2" value="AudioBook Gen" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="13" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-3" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn0.iconfinder.com/data/icons/evericons-24px-vol-1/24/file-upload-128.png" vertex="1" parent="1">
+          <mxGeometry x="260" y="83" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-4" value="Script Doc Upload Field" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="83" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-6" value="&lt;div&gt;Generate Scene Editor&lt;/div&gt;" style="labelPosition=center;verticalLabelPosition=middle;align=center;html=1;shape=mxgraph.basic.shaded_button;dx=10;fillColor=#E6E6E6;strokeColor=none;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="143" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="380" width="370" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-8" value="Scene Editor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="400" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-9" value="Scene Title" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="440" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-10" value="Background Music" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="121" y="490" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-11" value="&lt;div&gt;sound effects&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="121" y="520" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-12" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="581" width="230" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-13" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="610" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-15" value="Dialogs" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="120" y="581" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-16" value="Speaker 1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="126" y="611" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-17" value="Line Text" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="126" y="641" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-18" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="711" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-19" value="Speaker 2" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="126" y="711" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-20" value="Line Text" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="126" y="741" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-21" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="121" y="810" width="149" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-22" value="Speaker 1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="127" y="809" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-23" value="Line Text" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="127" y="840" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-28" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="287" y="631" width="20" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-29" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="287" y="731" width="20" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-30" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="289" y="831" width="20" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-32" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="110" y="483.5" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-35" value="&lt;div&gt;Text to Audio&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="350" y="506" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-36" value="Text to Speech" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="360" y="720" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-37" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="506" width="20" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="7l51cUJREPRZ6b69_pdL-38" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="300" as="sourcePoint" />
+            <mxPoint x="230" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="230" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
