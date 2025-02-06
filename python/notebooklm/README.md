@@ -16,12 +16,17 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 
 !["Audiobook Generator"](docs/images/audiobook-flow.jpg "Audiobook generator") 
 
+
+
 ### Steps 
 - python audiobook.py
   - converts script pdf into structured scene json using mistral-large API.  
   - triggers Text to Speech server for speech/dialogs and store audio files in resources folder
   - triggers Text to Sound server for background sound/music and store audio files in resources folder
   - Combines generated audio from speech and sound modules and creates audibook for the provided script
+
+!["Script Parser"](docs/images/script-parser.jpg "Script Parser") 
+
 
 ## Current Status
 1. Script parser - convert to scene structured json
