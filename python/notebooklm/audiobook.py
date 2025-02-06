@@ -87,11 +87,20 @@ Ex.
     return structure_json
 
 def get_narrator_dialog(scene_text):
+    '''
     prompt_for_scene = """
 Your task is to parse this script into a structured JSON format with the following requirements:
 
-  Analyze the following scene for an audiobook, providing dialogs for the main narrator and the dialogue speakers. Ensure the analysis captures the atmosphere, sound effects, and dialogue to create an immersive experience for the listener.",
+  Analyze the following scene for an audiobook, providing dialogs for the main narrator only. Ensure the analysis captures the atmosphere, sound effects, and dialogue to create an immersive experience for the listener.",
   
+"""
+    '''
+    prompt_for_scene = """
+You are given a script for an audiobook that includes various scenes with background music, sound effects, and dialogue. Your task is to parse this script into a structured JSON format with the following requirements:
+
+Extract the scene titles: Include the scene_title for each scene.
+Describe the scenes: Provide a narrator_description for each scene that captures the atmosphere, sound effects, and actions, creating an immersive experience for the listener.
+Exclude speaker dialogues: Do not include any dialogue spoken by the characters; focus solely on the narrator's description of the scene.
 """
     extracted_json = llm_parser(scene_text, prompt=prompt_for_scene)
     # File path for the JSON file
@@ -109,6 +118,66 @@ Your task is to parse this script into a structured JSON format with the followi
     return structure_json
 
 
+def get_speaker_dialog_voice_desc(scene_text):
+    prompt_for_scene = """
+The task is to analyze the given script and update the voice descriptions for each speaker based on the scene. 
+The initial voice descriptions provided a general overview of how each speaker sounds. 
+The updated script includes detailed voice descriptions for each line of dialogue, 
+incorporating the emotional nuances and specific tones relevant to each scene.
+"""
+    extracted_json = llm_parser(scene_text, prompt=prompt_for_scene)
+    # File path for the JSON file
+    file_path = 'speaker_dialog_voice.json'
+
+    # Write the cleaned JSON data back to the file
+    with open(file_path, 'w') as json_file:
+        json.dump(extracted_json, json_file, indent=4)
+
+ 
+    # Read the JSON data from the file
+    with open(file_path, 'r') as json_file:
+        structure_json = json.load(json_file)
+
+    return structure_json
+
+
+def get_sound_effects_time_stamps(scene_text):
+    prompt_for_scene = """
+Task: Create an Immersive Audiobook Experience
+
+Objective: To create a detailed and immersive audiobook experience by structuring scenes with specific timestamps and durations for background music, sound effects, and dialogue. This will ensure a dynamic and engaging listening experience.
+
+Requirements:
+
+Scene Structure: Each scene should include:
+
+Scene Title
+Background Music with description, timestamp, and duration
+Sound Effects with description, timestamp, and duration
+Dialogue with speaker, line, timestamp, and duration
+Timestamps and Durations:
+
+Provide precise timestamps for when each background music, sound effect, and dialogue line starts.
+Include the duration for each background music, sound effect, and dialogue line.
+JSON Format: The final output should be in JSON format for easy integration into an audiobook production system.
+
+  
+"""
+    extracted_json = llm_parser(scene_text, prompt=prompt_for_scene)
+    # File path for the JSON file
+    file_path = 'sound_effects_timestamp.json'
+
+    # Write the cleaned JSON data back to the file
+    with open(file_path, 'w') as json_file:
+        json.dump(extracted_json, json_file, indent=4)
+
+ 
+    # Read the JSON data from the file
+    with open(file_path, 'r') as json_file:
+        structure_json = json.load(json_file)
+
+    return structure_json
+
 
 def main():
     print("Audiobook Creation from Script")
@@ -122,7 +191,16 @@ def main():
 
     narrator_dialog = get_narrator_dialog(structured_scene_json)
 
+
     print(narrator_dialog)
+
+    speaker_voice_dialog = get_speaker_dialog_voice_desc(structured_scene_json)
+
+    print(speaker_voice_dialog)
+
+    sound_effects_timestamps = get_sound_effects_time_stamps(structured_scene_json)
+
+    print(sound_effects_timestamps)
 
 if __name__ == "__main__":
     main()

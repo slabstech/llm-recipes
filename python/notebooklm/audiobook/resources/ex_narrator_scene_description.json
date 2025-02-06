@@ -1,0 +1,32 @@
+{
+    "scenes": [
+      {
+        "scene_title": "Forest Clearing",
+        "narrator_description": "Emma and Leo stand in a forest clearing, surrounded by the soft, ambient sounds of nature. The wind whistles gently, leaves rustle, and birds chirp sporadically. In the distance, a branch cracks, the sound echoing through the forest."
+      },
+      {
+        "scene_title": "Tree with Door",
+        "narrator_description": "They approach a large tree with an unusual feature—a door embedded in its trunk. Leo pushes the door open with a loud creak, and it swings back against the trunk with a faint, echoing sound."
+      },
+      {
+        "scene_title": "Narrow Corridor",
+        "narrator_description": "Inside, they find a narrow corridor with wet, muddy ground underfoot. Drops of water trickle in the distance, and the air is cool and moist, filled with the scent of earth and wood. Small, flickering lights cast dancing shadows on the walls, adding to the eerie atmosphere."
+      },
+      {
+        "scene_title": "Cave with the Lightcore",
+        "narrator_description": "The corridor leads to a cave where a large, glowing artifact floats in the center. A deep, vibrating hum fills the room, barely audible but felt in the chest. The humming intensifies, becoming deeper and more pronounced. A high tone mixes into the roar, slowly increasing. The artifact's light flickers, and a dull hum fills the air, almost like an electric charge."
+      },
+      {
+        "scene_title": "The Activation",
+        "narrator_description": "The humming grows louder, and a bright beam of light suddenly shoots into the darkness. The deep, vibrating hum ends abruptly, leaving the cave in silence except for a faint crackling sound, like static electricity. The air feels heavy and electric, with a faint smell of ozone lingering in the cave."
+      },
+      {
+        "scene_title": "The Unknown",
+        "narrator_description": "A quiet humming starts again, faint and rhythmic. Somewhere, water drips into a small puddle. A high, whirring sound suddenly breaks through the silence before it dies away again. A soft knock echoes from the darkness. The silence becomes oppressive, and footsteps on damp ground are suddenly audible, slow and heavy, as if something big is approaching. A deep rumble fills the cave."
+      },
+      {
+        "scene_title": "Escape",
+        "narrator_description": "Emma and Leo's footsteps echo quickly through the cave as they rush to escape. A deep, regular rumble seems to be getting closer and closer, adding urgency to their flight."
+      }
+    ]
+  }

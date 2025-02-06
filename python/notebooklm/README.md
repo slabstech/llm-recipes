@@ -27,6 +27,9 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 
 !["Script Parser"](docs/images/script-parser.jpg "Script Parser") 
 
+- **Prompts for Audiobook**: Creating a storyline using prompts [Read more](docs/prompts.md)
+
+
 
 ## Current Status
 1. Script parser - convert to scene structured json
