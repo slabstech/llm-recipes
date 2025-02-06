@@ -26,20 +26,21 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 
 ## Features
 
-### GoAudio
 
-- **Challenge**: Understand the challenges involved in audio synchronization and transcription. [Read more](docs/challenge.md)
-- **Solution**: Learn about the solutions we've implemented to overcome these challenges. [Read more](docs/solution.md)
+- **Challenge**: project challenge. [Read more](docs/challenge.md)
+- **Solution**: Learn about the solutions we've implemented to solve the challenges. [Read more](docs/solution.md)
 - **Audio Sync**: Detailed guide on how to synchronize audio with text. [Read more](docs/audio-sync.md)
 
 ### Setup
 
 Follow the [setup guide](docs/setup.md) to build an End-to-End platform for Notebook LLM.
 
+<!-- 
 ### Steps
 
 1. **PDF Parser**: Parse PDFs with a temperature setting of 0.
 2. **Transcript Writer**: Transcribe audio with a temperature setting of 1 and a large context.
+-->
 
 ### Book Editor
 
@@ -67,19 +68,11 @@ huggingface-cli download facebook/audiogen-medium
 
 ## Reference
 
-- **NotebookLLM**: Core documentation for NotebookLLM.
 - **NotebookLlama**: Additional resources and use cases. [Learn more](https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/NotebookLlama)
+
+<!--
 - **Code Security**: Best practices for code security. [Learn more](https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/github_triage)
-
-## Documentation
-
-For more detailed information, refer to the following documents:
-
-- [Challenge](docs/challenge.md)
-- [Solution](docs/solution.md)
-- [Audio Sync](docs/audio-sync.md)
-- [Setup Guide](docs/setup.md)
-
+-->
 
 -----
 
