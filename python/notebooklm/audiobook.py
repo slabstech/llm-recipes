@@ -181,7 +181,7 @@ JSON Format: The final output should be in JSON format for easy integration into
 
 def main():
     print("Audiobook Creation from Script")
-    local_filename = 'Skript-GoAudio-Eng.pdf'
+    local_filename = 'audibook/resources/Skript-GoAudio-Eng.pdf'
     scene_text = parser_data(local_filename)
 
     structured_scene_json = get_structured_scene(scene_text=scene_text)
