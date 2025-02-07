@@ -16,6 +16,8 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 
 !["Audiobook Generator"](docs/images/audiobook-flow.jpg "Audiobook generator") 
 
+- **Roadmap**: Product Launch Roadmap [Read more](docs/roadmap.md)
+
 
 
 ### Steps 
