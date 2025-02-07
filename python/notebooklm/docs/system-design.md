@@ -11,5 +11,10 @@ System Design
     - Calculate estimated cost of Full run.  Make credits available for trial/demo.
     - Per Second basis cost calculator for on-demand GPU access and running. Check huggingface space with GPU
 
+- Demo
+    - Show sample doc in Indic Languages
+        - Hindi, Kannada, Tamil and English
+    - Provide non-copyrighted text
+        - Use sarvam tts for audio generation
 - TODO
   - 
