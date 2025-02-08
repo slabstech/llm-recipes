@@ -53,4 +53,7 @@ An experiment to build a production grade audiobook content generator system to 
 ## Reference
 
 - **NotebookLlama**: Additional resources and use cases. [Learn more](https://github.com/meta-llama/llama-cookbook/tree/main/end-to-end-use-cases/NotebookLlama)
+
+- TTS - Generation Docker - https://github.com/ashleykleynhans/tts-generation-docker
+- https://github.com/rsxdalv/tts-generation-webui
 - WishList - RTX 4090 GPU based computer for building End to End product inhouse. Buy Me [Razer Blade 18](https://www.notebooksbilliger.de/razer+blade+18+mercury+848789) or [ROG Zephyrus M16 ](https://www.notebooksbilliger.de/rog+zephyrus+m16+gu604vy+nm042w+847870)
