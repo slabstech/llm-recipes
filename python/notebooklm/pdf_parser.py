@@ -81,6 +81,11 @@ def get_pdf_metadata(file_path: str) -> Optional[dict]:
         return None
 
 def parser_data(pdf_path):
+
+    # Ensure the 'generated' folder exists
+    if not os.path.exists('generated'):
+        os.makedirs('generated')
+
     # Extract metadata first
     print("Extracting metadata...")
     metadata = get_pdf_metadata(pdf_path)
@@ -105,7 +110,7 @@ def parser_data(pdf_path):
 
     # Optional: Save the extracted text to a file
     if extracted_text:
-        output_file = 'extracted_text.txt'
+        output_file = 'generated/extracted_text.txt'
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(extracted_text)
         print(f"\nExtracted text has been saved to {output_file}")
@@ -155,10 +160,13 @@ def process_extracted_text(file_name, SYS_PROMPT):
     print(num_chunks)
     processed_text =process_chunks_to_output(output_file=output_file, chunks=chunks, SYS_PROMPT=SYS_PROMPT)
 
+    '''
+    ## Outputs from PDF parser
     print(f"\nProcessing complete!")
     print(f"Input file: {INPUT_FILE}")
     print(f"Output file: {output_file}")
     print(f"Total chunks processed: {num_chunks}")
+    '''
     return processed_text
 
 
