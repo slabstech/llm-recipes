@@ -80,7 +80,7 @@
       "prompts": [
         {
           "language": "en",
-          "prompt": "You are given a script for an audiobook that includes various scenes with background music, sound effects, and dialogue. Your task is to parse this script into a structured JSON format with the following requirements:\n\nExtract the scene titles: Include the scene_title for each scene.\nDescribe the scenes: Provide a narrator_description for each scene that captures the atmosphere, sound effects, and actions, creating an immersive experience for the listener.\nExclude speaker dialogues: Do not include any dialogue spoken by the characters; focus solely on the narrator's description of the scene."
+          "prompt": "You are given a script for an audiobook that includes various scenes with background music, sound effects, and dialogue. Your task is to parse this script into a structured JSON format with the following requirements:\n\nExtract the scene titles: Include the scene_title for each scene.\nDescribe the scenes: Provide a narrator_description for each scene that captures the atmosphere, sound effects, and actions, creating an immersive experience for the listener.\nExclude speaker dialogues: Do not include any dialogue spoken by the characters; focus solely on the narrator's description of the scene. when return the json , do not add the 'json' at the beginning and end. provide clean usable json for python"
         },
         {
           "language": "fr",

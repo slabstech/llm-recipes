@@ -6,8 +6,8 @@ def main(language):
 
     file_name = 'audiobook/resources/Skript-GoAudio-Eng.pdf'
 
-    script_parser(language= language, file_name= file_name)
-    #speech_generator()
+    #script_parser(language= language, file_name= file_name)
+    speech_generator()
 
 
 if __name__ == "__main__":

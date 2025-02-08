@@ -24,21 +24,63 @@ def generate_speaker_audio(scenes_data):
                                  bitrate="192k",
                                  parameters=["-q:a", "0"])
 
-def generate_narrator_voice(scenes_data):
+def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
+
+
+    #import json
+
+    #narrator_file_path = 'path/to/narrator_dialog.json'
+
+    try:
+        with open(narrator_file_path, 'r') as file:
+            file_content = file.read()
+            print(file_content)  # Debug statement to check file content
+            scenes_data_narrator = json.loads(file_content)
+            print(type(scenes_data_narrator))  # Debug statement
+            # Check if scenes_data_narrator is a dictionary
+            if isinstance(scenes_data_narrator, dict):
+                print(scenes_data_narrator['scenes'])
+            else:
+                print("Loaded data is not a dictionary")
+    except FileNotFoundError:
+        print(f"File not found: {narrator_file_path}")
+    except json.JSONDecodeError:
+        print("Error decoding JSON")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    '''
+
+    with open(narrator_file_path, 'r') as file:
+        scenes_data_narrator = json.load(file)
+
+    print(type(scenes_data_narrator))  # Debug statement
+    #print(scenes_data_narrator) 
+
+    print(scenes_data_narrator['scenes'])
+
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
         os.makedirs('generated')
 
-    scenes = json.loads(scenes_data)['scenes']
-    for i, scene in enumerate(scenes, start=1):
-        scene_title = scene['scene_title']
-        narrator_description = scene['narrator_description']
-        audio_segment = tts_server(narrator_description, "Narrator's calm, soothing voice")
-        audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
-                             format="mp3",
-                             bitrate="192k",
-                             parameters=["-q:a", "0"])
-
+    try:
+        scenes = scenes_data_narrator['scenes']
+        for i, scene in enumerate(scenes, start=1):
+            scene_title = scene['scene_title']
+            narrator_description = scene['narrator_description']
+            audio_segment = tts_server(narrator_description, "Narrator's calm, soothing voice")
+            audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
+                                format="mp3",
+                                bitrate="192k",
+                                parameters=["-q:a", "0"])
+    except KeyError as e:
+        print(f"KeyError: {e} - The key does not exist in the JSON data.")
+    except TypeError as e:
+        print(f"TypeError: {e} - Ensure the JSON data is correctly loaded into a dictionary.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+    '''
+        
 def combine_audio_segments(scenes_data):
     scenes = json.loads(scenes_data)['scenes']
     for i, scene in enumerate(scenes, start=1):
@@ -90,39 +132,32 @@ def tts_server(text, speaker_description):
 
 def speech_generator():
 
-    scenes_data_narrator = """
-    {
-        "scenes": [
-            {
-                "scene_title": "Forest Clearing",
-                "narrator_description": "Wind whistles through the trees, leaves rustle quietly in the background. Birds chirp sporadically, then suddenly silence, as if something had startled them. A branch cracks in the distance. The echo of the cracking sound resonates through the air."
-            }
-        ]
-    }
-    """
-    scenes_data = """
-    {
-        "scenes": [
-            {
-                "scene_title": "Forest Clearing",
-                "dialogue": [
-                    {
-                        "speaker": "Emma",
-                        "line": "So, Leo, what were you trying to show me here?",
-                        "voice_description": "Emma's voice is expressive and dramatic, with a hint of curiosity and impatience, speaking at a moderately fast pace."
-                    },
-                    {
-                        "speaker": "Leo",
-                        "line": "Patience, Emma. It's a bit... how should I say... next-level cool.",
-                        "voice_description": "Leo's voice is deep and resonant, with a calm and authoritative tone, speaking at a steady pace with a hint of excitement."
-                    }
-                ]
-            }
-        ]
-    }
-    """
-    generate_narrator_voice(scenes_data_narrator)
+    # Define the path to the JSON file
+    narrator_file_path = "generated/narrator_dialog.json"
 
-    generate_speaker_audio(scenes_data)
 
-    combine_audio_segments(scenes_data)
+    generate_narrator_voice(narrator_file_path)
+
+    '''
+
+    # Define the path to the JSON file
+    speaker_dialog_file_path = "generated/speaker_dialog_voice.json"
+
+    # Load the JSON data from the file
+    with open(speaker_dialog_file_path, 'r') as file:
+        scenes_data_speaker_dialog = json.load(file)
+
+    '''
+
+    # Define the path to the JSON file
+    structured_scenes_file_path = "generated/structured_scene.json"
+
+    # Load the JSON data from the file
+    with open(structured_scenes_file_path, 'r') as file:
+        script_scene_data = json.load(file)
+
+
+
+    #generate_speaker_audio(scenes_data_speaker_dialog)
+
+    combine_audio_segments(script_scene_data)
