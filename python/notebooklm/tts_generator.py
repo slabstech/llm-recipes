@@ -26,68 +26,17 @@ def generate_speaker_audio(scenes_data):
 
 def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
 
-    '''
-    #import json
-
-    #narrator_file_path = 'path/to/narrator_dialog.json'
-
-    try:
-        with open(narrator_file_path, 'r') as file:
-            file_content = file.read()
-            print(file_content)  # Debug statement to check file content
-            scenes_data_narrator = json.loads(file_content)
-            print(type(scenes_data_narrator))  # Debug statement
-            # Check if scenes_data_narrator is a dictionary
-            if isinstance(scenes_data_narrator, dict):
-                print(scenes_data_narrator['scenes'])
-            else:
-                print("Loaded data is not a dictionary")
-    except FileNotFoundError:
-        print(f"File not found: {narrator_file_path}")
-    except json.JSONDecodeError:
-        print("Error decoding JSON")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    '''
-
-    #scenes_narrator_voice = "{\n    \"scenes\": [\n        {\n            \"scene_title\": \"Forest Clearing\",\n            \"narrator_description\": \"Soft, ambient forest sounds fill the air with wind whistling, leaves rustling, and birds chirping sporadically. Suddenly, a branch cracks in the distance, its echo lingering. The birds fall silent, as if sensing something amiss.\"\n        }\n     ]\n}"
-
-    #scenes_data_narrator = json.loads(scenes_narrator_voice)    
-    with open(narrator_file_path, 'r', encoding='utf-8') as file:
-        file_content = file.read()
-
-    scenes_data_narrator_json = json.loads(file_content)
-    scenes_data_narrator = json.loads(scenes_data_narrator_json)
-
-    scenes = scenes_data_narrator['scenes']
-    print(scenes)
-        
-    #print(file_content)
-    '''
-    try:
-        scenes_data_narrator = json.loads(file_content)
-        #print(scenes_data_narrator)  # Print to verify the data is loaded correctly
-
-        test_scne = json.loads(scenes_data_narrator)
-        #print(test_scne)
-        scenes = test_scne["scenes"]
-        print(scenes)
-    except json.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-
-    # Ensure the JSON data is loaded into a dictionary
-    if isinstance(scenes_data_narrator, dict):
-        print("JSON data successfully loaded into a dictionary.")
-    else:
-        print("Failed to load JSON data into a dictionary.")
-    '''
-
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
         os.makedirs('generated')
 
     try:
+        with open(narrator_file_path, 'r', encoding='utf-8') as file:
+            file_content = file.read()
+
+        scenes_data_narrator_json = json.loads(file_content)
+        scenes_data_narrator = json.loads(scenes_data_narrator_json)
+ 
         scenes = scenes_data_narrator['scenes']
         for i, scene in enumerate(scenes, start=1):
             scene_title = scene['scene_title']
@@ -105,8 +54,18 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         print(f"An unexpected error occurred: {e}")
     
         
-def combine_audio_segments(scenes_data):
-    scenes = json.loads(scenes_data)['scenes']
+def combine_audio_segments(structured_scenes_file_path='generated/structured_scene.json'):
+
+        # Load the JSON data from the file
+    with open(structured_scenes_file_path, 'r', encoding='utf-8') as file:
+        file_content = file.read()
+
+
+    scenes_data_json = json.loads(file_content)
+    scenes_data = json.loads(scenes_data_json)
+
+    scenes = scenes_data['scenes']
+
     for i, scene in enumerate(scenes, start=1):
         scene_title = scene['scene_title']
         combined_audio = AudioSegment.silent(duration=0)
@@ -176,12 +135,7 @@ def speech_generator():
     # Define the path to the JSON file
     structured_scenes_file_path = "generated/structured_scene.json"
 
-    # Load the JSON data from the file
-    with open(structured_scenes_file_path, 'r') as file:
-        script_scene_data = json.load(file)
-
-
 
     #generate_speaker_audio(scenes_data_speaker_dialog)
 
-    #combine_audio_segments(script_scene_data)
+    #combine_audio_segments(structured_scenes_file_path)
