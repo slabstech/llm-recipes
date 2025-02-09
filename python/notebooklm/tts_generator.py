@@ -4,12 +4,31 @@ import json
 from tqdm import tqdm
 import requests
 
-def generate_speaker_audio(scenes_data):
+def generate_speaker_audio(structured_scenes_file_path):
+
+
+            # Load the JSON data from the file
+    with open(structured_scenes_file_path, 'r', encoding='utf-8') as file:
+        file_content = file.read()
+
+    file_content = file_content.replace("```json", "")
+    file_content = file_content.replace("```", "")
+
+    file_content = file_content.replace("Emma's voice is expressive," , "Laura's voice is expressive,")
+    file_content = file_content.replace("Leo's voice is deep and resonant,","Mike's voice is deep and resonant,")
+
+    scenes_data_json = json.loads(file_content)
+
+    print(scenes_data_json)
+
+    scenes_data = json.loads(scenes_data_json)
+
+    scenes = scenes_data['scenes']
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
         os.makedirs('generated')
 
-    scenes = json.loads(scenes_data)['scenes']
+    #scenes = json.loads(scenes_data)['scenes']
     for i, scene in enumerate(scenes, start=1):
         scene_title = scene['scene_title']
         dialogues = scene['dialogue']
@@ -41,7 +60,7 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         for i, scene in enumerate(scenes, start=1):
             scene_title = scene['scene_title']
             narrator_description = scene['narrator_description']
-            audio_segment = tts_server(narrator_description, "Narrator's calm, soothing voice")
+            audio_segment = tts_server(narrator_description, "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise.")
             audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
                                 format="mp3",
                                 bitrate="192k",
@@ -60,11 +79,14 @@ def combine_audio_segments(structured_scenes_file_path='generated/structured_sce
     with open(structured_scenes_file_path, 'r', encoding='utf-8') as file:
         file_content = file.read()
 
+    file_content = file_content.replace("```", "")
 
     scenes_data_json = json.loads(file_content)
+
     scenes_data = json.loads(scenes_data_json)
 
     scenes = scenes_data['scenes']
+    final_audio = AudioSegment.silent(duration=0)
 
     for i, scene in enumerate(scenes, start=1):
         scene_title = scene['scene_title']
@@ -85,11 +107,17 @@ def combine_audio_segments(structured_scenes_file_path='generated/structured_sce
                 combined_audio += dialogue_audio
 
         # Export combined audio
-        combined_audio.export(f"scene_{i}_{scene_title.replace(' ', '_')}_combined.mp3",
+        final_audio += combined_audio
+        combined_audio.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_combined.mp3",
                               format="mp3",
                               bitrate="192k",
                               parameters=["-q:a", "0"])
-
+    
+    final_audio.export(f"full_audiobook_combined.mp3",
+                              format="mp3",
+                              bitrate="192k",
+                              parameters=["-q:a", "0"])
+    
 def tts_server(text, speaker_description):
     url = 'http://localhost:8000/v1/audio/speech'
 
@@ -115,27 +143,24 @@ def tts_server(text, speaker_description):
 
 def speech_generator():
 
+
+
+
+    
+
     # Define the path to the JSON file
     narrator_file_path = "generated/narrator_dialog.json"
 
-
-    generate_narrator_voice(narrator_file_path)
-
-    '''
-
     # Define the path to the JSON file
     speaker_dialog_file_path = "generated/speaker_dialog_voice.json"
-
-    # Load the JSON data from the file
-    with open(speaker_dialog_file_path, 'r') as file:
-        scenes_data_speaker_dialog = json.load(file)
-
-    '''
 
     # Define the path to the JSON file
     structured_scenes_file_path = "generated/structured_scene.json"
 
 
-    #generate_speaker_audio(scenes_data_speaker_dialog)
+    #generate_narrator_voice(narrator_file_path)
 
-    #combine_audio_segments(structured_scenes_file_path)
+
+    generate_speaker_audio(speaker_dialog_file_path)
+
+    combine_audio_segments(structured_scenes_file_path)

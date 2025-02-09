@@ -55,6 +55,9 @@ This guide will walk you through setting up your environment and necessary tools
 
    ```sh
    huggingface-cli download parler-tts/parler-tts-mini-v1
+   huggingface-cli download parler-tts/parler-tts-mini-v1.1
+   huggingface-cli download parler-tts/parler-tts-mini-multilingual
+   huggingface-cli download parler-tts/parler-tts-mini-multilingual-v1.1
    huggingface-cli download facebook/audiogen-medium
    huggingface-cli download facebook/audio-magnet-medium
    ```
