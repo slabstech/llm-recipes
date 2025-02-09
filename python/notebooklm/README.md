@@ -32,12 +32,15 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 - **Prompts for Audiobook**: Creating a storyline using prompts [Read more](docs/prompts.md)
 
 
-
 ## Current Status
-1. Script parser - convert to scene structured json
-2. TTS server - Parler-tts server to generate speech for dialogs in scenes
-3. AudioGen module - Audiocraft/magnet background sound creator
-4. Basic audiobook - linear worflow for full audio creation without scene logic
+
+| Module            | Description                                         | Tech                   | Source                   | Status |
+|-------------------|------------------------------------------------|------------------------|------------------------|------------------------|
+| Script parser     | Convert to scene structured json              |  LLM Multi-shot Prompt                       | [script_parser.py](script_parser.py)                       | Done |
+| TTS server        | Parler-tts server to generate speech for dialogs in scenes | Parler-tts             | [tts_generator.py](tts_generator.py)                       | Done |
+| AudioGen module   | Audiocraft/magnet background sound creator    | Audiocraft/magnet      |                        | In progress |
+| Basic audiobook   | Linear workflow for full audio creation without scene logic | python                       |  [audiobook.py](audiobook.py)                      | In progress |
+
 
 ## Documentation
 

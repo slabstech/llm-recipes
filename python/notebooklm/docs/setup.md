@@ -31,16 +31,16 @@ This guide will walk you through setting up your environment and necessary tools
    pip install -r requirements.txt
    ```
 
-4. **For Pytorch Users:**
+4. **For Pytorch Model Dev Users:**
    ```sh
-   pip install -r tts-requirements.txt
+   pip install -r pytorch-requirements.txt
    ```
 
 ### 2. Setup Ollama
 
 1. **Start Docker Compose:**
    ```sh
-   docker compose up -d llm-compose.yml
+   docker compose up -d docker/llm-compose.yml
    ```
 
 2. **Pull Necessary LLM Models:**
@@ -58,47 +58,30 @@ This guide will walk you through setting up your environment and necessary tools
    huggingface-cli download facebook/audiogen-medium
    huggingface-cli download facebook/audio-magnet-medium
    ```
-
-<!-- 
-### 3. Run the PDF Parser and Prepare Data for TTS
-
-1. **Run the PDF Parser:**
+4. **Start TTS Server for Speech Creation**
    ```sh
-   python pdf-parser.py
+   docker compose up -d docker/tts-server.yml
    ```
 
-### 4. Send Data to TTS (Text-to-Speech)
-
-1. **Prepare the Text Data:**
-   Ensure the output from the PDF parser is in a format suitable for your TTS engine.
-
-2. **Run the TTS Script:**
+5. **Start Audiocraft Server for Sound/Music Creation**
    ```sh
-   python tts-script.py
+   docker compose up -d docker/audiocraft-server.yml
    ```
--->
+
 ### 4. Additional Tips
 
 - **Environment Variables:**
   Ensure any required environment variables are set. You can use a `.env` file or set them directly in your terminal.
 
 - **Dependencies:**
-  Ensure all dependencies listed in `requirements.txt` and `tts-requirements.txt` are correct and up-to-date.
+  Ensure all dependencies listed in `requirements.txt` and `pytorch-requirements.txt` are correct and up-to-date.
 
 - **Docker Check:**
   Verify that Docker is running and the necessary containers are up and operational.
 
 ## Troubleshooting
 
-- **Virtual Environment Issues:**
-  If you encounter issues with the virtual environment, try deleting the `venv` directory and recreating it.
 
 - **Docker Issues:**
   Check Docker logs for any errors and ensure that the Docker daemon is running.
 
-- **Library Issues:**
-  Ensure all libraries are compatible with your Python version. You can check compatibility in the respective library documentation.
-
-## Conclusion
-
-Following these steps should set up your environment to create an audiobook using Python. If you encounter any issues, refer to the troubleshooting section or seek help from the community.
