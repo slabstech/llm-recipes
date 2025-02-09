@@ -19,8 +19,6 @@ def generate_speaker_audio(structured_scenes_file_path):
 
     scenes_data_json = json.loads(file_content)
 
-    print(scenes_data_json)
-
     scenes_data = json.loads(scenes_data_json)
 
     scenes = scenes_data['scenes']
@@ -53,6 +51,9 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         with open(narrator_file_path, 'r', encoding='utf-8') as file:
             file_content = file.read()
 
+
+        file_content = file_content.replace("```json", "")
+        file_content = file_content.replace("```", "")
         scenes_data_narrator_json = json.loads(file_content)
         scenes_data_narrator = json.loads(scenes_data_narrator_json)
  

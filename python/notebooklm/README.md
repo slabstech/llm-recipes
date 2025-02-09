@@ -64,4 +64,5 @@ An experiment to build a production grade audiobook content generator system to 
 - Specific Speakers - Jon, Lea, Gary, Jenna, Mike, Laura
 
 - Inference Tips
-  - https://github.com/huggingface/parler-tts/blob/main/INFERENCE.md
+  - [Inference Upgrade](https://github.com/huggingface/parler-tts/blob/main/INFERENCE.md)
+  - [Large Token Generation](https://huggingface.co/spaces/ai4bharat/indic-parler-tts/blob/main/app.py#L179)
