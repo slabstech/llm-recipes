@@ -13,6 +13,8 @@
 
 NotebookLM is a self-hosted platform designed to create, manage, and enhance audiobooks. This platform leverages various tools and models to parse, transcribe, and improve manuscripts, ultimately providing high-quality audio content.
 
+- [Project Dhwani](https://slabstech.com/dhwani/) 
+  - [Source] (https://github.com/slabstech/dhwani)
 
 !["Audiobook Generator"](docs/images/audiobook-flow.jpg "Audiobook generator") 
 
@@ -52,6 +54,14 @@ NotebookLM is a self-hosted platform designed to create, manage, and enhance aud
 - **Database Schema**: Schema for Scene Editing and Media content [Read more](docs/database_schema.md)
 
 An experiment to build a production grade audiobook content generator system to help publishers build on their IP and reach larger audience.
+
+## Inference Speed
+
+| GPU Model    | `torch.compile` |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
+|--------------|------------------|---------------------------|-------------------|--------------------|--------------------|
+| GTX 1060     | no               | 2775.97                   | -                 | 87.37              | 2863.34            |
+| RTX 4050     | no               | 489.93                    | -                 | 93.82              | 583.75             |
+| RTX 4050     | yes              | --                        | -                 | --                 | --                 |
 
 ## Reference
 

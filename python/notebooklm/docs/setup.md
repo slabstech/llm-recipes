@@ -9,7 +9,14 @@ This guide will walk you through setting up your environment and necessary tools
 
 ## Step-by-Step Setup
 
-### 1. Create a Virtual Environment and Install Libraries
+### 1. Install required system library
+1. ***ffmpeg for audio management***
+   ```sh
+   sudo apt get update
+   sudo apt install ffmpeg 
+   ```
+
+### 2. Create a Virtual Environment and Install Libraries
 
 1. **Create a Virtual Environment:**
    ```sh
@@ -36,7 +43,7 @@ This guide will walk you through setting up your environment and necessary tools
    pip install -r pytorch-requirements.txt
    ```
 
-### 2. Setup Ollama
+### 3. Setup Ollama for Parsing pdf
 
 1. **Start Docker Compose:**
    ```sh
@@ -50,7 +57,9 @@ This guide will walk you through setting up your environment and necessary tools
    ```
 
 
-3. **Pull Necessary TTS and Audio Models:**
+### 4. Setup Parlet-tts for Speech Generation
+
+1. **Pull Necessary TTS and Audio Models:**
    To get started, download the following models using the Hugging Face CLI:
 
    ```sh
@@ -61,17 +70,22 @@ This guide will walk you through setting up your environment and necessary tools
    huggingface-cli download facebook/audiogen-medium
    huggingface-cli download facebook/audio-magnet-medium
    ```
-4. **Start TTS Server for Speech Creation**
+2. **Start TTS Server for Speech Creation**
+   - for RTX 40 series 
+   ```sh
+   docker compose -f docker/tts-server-fast.yml up -d
+   ```
+   - for GTX series 
    ```sh
    docker compose -f docker/tts-server.yml up -d
    ```
 
-5. **Start Audiocraft Server for Sound/Music Creation**
+3. **Start Audiocraft Server for Sound/Music Creation**
    ```sh
    docker compose -f docker/audiocraft-server.yml up -d 
    ```
 
-### 4. Additional Tips
+### 5. Additional Tips
 
 - **Environment Variables:**
   Ensure any required environment variables are set. You can use a `.env` file or set them directly in your terminal.
