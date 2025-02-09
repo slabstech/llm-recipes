@@ -143,11 +143,6 @@ def tts_server(text, speaker_description):
 
 def speech_generator():
 
-
-
-
-    
-
     # Define the path to the JSON file
     narrator_file_path = "generated/narrator_dialog.json"
 
@@ -158,8 +153,7 @@ def speech_generator():
     structured_scenes_file_path = "generated/structured_scene.json"
 
 
-    #generate_narrator_voice(narrator_file_path)
-
+    generate_narrator_voice(narrator_file_path)
 
     generate_speaker_audio(speaker_dialog_file_path)
 

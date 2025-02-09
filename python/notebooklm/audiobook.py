@@ -9,7 +9,7 @@ def main(language):
     # TODO - remove hardcoded voices for specific speaker
     ## Use Jon for Narrator voice,  Mike for leo and, Laura for Emma. Hardocoded for now
 
-    #script_parser(language= language, file_name= file_name)
+    script_parser(language= language, file_name= file_name)
     speech_generator()
 
 
