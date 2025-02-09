@@ -26,7 +26,7 @@ def generate_speaker_audio(scenes_data):
 
 def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
 
-
+    '''
     #import json
 
     #narrator_file_path = 'path/to/narrator_dialog.json'
@@ -51,13 +51,37 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
 
     '''
 
-    with open(narrator_file_path, 'r') as file:
-        scenes_data_narrator = json.load(file)
+    #scenes_narrator_voice = "{\n    \"scenes\": [\n        {\n            \"scene_title\": \"Forest Clearing\",\n            \"narrator_description\": \"Soft, ambient forest sounds fill the air with wind whistling, leaves rustling, and birds chirping sporadically. Suddenly, a branch cracks in the distance, its echo lingering. The birds fall silent, as if sensing something amiss.\"\n        }\n     ]\n}"
 
-    print(type(scenes_data_narrator))  # Debug statement
-    #print(scenes_data_narrator) 
+    #scenes_data_narrator = json.loads(scenes_narrator_voice)    
+    with open(narrator_file_path, 'r', encoding='utf-8') as file:
+        file_content = file.read()
 
-    print(scenes_data_narrator['scenes'])
+    scenes_data_narrator_json = json.loads(file_content)
+    scenes_data_narrator = json.loads(scenes_data_narrator_json)
+
+    scenes = scenes_data_narrator['scenes']
+    print(scenes)
+        
+    #print(file_content)
+    '''
+    try:
+        scenes_data_narrator = json.loads(file_content)
+        #print(scenes_data_narrator)  # Print to verify the data is loaded correctly
+
+        test_scne = json.loads(scenes_data_narrator)
+        #print(test_scne)
+        scenes = test_scne["scenes"]
+        print(scenes)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+
+    # Ensure the JSON data is loaded into a dictionary
+    if isinstance(scenes_data_narrator, dict):
+        print("JSON data successfully loaded into a dictionary.")
+    else:
+        print("Failed to load JSON data into a dictionary.")
+    '''
 
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
@@ -79,7 +103,7 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         print(f"TypeError: {e} - Ensure the JSON data is correctly loaded into a dictionary.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-    '''
+    
         
 def combine_audio_segments(scenes_data):
     scenes = json.loads(scenes_data)['scenes']
@@ -160,4 +184,4 @@ def speech_generator():
 
     #generate_speaker_audio(scenes_data_speaker_dialog)
 
-    combine_audio_segments(script_scene_data)
+    #combine_audio_segments(script_scene_data)
