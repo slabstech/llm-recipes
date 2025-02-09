@@ -4,7 +4,30 @@ import json
 from tqdm import tqdm
 import requests
 
-def generate_speaker_audio(structured_scenes_file_path):
+
+def update_voice_descriptions(language, file_content):
+    # Define the replacement dictionary based on language
+    replacements = {
+        "de": {
+            "Emma's voice is expressive,": "Nicole's voice is expressive,",
+            "Leo's voice is deep and resonant,": "Michelle's voice is deep and resonant,"
+        },
+        "en": {
+            "Emma's voice is expressive,": "Laura's voice is expressive,",
+            "Leo's voice is deep and resonant,": "Mike's voice is deep and resonant,"
+        }
+    }
+
+    # Check if the language is supported
+    if language in replacements:
+        for old_text, new_text in replacements[language].items():
+            file_content = file_content.replace(old_text, new_text)
+    else:
+        print("Unsupported language")
+
+    return file_content
+
+def generate_speaker_audio(structured_scenes_file_path,language):
 
 
             # Load the JSON data from the file
@@ -14,10 +37,11 @@ def generate_speaker_audio(structured_scenes_file_path):
     file_content = file_content.replace("```json", "")
     file_content = file_content.replace("```", "")
 
-    file_content = file_content.replace("Emma's voice is expressive," , "Laura's voice is expressive,")
-    file_content = file_content.replace("Leo's voice is deep and resonant,","Mike's voice is deep and resonant,")
+    #language = "de"  
+    #language = "en"
+    updated_content = update_voice_descriptions(language, file_content)
 
-    scenes_data_json = json.loads(file_content)
+    scenes_data_json = json.loads(updated_content)
 
     scenes_data = json.loads(scenes_data_json)
 
@@ -142,7 +166,7 @@ def tts_server(text, speaker_description):
         # Convert the audio to a NumPy array
         return audio
 
-def speech_generator():
+def speech_generator(language):
 
     # Define the path to the JSON file
     narrator_file_path = "generated/narrator_dialog.json"
@@ -156,6 +180,6 @@ def speech_generator():
 
     generate_narrator_voice(narrator_file_path)
 
-    generate_speaker_audio(speaker_dialog_file_path)
+    generate_speaker_audio(speaker_dialog_file_path, language)
 
     combine_audio_segments(structured_scenes_file_path)

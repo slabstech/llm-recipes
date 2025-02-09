@@ -4,7 +4,14 @@ from tts_generator import speech_generator
 
 def main(language):
 
-    file_name = 'audiobook/resources/Skript-GoAudio-Eng.pdf'
+    if language == 'en':
+        file_name = 'audiobook/resources/Skript-Go-Audio-Eng.pdf'
+    elif language == 'de':
+        file_name = 'audiobook/resources/Skript-Go-Audio-De.pdf'
+    else:
+        raise ValueError("Unsupported language. Please choose 'en' for English or 'de' for German.")
+    
+    file_name = 'audiobook/resources/Skript-Go-Audio-De.pdf'
 
     # TODO - remove hardcoded voices for specific speaker
     ## Use Jon for Narrator voice,  Mike for leo and, Laura for Emma. Hardocoded for now

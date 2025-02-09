@@ -40,7 +40,7 @@ This guide will walk you through setting up your environment and necessary tools
 
 1. **Start Docker Compose:**
    ```sh
-   docker compose up -d docker/llm-compose.yml
+   docker compose -f docker/llm-compose.yml up -d 
    ```
 
 2. **Pull Necessary LLM Models:**
@@ -63,12 +63,12 @@ This guide will walk you through setting up your environment and necessary tools
    ```
 4. **Start TTS Server for Speech Creation**
    ```sh
-   docker compose up -d docker/tts-server.yml
+   docker compose -f docker/tts-server.yml up -d
    ```
 
 5. **Start Audiocraft Server for Sound/Music Creation**
    ```sh
-   docker compose up -d docker/audiocraft-server.yml
+   docker compose -f docker/audiocraft-server.yml up -d 
    ```
 
 ### 4. Additional Tips
