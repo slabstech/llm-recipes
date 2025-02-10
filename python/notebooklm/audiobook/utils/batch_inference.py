@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoFeatureExtractor, set_seed
 import scipy
 import soundfile as sf
 
-repo_id = "parler-tts/parler-tts-mini-v1"
+repo_id = "parler-tts/parler-tts-mini-v1.1"
 
 model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id).to("cuda")
 tokenizer = AutoTokenizer.from_pretrained(repo_id, padding_side="left")
@@ -21,8 +21,14 @@ length_of_input_text = len(input_text)
 # Create the description list with the same length as input_text
 description = [description_text] * length_of_input_text
 
-inputs = tokenizer(description, return_tensors="pt", padding=True).to("cuda")
+description_tokenizer = AutoTokenizer.from_pretrained(model.config.text_encoder._name_or_path)
+
+
+#inputs = description_tokenizer(description, return_tensors="pt", padding=True).to("cuda")
+inputs = description_tokenizer(description, return_tensors="pt", padding=True).to("cuda")
+
 prompt = tokenizer(input_text, return_tensors="pt", padding=True).to("cuda")
+
 
 set_seed(0)
 generation = model.generate(
