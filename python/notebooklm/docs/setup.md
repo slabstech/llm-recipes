@@ -9,7 +9,14 @@ This guide will walk you through setting up your environment and necessary tools
 
 ## Step-by-Step Setup
 
-### 1. Create a Virtual Environment and Install Libraries
+### 1. Install required system library
+1. ***ffmpeg for audio management***
+   ```sh
+   sudo apt get update
+   sudo apt install ffmpeg 
+   ```
+
+### 2. Create a Virtual Environment and Install Libraries
 
 1. **Create a Virtual Environment:**
    ```sh
@@ -31,16 +38,16 @@ This guide will walk you through setting up your environment and necessary tools
    pip install -r requirements.txt
    ```
 
-4. **For Pytorch Users:**
+4. **For Pytorch Model Dev Users:**
    ```sh
-   pip install -r tts-requirements.txt
+   pip install -r pytorch-requirements.txt
    ```
 
-### 2. Setup Ollama
+### 3. Setup Ollama for Parsing pdf
 
 1. **Start Docker Compose:**
    ```sh
-   docker compose up -d llm-compose.yml
+   docker compose -f docker/llm-compose.yml up -d 
    ```
 
 2. **Pull Necessary LLM Models:**
@@ -50,55 +57,46 @@ This guide will walk you through setting up your environment and necessary tools
    ```
 
 
-3. **Pull Necessary TTS and Audio Models:**
+### 4. Setup Parlet-tts for Speech Generation
+
+1. **Pull Necessary TTS and Audio Models:**
    To get started, download the following models using the Hugging Face CLI:
 
    ```sh
-   huggingface-cli download parler-tts/parler-tts-mini-v1
+   huggingface-cli download parler-tts/parler-tts-mini-v1.1
+   huggingface-cli download parler-tts/parler-tts-mini-multilingual-v1.1
    huggingface-cli download facebook/audiogen-medium
    huggingface-cli download facebook/audio-magnet-medium
    ```
-
-<!-- 
-### 3. Run the PDF Parser and Prepare Data for TTS
-
-1. **Run the PDF Parser:**
+2. **Start TTS Server for Speech Creation**
+   - for RTX 40 series - Fast inference with torch.compile
    ```sh
-   python pdf-parser.py
+   docker compose -f docker/tts-server-fast.yml up -d
+   ```
+   - for GTX series 
+   ```sh
+   docker compose -f docker/tts-server.yml up -d
    ```
 
-### 4. Send Data to TTS (Text-to-Speech)
-
-1. **Prepare the Text Data:**
-   Ensure the output from the PDF parser is in a format suitable for your TTS engine.
-
-2. **Run the TTS Script:**
+3. **Start Audiocraft Server for Sound/Music Creation**
    ```sh
-   python tts-script.py
+   docker compose -f docker/audiocraft-server.yml up -d 
    ```
--->
-### 4. Additional Tips
+
+### 5. Additional Tips
 
 - **Environment Variables:**
   Ensure any required environment variables are set. You can use a `.env` file or set them directly in your terminal.
 
 - **Dependencies:**
-  Ensure all dependencies listed in `requirements.txt` and `tts-requirements.txt` are correct and up-to-date.
+  Ensure all dependencies listed in `requirements.txt` and `pytorch-requirements.txt` are correct and up-to-date.
 
 - **Docker Check:**
   Verify that Docker is running and the necessary containers are up and operational.
 
 ## Troubleshooting
 
-- **Virtual Environment Issues:**
-  If you encounter issues with the virtual environment, try deleting the `venv` directory and recreating it.
 
 - **Docker Issues:**
   Check Docker logs for any errors and ensure that the Docker daemon is running.
 
-- **Library Issues:**
-  Ensure all libraries are compatible with your Python version. You can check compatibility in the respective library documentation.
-
-## Conclusion
-
-Following these steps should set up your environment to create an audiobook using Python. If you encounter any issues, refer to the troubleshooting section or seek help from the community.
