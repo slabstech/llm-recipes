@@ -11,3 +11,4 @@ narrator_dialog.json
 speaker_dialog_voice.json
 sound_effects_timestamp.json
 generated/
+pytorch-venv/

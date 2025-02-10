@@ -3,7 +3,7 @@ import os
 import json
 from tqdm import tqdm
 import requests
-
+from typing import List, Tuple
 
 def update_voice_descriptions(language, file_content):
     # Define the replacement dictionary based on language
@@ -143,6 +143,33 @@ def combine_audio_segments(structured_scenes_file_path='generated/structured_sce
                               bitrate="192k",
                               parameters=["-q:a", "0"])
     
+def tts_server_batch(texts: List[str], speaker_descriptions) -> List[AudioSegment]:
+    url = 'http://localhost:8000/v1/audio/speech_batch'
+    payload = {
+        'input': texts,
+        'voice': speaker_descriptions
+    }
+
+    # Make the POST request
+    response = requests.post(url, json=payload)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Extract the audio files from the response
+        audio_segments = []
+        for i, audio_file in enumerate(response.json()):
+            # Save each audio response as a WAV file
+            with open(f'audio_{i}.mp3', 'wb') as f:
+                f.write(audio_file)
+
+            # Load the audio file using pydub
+            audio = AudioSegment.from_mp3(f'audio_{i}.mp3')
+            audio_segments.append(audio)
+
+        return audio_segments
+    else:
+        raise Exception(f"Failed to generate audio: {response.status_code}")    
+    
 def tts_server(text, speaker_description):
     url = 'http://localhost:8000/v1/audio/speech'
 
@@ -183,3 +210,13 @@ def speech_generator(language):
     generate_speaker_audio(speaker_dialog_file_path, language)
 
     combine_audio_segments(structured_scenes_file_path)
+
+    ''' Batch Speech Generatioon
+
+    texts = ["Hey, how are you doing?", "I'm not sure how to feel about it."]
+    speaker_descriptions = "A male speaker with a monotone and high-pitched voice is delivering his speech at a really low speed in a confined environment."
+
+    audio_segments = tts_server_batch(texts, speaker_descriptions)
+    for i, audio in enumerate(audio_segments):
+        print(f"Audio {i}: {audio}")
+    '''
