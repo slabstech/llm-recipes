@@ -143,7 +143,7 @@ def combine_audio_segments(structured_scenes_file_path='generated/structured_sce
                               bitrate="192k",
                               parameters=["-q:a", "0"])
     
-def tts_server_batch(texts: List[str], speaker_descriptions) -> List[AudioSegment]:
+def tts_server_batch(texts: List[str], speaker_descriptions: List[str]) -> List[AudioSegment]:
     url = 'http://localhost:8000/v1/audio/speech_batch'
     payload = {
         'input': texts,
@@ -204,19 +204,24 @@ def speech_generator(language):
     # Define the path to the JSON file
     structured_scenes_file_path = "generated/structured_scene.json"
 
-
+    
     generate_narrator_voice(narrator_file_path)
 
     generate_speaker_audio(speaker_dialog_file_path, language)
 
     combine_audio_segments(structured_scenes_file_path)
-
-    ''' Batch Speech Generatioon
-
+    '''
+    #Batch Speech Generatioon
+    
     texts = ["Hey, how are you doing?", "I'm not sure how to feel about it."]
     speaker_descriptions = "A male speaker with a monotone and high-pitched voice is delivering his speech at a really low speed in a confined environment."
 
-    audio_segments = tts_server_batch(texts, speaker_descriptions)
+
+    length_of_input_text = len(texts)
+
+    # Create the description list with the same length as input_text
+    description = [speaker_descriptions] * length_of_input_text
+    audio_segments = tts_server_batch(texts, description)
     for i, audio in enumerate(audio_segments):
         print(f"Audio {i}: {audio}")
     '''

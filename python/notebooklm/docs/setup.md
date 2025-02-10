@@ -63,15 +63,13 @@ This guide will walk you through setting up your environment and necessary tools
    To get started, download the following models using the Hugging Face CLI:
 
    ```sh
-   huggingface-cli download parler-tts/parler-tts-mini-v1
    huggingface-cli download parler-tts/parler-tts-mini-v1.1
-   huggingface-cli download parler-tts/parler-tts-mini-multilingual
    huggingface-cli download parler-tts/parler-tts-mini-multilingual-v1.1
    huggingface-cli download facebook/audiogen-medium
    huggingface-cli download facebook/audio-magnet-medium
    ```
 2. **Start TTS Server for Speech Creation**
-   - for RTX 40 series 
+   - for RTX 40 series - Fast inference with torch.compile
    ```sh
    docker compose -f docker/tts-server-fast.yml up -d
    ```
