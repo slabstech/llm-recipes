@@ -96,6 +96,7 @@ def generate_speaker_audio(structured_scenes_file_path,language):
 
 def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
 
+    print('start Narrator geneation')
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
         os.makedirs('generated')
@@ -110,7 +111,6 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         scenes_data_narrator = json.loads(scenes_data_narrator_json)
  
         scenes = scenes_data_narrator['scenes']
-
 
         # Collect all narrator descriptions and create a corresponding description list
         narrator_descriptions = [scene['narrator_description'] for scene in scenes]
@@ -130,6 +130,9 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         print(f"TypeError: {e} - Ensure the JSON data is correctly loaded into a dictionary.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+    
+
+    print('End Narrator geneation')
     
         
 def combine_audio_segments(structured_scenes_file_path='generated/structured_scene.json'):
