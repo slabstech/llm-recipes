@@ -3,8 +3,8 @@ services:
     image: slabstech/parler-tts-server-fast
     environment:
 #     - MODEL=ai4bharat/indic-parler-tts
-#     - MODEL=parler-tts/parler-tts-mini-v1
-      - MODEL=parler-tts/parler-tts-mini-multilingual
+      - MODEL=parler-tts/parler-tts-mini-v1.1
+#      - MODEL=parler-tts/parler-tts-mini-multilingual
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
     restart: unless-stopped
