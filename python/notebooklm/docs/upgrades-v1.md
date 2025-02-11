@@ -1,3 +1,4 @@
+
 Inference Upgrade 
 
 
@@ -20,3 +21,17 @@ Test audio with parler-tts-large for quality and speed .
 
 
 -- 
+
+
+analysis after solution
+
+batch inference added unintended latency with large text arrarys.
+
+Next step, chunking input arrays 
+For batch inference. 
+
+Latency is down by another multiple 
+
+Chunking adds quality issues. 
+Need to build an eval,
+To identify any problem data and update chunk size.
