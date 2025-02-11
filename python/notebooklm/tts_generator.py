@@ -4,6 +4,10 @@ import json
 from tqdm import tqdm
 import requests
 from typing import List, Tuple
+import zipfile
+import io
+from collections import defaultdict
+
 
 def update_voice_descriptions(language, file_content):
     # Define the replacement dictionary based on language
@@ -50,23 +54,49 @@ def generate_speaker_audio(structured_scenes_file_path,language):
     if not os.path.exists('generated'):
         os.makedirs('generated')
 
-    #scenes = json.loads(scenes_data)['scenes']
+        # Initialize a dictionary to store all lines per speaker across all scenes
+    all_lines_per_speaker = defaultdict(list)
+
+    # Accumulate lines and voice descriptions for each speaker across all scenes
     for i, scene in enumerate(scenes, start=1):
         scene_title = scene['scene_title']
         dialogues = scene['dialogue']
 
-        for dialogue in tqdm(dialogues, desc=f"Generating audio for scene {i}", unit="dialogue"):
+        # Group lines by speaker
+        lines_per_speaker = defaultdict(list)
+        for j, dialogue in enumerate(dialogues):
             speaker = dialogue['speaker']
             line = dialogue['line']
             voice_description = dialogue['voice_description']
-            audio_segment = tts_server(line, voice_description)
-            audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_{speaker}.mp3",
-                                 format="mp3",
-                                 bitrate="192k",
-                                 parameters=["-q:a", "0"])
+            dialogue_number = j + 1
+            lines_per_speaker[speaker].append((dialogue_number, line, voice_description))
+
+        # Add lines to the all_lines_per_speaker dictionary
+        for speaker, lines in lines_per_speaker.items():
+            all_lines_per_speaker[speaker].extend(lines)
+
+    # Generate audio for each speaker across all scenes
+    for speaker, lines in tqdm(all_lines_per_speaker.items(), desc="Generating audio for all speakers", unit="speaker"):
+        # Extract lines and voice descriptions for the current speaker
+        lines_text = [line for _, line, _ in lines]
+        voice_descriptions = [voice_description for _, _, voice_description in lines]
+
+        # Call the batch TTS server
+        audio_segments = tts_server_batch(lines_text, voice_descriptions)
+
+        # Export each audio segment
+        for k, (_, line, _) in enumerate(lines):
+            audio_segment = audio_segments[k]
+            scene_i = (k // len(scenes[0]['dialogue'])) + 1  # Assuming each scene has the same number of dialogues
+            audio_segment.export(f"generated/scene_{scene_i}_{scene_title.replace(' ', '_')}_{speaker}_dialogue_{k+1}.mp3",
+                                format="mp3",
+                                bitrate="192k",
+                                parameters=["-q:a", "0"])
+
 
 def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
 
+    print('start Narrator geneation')
     # Ensure the 'generated' folder exists
     if not os.path.exists('generated'):
         os.makedirs('generated')
@@ -75,27 +105,34 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         with open(narrator_file_path, 'r', encoding='utf-8') as file:
             file_content = file.read()
 
-
         file_content = file_content.replace("```json", "")
         file_content = file_content.replace("```", "")
         scenes_data_narrator_json = json.loads(file_content)
         scenes_data_narrator = json.loads(scenes_data_narrator_json)
  
         scenes = scenes_data_narrator['scenes']
+
+        # Collect all narrator descriptions and create a corresponding description list
+        narrator_descriptions = [scene['narrator_description'] for scene in scenes]
+        narrator_description_voice = "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise."
+        narrator_description_list = [narrator_description_voice] * len(narrator_descriptions)
+        audio_segments_narrators = tts_server_batch(narrator_descriptions, narrator_description_list)
         for i, scene in enumerate(scenes, start=1):
             scene_title = scene['scene_title']
-            narrator_description = scene['narrator_description']
-            audio_segment = tts_server(narrator_description, "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise.")
-            audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
-                                format="mp3",
-                                bitrate="192k",
-                                parameters=["-q:a", "0"])
+            audio_segments_narrators[i-1].export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
+                                        format="mp3",
+                                        bitrate="192k")
+            
+
     except KeyError as e:
         print(f"KeyError: {e} - The key does not exist in the JSON data.")
     except TypeError as e:
         print(f"TypeError: {e} - Ensure the JSON data is correctly loaded into a dictionary.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+    
+
+    print('End Narrator geneation')
     
         
 def combine_audio_segments(structured_scenes_file_path='generated/structured_scene.json'):
@@ -124,9 +161,9 @@ def combine_audio_segments(structured_scenes_file_path='generated/structured_sce
             combined_audio += narrator_audio
 
         # Add dialogue
-        for dialogue in scene['dialogue']:
+        for j, dialogue in enumerate(scene['dialogue'], start=1):
             speaker = dialogue['speaker']
-            dialogue_file = f"generated/scene_{i}_{scene_title.replace(' ', '_')}_{speaker}.mp3"
+            dialogue_file = f"generated/scene_{i}_{scene_title.replace(' ', '_')}_{speaker}_dialogue_{j}.mp3"
             if os.path.exists(dialogue_file):
                 dialogue_audio = AudioSegment.from_mp3(dialogue_file)
                 combined_audio += dialogue_audio
@@ -150,20 +187,30 @@ def tts_server_batch(texts: List[str], speaker_descriptions: List[str]) -> List[
         'voice': speaker_descriptions
     }
 
+    # Ensure the 'generated' folder exists
+    if not os.path.exists('generated'):
+        os.makedirs('generated')
+
     # Make the POST request
     response = requests.post(url, json=payload)
 
     # Check if the request was successful
     if response.status_code == 200:
         # Extract the audio files from the response
+        zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+
+        # Extract the audio files from the zip file
         audio_segments = []
-        for i, audio_file in enumerate(response.json()):
-            # Save each audio response as a WAV file
-            with open(f'audio_{i}.mp3', 'wb') as f:
-                f.write(audio_file)
+        for i, audio_file_name in enumerate(zip_file.namelist()):
+            # Read the audio file content
+            audio_file_content = zip_file.read(audio_file_name)
+
+            # Write the audio file content to a temporary file
+            with open(f'generated/audio_{i}.mp3', 'wb') as f:
+                f.write(audio_file_content)
 
             # Load the audio file using pydub
-            audio = AudioSegment.from_mp3(f'audio_{i}.mp3')
+            audio = AudioSegment.from_mp3(f'generated/audio_{i}.mp3')
             audio_segments.append(audio)
 
         return audio_segments
@@ -210,18 +257,4 @@ def speech_generator(language):
     generate_speaker_audio(speaker_dialog_file_path, language)
 
     combine_audio_segments(structured_scenes_file_path)
-    '''
-    #Batch Speech Generatioon
-    
-    texts = ["Hey, how are you doing?", "I'm not sure how to feel about it."]
-    speaker_descriptions = "A male speaker with a monotone and high-pitched voice is delivering his speech at a really low speed in a confined environment."
-
-
-    length_of_input_text = len(texts)
-
-    # Create the description list with the same length as input_text
-    description = [speaker_descriptions] * length_of_input_text
-    audio_segments = tts_server_batch(texts, description)
-    for i, audio in enumerate(audio_segments):
-        print(f"Audio {i}: {audio}")
-    '''
+ 

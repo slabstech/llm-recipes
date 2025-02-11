@@ -57,11 +57,13 @@ An experiment to build a production grade audiobook content generator system to 
 
 ## Inference Speed
 
-| GPU Model    | `torch.compile` |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
-|--------------|------------------|---------------------------|-------------------|--------------------|--------------------|
-| GTX 1060     | no               | 2775.97                   | -                 | 87.37              | 2863.34            |
-| RTX 4050     | no               | 489.93                    | -                 | 93.82              | 583.75             |
-| RTX 4050     | yes              | --                        | -                 | --                 | --                 |
+| GPU Model    | `torch.compile` | batch generation |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
+|--------------|-----------------|------------------|---------------------------|------------------------------|-------------------------------|-------------------|
+| GTX 1060     | no              |no                | 2775.97                   | -                            | 87.37                         | 2863.34           |
+| GTX 1060     | no              |yes               | 1224.5                    | -                            | 87.37                         | 2863.34           |
+| RTX 4050     | no              |no                | 489.93                    | -                            | 93.82                         | 583.75            |
+| RTX 4050     | no              |yes               | -                         | -                            | -                             |                   |
+| RTX 4050     | yes             |                  | --                        | -                            | --                            | --                |
 
 ## Reference
 
@@ -76,3 +78,8 @@ An experiment to build a production grade audiobook content generator system to 
 - Inference Tips
   - [Inference Upgrade](https://github.com/huggingface/parler-tts/blob/main/INFERENCE.md)
   - [Large Token Generation](https://huggingface.co/spaces/ai4bharat/indic-parler-tts/blob/main/app.py#L179)
+  - [AudioBox- Meta](https://audiobox.metademolab.com/storymaker/demo)
+    - [Audiobox-Paper](https://arxiv.org/abs/2312.15821)
+    - [Blog](https://ai.meta.com/blog/audiobox-generating-audio-voice-natural-language-prompts/)
+  - [Speechify](https://github.com/SpeechifyInc)
+  - [e2tts](https://github.com/lucidrains/e2-tts-pytorch)

@@ -140,4 +140,5 @@ def script_parser(language, file_name):
 
     speaker_voice_dialog = get_speaker_dialog_voice_desc(structured_scene_json, script_prompts=script_prompts, language=language)
 
+    print("Completed Script Creation")
     #sound_effects_timestamps = get_sound_effects_time_stamps(structured_scene_json, script_prompts=script_prompts, language=language)
