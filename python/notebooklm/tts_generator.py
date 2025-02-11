@@ -4,6 +4,8 @@ import json
 from tqdm import tqdm
 import requests
 from typing import List, Tuple
+import zipfile
+import io
 
 def update_voice_descriptions(language, file_content):
     # Define the replacement dictionary based on language
@@ -75,21 +77,26 @@ def generate_narrator_voice(narrator_file_path='narrator_dialog.json'):
         with open(narrator_file_path, 'r', encoding='utf-8') as file:
             file_content = file.read()
 
-
         file_content = file_content.replace("```json", "")
         file_content = file_content.replace("```", "")
         scenes_data_narrator_json = json.loads(file_content)
         scenes_data_narrator = json.loads(scenes_data_narrator_json)
  
         scenes = scenes_data_narrator['scenes']
+
+
+        # Collect all narrator descriptions and create a corresponding description list
+        narrator_descriptions = [scene['narrator_description'] for scene in scenes]
+        narrator_description_voice = "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise."
+        narrator_description_list = [narrator_description_voice] * len(narrator_descriptions)
+        audio_segments_narrators = tts_server_batch(narrator_descriptions, narrator_description_list)
         for i, scene in enumerate(scenes, start=1):
             scene_title = scene['scene_title']
-            narrator_description = scene['narrator_description']
-            audio_segment = tts_server(narrator_description, "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise.")
-            audio_segment.export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
-                                format="mp3",
-                                bitrate="192k",
-                                parameters=["-q:a", "0"])
+            audio_segments_narrators[i-1].export(f"generated/scene_{i}_{scene_title.replace(' ', '_')}_narrator.mp3",
+                                        format="mp3",
+                                        bitrate="192k")
+            
+
     except KeyError as e:
         print(f"KeyError: {e} - The key does not exist in the JSON data.")
     except TypeError as e:
@@ -156,11 +163,17 @@ def tts_server_batch(texts: List[str], speaker_descriptions: List[str]) -> List[
     # Check if the request was successful
     if response.status_code == 200:
         # Extract the audio files from the response
+        zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+
+        # Extract the audio files from the zip file
         audio_segments = []
-        for i, audio_file in enumerate(response.json()):
-            # Save each audio response as a WAV file
+        for i, audio_file_name in enumerate(zip_file.namelist()):
+            # Read the audio file content
+            audio_file_content = zip_file.read(audio_file_name)
+
+            # Write the audio file content to a temporary file
             with open(f'audio_{i}.mp3', 'wb') as f:
-                f.write(audio_file)
+                f.write(audio_file_content)
 
             # Load the audio file using pydub
             audio = AudioSegment.from_mp3(f'audio_{i}.mp3')
@@ -207,21 +220,7 @@ def speech_generator(language):
     
     generate_narrator_voice(narrator_file_path)
 
-    generate_speaker_audio(speaker_dialog_file_path, language)
+    #generate_speaker_audio(speaker_dialog_file_path, language)
 
     combine_audio_segments(structured_scenes_file_path)
-    '''
-    #Batch Speech Generatioon
-    
-    texts = ["Hey, how are you doing?", "I'm not sure how to feel about it."]
-    speaker_descriptions = "A male speaker with a monotone and high-pitched voice is delivering his speech at a really low speed in a confined environment."
-
-
-    length_of_input_text = len(texts)
-
-    # Create the description list with the same length as input_text
-    description = [speaker_descriptions] * length_of_input_text
-    audio_segments = tts_server_batch(texts, description)
-    for i, audio in enumerate(audio_segments):
-        print(f"Audio {i}: {audio}")
-    '''
+ 
