@@ -1,5 +1,7 @@
 Onnx - optimisation
 
+- REfer - OpenVINo - conversion
+ - https://docs.openvino.ai/2025/notebooks/parler-tts-text-to-speech-with-output.html
 
 - pip install -r onnx-requirements.txt
 
