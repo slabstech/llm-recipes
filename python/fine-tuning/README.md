@@ -3,7 +3,8 @@ Model Optimisation
 - Fine tune models
 - Inference Upgrade
 
-
+- onnx for parler-tts
+  - https://www.perplexity.ai/search/run-a-onnx-model-j0HI1SoiRW2XuAUqiZLH6Q
 - 
 
 - Reference
