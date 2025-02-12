@@ -10,7 +10,17 @@ from typing import List
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 src_lang, tgt_lang = "hin_Deva", "eng_Latn"
+
+#Indic to Indic
+model_name = "ai4bharat/indictrans2-indic-indic-dist-320M"
+
+# Indic to English
 model_name = "ai4bharat/indictrans2-indic-en-dist-200M"
+
+#English to Indic
+model_name = "ai4bharat/indictrans2-en-indic-dist-200M"
+
+
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 
 model = AutoModelForSeq2SeqLM.from_pretrained(
@@ -26,6 +36,8 @@ app = FastAPI()
 
 class TranslationRequest(BaseModel):
     sentences: List[str]
+    src_lang: str
+    tgt_lang: str
 
 class TranslationResponse(BaseModel):
     translations: List[str]
@@ -33,6 +45,9 @@ class TranslationResponse(BaseModel):
 @app.post("/translate", response_model=TranslationResponse)
 async def translate(request: TranslationRequest):
     input_sentences = request.sentences
+    src_lang = request.src_lang
+    tgt_lang = request.tgt_lang
+
     if not input_sentences:
         raise HTTPException(status_code=400, detail="Input sentences are required")
 
