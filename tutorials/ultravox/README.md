@@ -1,5 +1,10 @@
 UltraVox - Speech Language Model
 
+- Feb 12, 2025
+- huggingface-cli download fixie-ai/ultravox-v0_5-llama-3_2-1b
+
+
+---
 
 - Small model - fixie-ai/ultravox-v0_3-llama-3_2-1b
   - huggingface-cli download fixie-ai/ultravox-v0_3-llama-3_2-1b
