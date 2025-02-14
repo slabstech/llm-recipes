@@ -15,3 +15,6 @@ Run Speech to text
 - python python/api_interface.py
 - python python/whisper_api.py
 `
+
+
+https://github.com/huggingface/speech-to-speech
