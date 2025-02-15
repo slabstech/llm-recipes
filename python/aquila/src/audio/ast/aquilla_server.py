@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from transformers import ASTFeatureExtractor, ASTForAudioClassification
 import torch
@@ -40,10 +40,14 @@ def chunk_audio(audio, sr, chunk_size):
     chunks = [audio[i*chunk_length:(i+1)*chunk_length] for i in range(num_chunks)]
     return chunks
 
-@app.post("/predict_audio")
+@app.post("/predict_audio", description="Predict audio file content. Only .wav files are accepted.")
 async def predict_audio(file: UploadFile = File(...)):
     start_time = time.time()  # Record the start time
     try:
+        # Validate file type
+        if file.content_type != "audio/wav":
+            raise HTTPException(status_code=400, detail="Only .wav files are allowed")
+
         # Read the audio file
         audio_bytes = await file.read()
         audio, sr = sf.read(io.BytesIO(audio_bytes))
@@ -107,14 +111,13 @@ def explain_image(image_bytes, model, prompt, ollama_url):
     return response_data
 
 @app.post("/predict_image")
-async def predict_image(file: UploadFile = File(...)):
+async def predict_image(file: UploadFile = File(...), prompt: str = "explain this image?"):
     try:
         # Read the image file
         image_bytes = await file.read()
 
-        # Define the model, prompt, and URL
+        # Define the model and URL
         model = "minicpm-v"
-        prompt = "explain this image?"
         url = "http://localhost:11434"
 
         # Get the image explanation
