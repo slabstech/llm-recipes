@@ -57,10 +57,11 @@ An experiment to build a production grade audiobook content generator system to 
 
 ## Inference Speed
 
-| GPU Model    | `torch.compile` | batch generation |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
+
+| GPU Model    | `torch.compile` | batch generation + chunking  |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
 |--------------|-----------------|------------------|---------------------------|------------------------------|-------------------------------|-------------------|
 | GTX 1060     | no              |no                | 2775.97                   | -                            | 87.37                         | 2863.34           |
-| GTX 1060     | no              |yes               | 1224.5                    | -                            | 87.37                         | 2863.34           |
+| GTX 1060     | no              |yes               | 663.81                    | -                            | 88.96                         | 683.81            |
 | RTX 4050     | no              |no                | 489.93                    | -                            | 93.82                         | 583.75            |
 | RTX 4050     | no              |yes               | -                         | -                            | -                             |                   |
 | RTX 4050     | yes             |                  | --                        | -                            | --                            | --                |

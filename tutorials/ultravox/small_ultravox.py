@@ -4,9 +4,9 @@ import transformers
 import numpy as np
 import librosa
 
-pipe = transformers.pipeline(model='fixie-ai/ultravox-v0_3-llama-3_2-1b', trust_remote_code=True)
+pipe = transformers.pipeline(model='fixie-ai/ultravox-v0_5-llama-3_2-1b', trust_remote_code=True)
 
-path = "<path-to-input-audio>"  # TODO: pass the audio here
+path = "test1.flac"  # TODO: pass the audio here
 audio, sr = librosa.load(path, sr=16000)
 
 
