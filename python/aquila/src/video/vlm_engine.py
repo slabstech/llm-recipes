@@ -71,14 +71,17 @@ def explain_images_directory(directory, model, prompt, url):
 def main():
  
     # Load the prompt from a JSON file
-    with open('vllm.json', 'r') as f:
-        prompt_data = json.load(f)
+    #with open('vllm.json', 'r') as f:
+    #    prompt_data = json.load(f)
 
-    model = prompt_data['model']
-    prompt = prompt_data['prompt']
-    url = prompt_data['url']
+    #model = prompt_data['model']
+    model = "moondream"
+    prompt = "explain this image?"
+    url = "localhost:5001"
+    #prompt = prompt_data['prompt']
+    #url = prompt_data['url']
         
-    image_inference = explain_image("../../data/scene-unity.jpg", model, prompt, url)    
+    image_inference = explain_image("../../data/scene-unity-1.jpg", model, prompt, url)    
     print(image_inference)
 
 if __name__ == "__main__":
