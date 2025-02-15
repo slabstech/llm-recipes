@@ -17,6 +17,9 @@ Audio Spectrogram Transformer (AST)
  - Reference   
     - HF - https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593
         - 
+    - Dataset
+        - https://www.kaggle.com/datasets/wimccall/reduced-mad-dataset-military-audio-dataset
+        - https://www.kaggle.com/datasets/junewookim/mad-dataset-military-audio-dataset
     - Code 
         - https://github.com/YuanGongND/ast
         - https://github.com/YuanGongND/ltu
