@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from transformers import ASTFeatureExtractor, ASTForAudioClassification
 import torch
-import librosa
+import soundfile as sf
 import io
 
 app = FastAPI()
@@ -19,7 +19,7 @@ async def predict(file: UploadFile = File(...)):
     try:
         # Read the audio file
         audio_bytes = await file.read()
-        audio, sr = librosa.load(io.BytesIO(audio_bytes), sr=feature_extractor.sampling_rate)
+        audio, sr = sf.read(io.BytesIO(audio_bytes))
 
         # Preprocess the audio
         inputs = feature_extractor(audio, sampling_rate=sr, return_tensors="pt")
