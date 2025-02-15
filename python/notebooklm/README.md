@@ -57,6 +57,7 @@ An experiment to build a production grade audiobook content generator system to 
 
 ## Inference Speed
 
+
 | GPU Model    | `torch.compile` | batch generation + chunking  |  Speech Generator (secs)  | Script Parser (Local) (secs) | Script Parser (Online) (secs) | Total Time (secs) |
 |--------------|-----------------|------------------|---------------------------|------------------------------|-------------------------------|-------------------|
 | GTX 1060     | no              |no                | 2775.97                   | -                            | 87.37                         | 2863.34           |
