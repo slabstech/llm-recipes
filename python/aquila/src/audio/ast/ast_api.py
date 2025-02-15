@@ -9,6 +9,10 @@ import numpy as np
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
+import requests
+import base64
+import json
+import os
 
 app = FastAPI(docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -36,8 +40,8 @@ def chunk_audio(audio, sr, chunk_size):
     chunks = [audio[i*chunk_length:(i+1)*chunk_length] for i in range(num_chunks)]
     return chunks
 
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+@app.post("/predict_audio")
+async def predict_audio(file: UploadFile = File(...)):
     start_time = time.time()  # Record the start time
     try:
         # Read the audio file
@@ -70,6 +74,53 @@ async def predict(file: UploadFile = File(...)):
 
         elapsed_time = time.time() - start_time  # Calculate elapsed time
         return JSONResponse(content={"filename": file.filename, "predictions": predictions, "time_taken(ms)": elapsed_time})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+def explain_image(image_bytes, model, prompt, ollama_url):
+    encoded_image = base64.b64encode(image_bytes).decode("utf-8")
+    url = ollama_url + "/api/chat"
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt,
+                "images": [encoded_image]
+            }
+        ]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    response_data = ""
+    if response.status_code == 200:
+        for chunk in response.iter_lines():
+            if chunk:
+                data = chunk.decode('utf-8')
+                data_list = json.loads(data)
+                content = data_list['message']['content']
+                response_data += content
+    else:
+        raise Exception(f"Error: {response.status_code} - {response.text}")
+    return response_data
+
+@app.post("/predict_image")
+async def predict_image(file: UploadFile = File(...)):
+    try:
+        # Read the image file
+        image_bytes = await file.read()
+
+        # Define the model, prompt, and URL
+        model = "minicpm-v"
+        prompt = "explain this image?"
+        url = "http://localhost:11434"
+
+        # Get the image explanation
+        image_metadata = explain_image(image_bytes, model, prompt, url)
+
+        return JSONResponse(content={"filename": file.filename, "metadata": image_metadata})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
