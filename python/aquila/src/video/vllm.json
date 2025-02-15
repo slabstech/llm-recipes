@@ -1,0 +1,13 @@
+{
+    "model" : "moondream:latest",
+    "url" : "http://localhost:5001",
+    "prompt" : 
+        { "begin" :"Analyze the image and return a JSON object containing the following information: ",
+            "objects": [ { 
+      "name": "object name",
+      "count": "number of instances" ,
+      "description": "brief description" } ], 
+      "scene": "overall description of the scene", 
+      "colors": "dominant colors in the image",
+    "end" : "Ensure the output is valid JSON format. " } 
+}
