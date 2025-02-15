@@ -14,6 +14,8 @@ Audio Spectrogram Transformer (AST)
     - ```curl -X POST "http://127.0.0.1:8000/predict" -F "file=@1_gunshot/1_gunshot.5.wav"```
 
 
+gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app
+
  - Reference   
     - HF - https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593
         - 
