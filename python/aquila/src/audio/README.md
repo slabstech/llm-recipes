@@ -1,5 +1,8 @@
 Audio Analytics
 
-- Military Audio Dataset
 
-- https://github.com/kaen2891/military_audio_dataset
+- Military Audio Classification
+    - Military Audio Dataset
+        - https://github.com/kaen2891/military_audio_dataset
+        - Run pre-trained model for classification
+        -
