@@ -5,6 +5,7 @@ import onnxruntime
 import soundfile as sf
 import io
 import time
+import traceback
 
 app = FastAPI()
 
@@ -70,6 +71,7 @@ async def predict(file: UploadFile = File(...)):
             "processing_time": processing_time
         })
     except Exception as e:
+        traceback.print_exc()
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import time
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from transformers import ASTFeatureExtractor, ASTForAudioClassification
@@ -16,6 +17,7 @@ id2label = {v: k for k, v in label2id.items()}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    start_time = time.time()  # Record the start time
     try:
         # Read the audio file
         audio_bytes = await file.read()
@@ -32,7 +34,8 @@ async def predict(file: UploadFile = File(...)):
             predicted_class_id = torch.argmax(logits, dim=-1).item()
             predicted_label = id2label[predicted_class_id]
 
-        return JSONResponse(content={"filename": file.filename, "predicted_class": predicted_label})
+        elapsed_time = time.time() - start_time  # Calculate elapsed time
+        return JSONResponse(content={"filename": file.filename, "predicted_class": predicted_label, "time_taken": elapsed_time})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
