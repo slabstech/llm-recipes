@@ -23,3 +23,4 @@ Audio Spectrogram Transformer (AST)
     - Code 
         - https://github.com/YuanGongND/ast
         - https://github.com/YuanGongND/ltu
+    - https://huggingface.co/STMicroelectronics/yamnet
