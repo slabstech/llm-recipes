@@ -4,6 +4,7 @@ from transformers import ASTFeatureExtractor
 import onnxruntime
 import soundfile as sf
 import io
+import time
 
 app = FastAPI()
 
@@ -40,6 +41,8 @@ label2id, id2label = load_label_mappings('labels.txt')
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
+        start_time = time.time()
+
         # Read the audio file
         audio_bytes = await file.read()
         audio, sr = sf.read(io.BytesIO(audio_bytes))
@@ -56,7 +59,16 @@ async def predict(file: UploadFile = File(...)):
         predicted_class_id = logits.argmax(axis=-1).item()
         predicted_label = id2label[predicted_class_id]
 
-        return JSONResponse(content={"filename": file.filename, "predicted_class": predicted_label})
+        end_time = time.time()
+        processing_time = end_time - start_time
+
+        print(f"Processed {file.filename} in {processing_time:.2f} seconds")
+
+        return JSONResponse(content={
+            "filename": file.filename,
+            "predicted_class": predicted_label,
+            "processing_time": processing_time
+        })
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 

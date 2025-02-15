@@ -15,7 +15,8 @@ def index():
         
         if file:
             try:
-                url = "http://138.246.17.57:8000/predict"
+                url = "http://localhost:8000/predict"
+                #url = "http://138.246.17.57:8000/predict"
                 files = {'file': (file.filename, file.stream, file.content_type)}
                 response = requests.post(url, files=files)
                 
