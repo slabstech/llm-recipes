@@ -1,0 +1,135 @@
+{
+    "ukraine_support_scenarios": [
+      {
+        "id": 1,
+        "name": "Drone Defense Network",
+        "inputs": {
+          "video": "Satellite imagery of Russian artillery positions",
+          "audio": "Intercepted communications discussing drone vulnerabilities",
+          "text": "Reports on Ukraine's expanding drone capabilities"
+        },
+        "challenge": "Develop a coordinated drone defense strategy to counter Russian artillery",
+        "domain": "air",
+        "time_sensitivity": "urgent",
+        "ethical_considerations": "Minimizing civilian casualties in counter-artillery operations"
+      },
+      {
+        "id": 2,
+        "name": "Humanitarian Corridor Security",
+        "inputs": {
+          "video": "Drone footage of civilian evacuation routes",
+          "audio": "Distress calls from trapped civilians",
+          "text": "Intelligence on Russian forces targeting evacuation corridors"
+        },
+        "challenge": "Secure safe passage for civilians from occupied territories",
+        "domain": "land",
+        "time_sensitivity": "urgent",
+        "ethical_considerations": "Prioritizing civilian safety while engaging hostile forces"
+      },
+      {
+        "id": 3,
+        "name": "Critical Infrastructure Protection",
+        "inputs": {
+          "video": "Surveillance of power plants and water facilities",
+          "audio": "Intercepted plans for Russian cyberattacks",
+          "text": "Damage reports from recent infrastructure strikes"
+        },
+        "challenge": "Fortify and defend key infrastructure against Russian attacks",
+        "domain": "multi-domain",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Balancing military defense with civilian infrastructure needs"
+      },
+      {
+        "id": 4,
+        "name": "Counteroffensive Planning",
+        "inputs": {
+          "video": "Satellite imagery of Russian troop movements near Pokrovsk",
+          "audio": "Captured Russian communications about supply shortages",
+          "text": "Intelligence on Russian force degradation in the area"
+        },
+        "challenge": "Plan and execute a counteroffensive to reclaim territory south of Pokrovsk",
+        "domain": "land",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Minimizing casualties on both sides during offensive operations"
+      },
+      {
+        "id": 5,
+        "name": "Air Defense Modernization",
+        "inputs": {
+          "video": "Footage of recent missile interceptions",
+          "audio": "Pilot reports on Russian air tactics",
+          "text": "Technical specifications of new air defense systems"
+        },
+        "challenge": "Integrate new air defense technologies to improve interception rates",
+        "domain": "air",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Ensuring new systems comply with international weapons conventions"
+      },
+      {
+        "id": 6,
+        "name": "Cyber Warfare Coordination",
+        "inputs": {
+          "video": "Network traffic visualizations of ongoing cyberattacks",
+          "audio": "Intercepted Russian hacker communications",
+          "text": "Reports on vulnerabilities in Russian military networks"
+        },
+        "challenge": "Coordinate cyber defenses and launch counter-cyberattacks",
+        "domain": "cyber",
+        "time_sensitivity": "urgent",
+        "ethical_considerations": "Avoiding disruption of civilian infrastructure in cyber operations"
+      },
+      {
+        "id": 7,
+        "name": "International Aid Logistics",
+        "inputs": {
+          "video": "Satellite imagery of potential aid delivery routes",
+          "audio": "Coordination calls with international partners",
+          "text": "Inventory lists of incoming military and humanitarian aid"
+        },
+        "challenge": "Efficiently distribute international aid while avoiding Russian interdiction",
+        "domain": "multi-domain",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Ensuring fair distribution of aid to all affected populations"
+      },
+      {
+        "id": 8,
+        "name": "Asymmetric Warfare Training",
+        "inputs": {
+          "video": "Training exercises in urban combat scenarios",
+          "audio": "Lessons learned from successful guerrilla tactics",
+          "text": "Analysis of Russian vulnerabilities to asymmetric warfare"
+        },
+        "challenge": "Develop and implement new asymmetric warfare strategies",
+        "domain": "land",
+        "time_sensitivity": "non-urgent",
+        "ethical_considerations": "Adhering to international laws of war in asymmetric tactics"
+      },
+      {
+        "id": 9,
+        "name": "Diplomatic Negotiations Support",
+        "inputs": {
+          "video": "Footage of war crimes evidence",
+          "audio": "Recorded testimonies of Ukrainian civilians",
+          "text": "Draft peace proposals and territorial claims"
+        },
+        "challenge": "Provide military intelligence to strengthen Ukraine's position in peace talks",
+        "domain": "multi-domain",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Balancing transparency with operational security in negotiations"
+      },
+      {
+        "id": 10,
+        "name": "Defense Industry Collaboration",
+        "inputs": {
+          "video": "Footage of joint Ukrainian-European weapons production",
+          "audio": "Strategy meetings with international defense companies",
+          "text": "Contracts for new joint ventures in defense technology"
+        },
+        "challenge": "Rapidly expand Ukraine's defense industrial base through international partnerships",
+        "domain": "multi-domain",
+        "time_sensitivity": "time-sensitive",
+        "ethical_considerations": "Ensuring new weapons comply with international treaties and conventions"
+      }
+    ]
+  }
+  
