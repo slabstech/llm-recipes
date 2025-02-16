@@ -1,18 +1,18 @@
 LLM Recipes
 
-- Assistant
+- Decision Agent
     - On-device assistant with Speech, Vision, Text search
  
+ ![Decision Engine](python/aquila/data/aquila-workflow.drawio.png)
+ 
 
-!["Multi-modal On-device"](docs/images/on-device.drawio.png "Multi-modal On-device") 
-
-
-[Discord Server](https://discord.gg/h8ygUwvw)
+[Join - Discord Server](https://discord.gg/h8ygUwvw)
 
 
 | Version |Concept | Status | Tech |
 |---|---|---|---|
-|v0.8| [NoteBook LLama](python/notebooklm) | In-Progress | python + tts  | 
+|v0.8| [Mulit-modal Agents](python/aquila/agents/) | In-progress | python | 
+|v0.8| [NoteBook LLama](python/notebooklm) | complete | python + tts  | 
 |v0.8| [Quantisation](tutorial/llama.cpp/) | Paused | llama.cpp  | 
 |v0.7| [On-device Mobile](tutorial/android/) | Paused | Android + TF lite  | 
 |v0.6| [UI](UI) | Complete | Typescript -  [link](https://sanjeevini.me) | 

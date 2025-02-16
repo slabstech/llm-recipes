@@ -13,6 +13,7 @@ import requests
 import base64
 import json
 import os
+import cv2
 
 app = FastAPI(docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -124,6 +125,50 @@ async def predict_image(file: UploadFile = File(...), prompt: str = "explain thi
         image_metadata = explain_image(image_bytes, model, prompt, url)
 
         return JSONResponse(content={"filename": file.filename, "metadata": image_metadata})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+@app.post("/predict_video")
+async def predict_video(file: UploadFile = File(...), prompt: str = "explain this video"):
+    try:
+        # Read the video file
+        video_bytes = await file.read()
+
+        # Define the model and URL
+        model = "minicpm-v"
+        url = "http://localhost:11434"
+
+        # Open the video file
+        video_stream = cv2.VideoCapture(video_bytes)
+        total_frames = int(video_stream.get(cv2.CAP_PROP_FRAME_COUNT))
+        fps = video_stream.get(cv2.CAP_PROP_FPS)
+
+        # Divide the video into 5 segments
+        segment_size = total_frames // 5
+
+        # Extract frames
+        frames = []
+        timestamps = []
+        for i in range(5):
+            frame_index = segment_size * i + segment_size // 2
+            video_stream.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+            ret, frame = video_stream.read()
+            if ret:
+                frames.append(frame)
+                timestamps.append(frame_index / fps)
+
+        video_stream.release()
+
+        # Get explanations for each frame
+        frame_metadata = []
+        for frame, timestamp in zip(frames, timestamps):
+            _, frame_bytes = cv2.imencode('.jpg', frame)
+            frame_metadata.append({
+                "timestamp": timestamp,
+                "metadata": explain_image(frame_bytes.tobytes(), model, prompt, url)
+            })
+
+        return JSONResponse(content={"filename": file.filename, "metadata": frame_metadata})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
