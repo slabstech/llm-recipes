@@ -1,5 +1,12 @@
 Audio Spectrogram Transformer (AST)
 
+
+- Server
+    - ```uvicorn ast_api:app --reload```
+
+- client
+    - ```gunicorn -w 4 -b 0.0.0.0:8001 wsgi:app```
+
 - Download dataset
     - ```huggingface-cli download MIT/ast-finetuned-audioset-10-10-0.4593```
 - Setup python libraries

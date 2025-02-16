@@ -1,0 +1,10 @@
+langchain==0.0.184
+openai==0.27.0
+pydantic==1.10.7
+python-dotenv==1.0.0
+numpy==1.21.6
+opencv-python==4.5.5.64
+tensorflow==2.9.1
+assemblyai==0.17.0
+google-search-results==2.4.1
+pytest==7.3.1
