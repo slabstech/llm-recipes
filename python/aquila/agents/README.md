@@ -1,5 +1,18 @@
 # Military Decision Agent System
 
+
+- [Scenario Generator](data/repspone-scenario-1-2025.md)
+   - [scene 1 - ukraine -scenario 2025](data/ukraine-scenario-1.json)
+   - [scene 2 - scenario 2025](data/2025-scenario.json)
+   - [scene 3](data/scenario-1.json)
+   - [scene 4](data/scenario-2.json)
+
+- [Image Generator via Grok](data/image-scenario-generator.md)
+
+- [Audio Generator for Communication]()
+
+- [Audio Generator for Sounds]()
+
 ## Overview
 
 The Military Decision Agent System is an advanced AI-powered platform designed to assist in military decision-making processes. It leverages cutting-edge natural language processing, computer vision, and audio analysis technologies to process multimodal inputs and provide comprehensive situation assessments and decision recommendations.

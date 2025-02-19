@@ -1,12 +1,17 @@
 Hackathons
 
 - Current - 
+    - Eleven Labs - [22-23 Feb](https://hackathon.elevenlabs.io/)
+    - ArangoDB - [< 8 March 2025](https://arangodbhackathon.devpost.com/)
+    - Predictive HEalthcare - [< 1 March 2025](https://meldrx-predictive-ai.devpost.com/)
+    - Snapdragon AI - [< 25 FEb 2025](https://wos-ai.devpost.com/)
+- Upcoming
+    - EDTH - Amsterdam [March 28-30](https://lu.ma/eurodefensetech)
+    - 
+
+- Past
     - ETHGlobal - Ethereum Agents [Jan 30-Feb 12](https://ethglobal.com/events/agents/info/start)
     - EDF Munich - 2025 [Feb 13-16](https://eurodefense.tech/)
-
-- Upcoming
-
-- Past 
     - hackaTUM - [Nov 22-24](hack.tum.de)
     - Assembly AI - [Nov 13-24](https://dev.to/challenges/assemblyai)
     - Ollama + PG AI [Oct 30- Nov 10](https://dev.to/challenges/pgai)

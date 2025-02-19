@@ -1,0 +1,105 @@
+{
+    "military_scenarios": [
+      {
+        "id": 1,
+        "name": "Border Incursion",
+        "inputs": {
+          "video": "Unidentified vehicles crossing disputed border area",
+          "audio": "Foreign language communications intercepted",
+          "text": "Reports of increased military activity in the region"
+        },
+        "challenge": "Assess threat level and determine appropriate response"
+      },
+      {
+        "id": 2,
+        "name": "Hostage Rescue Operation",
+        "inputs": {
+          "video": "Satellite imagery of compound with suspected hostages",
+          "audio": "Analysis of ransom calls",
+          "text": "Intelligence reports suggesting 48-hour action window"
+        },
+        "challenge": "Plan and execute a time-sensitive rescue operation"
+      },
+      {
+        "id": 3,
+        "name": "Cyber Attack on Military Infrastructure",
+        "inputs": {
+          "video": "Network traffic visualization",
+          "audio": "Emergency calls from affected bases",
+          "text": "Cybersecurity system alerts detailing attack vectors"
+        },
+        "challenge": "Mitigate attack impact and identify perpetrators"
+      },
+      {
+        "id": 4,
+        "name": "Humanitarian Aid Mission in Conflict Zone",
+        "inputs": {
+          "video": "Drone footage of destroyed infrastructure and displaced civilians",
+          "audio": "Radio chatter indicating armed groups in the area",
+          "text": "UN reports on urgent medical and food supply needs"
+        },
+        "challenge": "Coordinate aid delivery while ensuring personnel safety"
+      },
+      {
+        "id": 5,
+        "name": "Submarine Detection in Territorial Waters",
+        "inputs": {
+          "video": "Satellite imagery of increased naval activity",
+          "audio": "Sonar data of unidentified submarine",
+          "text": "Intercepted encrypted communications from the area"
+        },
+        "challenge": "Confirm threat and formulate diplomatic/military response"
+      },
+      {
+        "id": 6,
+        "name": "Chemical Weapon Threat in Urban Area",
+        "inputs": {
+          "video": "CCTV footage of suspicious activity around chemical plant",
+          "audio": "Emergency calls reporting strange odors",
+          "text": "Environmental sensor data showing trace amounts of toxic substances"
+        },
+        "challenge": "Identify threat, plan evacuation, and neutralize chemical hazard"
+      },
+      {
+        "id": 7,
+        "name": "Peacekeeping Mission in Civil War Zone",
+        "inputs": {
+          "video": "Aerial surveillance of clashes between armed factions",
+          "audio": "Intercepted communications between faction leaders",
+          "text": "Social media analysis revealing growing tensions"
+        },
+        "challenge": "De-escalate conflict and protect civilian population"
+      },
+      {
+        "id": 8,
+        "name": "Space Debris Collision Threat",
+        "inputs": {
+          "video": "Telescope footage of approaching space debris",
+          "audio": "Space station crew reports of visual confirmation",
+          "text": "Radar data showing collision course with military satellites"
+        },
+        "challenge": "Prevent collision and minimize impact on global communications"
+      },
+      {
+        "id": 9,
+        "name": "Covert Extraction of High-Value Asset",
+        "inputs": {
+          "video": "Thermal imaging of guard patterns around secure compound",
+          "audio": "Voice recognition analysis of intercepted calls",
+          "text": "Geopolitical reports suggesting narrow extraction window"
+        },
+        "challenge": "Plan and execute extraction while maintaining plausible deniability"
+      },
+      {
+        "id": 10,
+        "name": "Natural Disaster Response",
+        "inputs": {
+          "video": "Satellite imagery of at-risk population centers",
+          "audio": "Seismic data indicating imminent volcanic eruption",
+          "text": "Weather forecasts predicting conditions hampering evacuation"
+        },
+        "challenge": "Coordinate large-scale evacuation and disaster relief efforts"
+      }
+    ]
+  }
+  
