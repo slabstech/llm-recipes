@@ -11,8 +11,9 @@ LLM Recipes
 
 | Version |Concept | Status | Tech |
 |---|---|---|---|
-|v0.8| [Mulit-modal Agents](python/aquila/agents/) | In-progress | python | 
-|v0.8| [NoteBook LLama](python/notebooklm) | complete | python + tts  | 
+|v0.11| [Voice - Shopping Bot](python/shopping-bot) | In-progress | python | 
+|v0.10| [Mulit-modal Agents](python/aquila/agents/) | In-progress | python | 
+|v0.9| [NoteBook LLama](python/notebooklm) | complete | python + tts  | 
 |v0.8| [Quantisation](tutorial/llama.cpp/) | Paused | llama.cpp  | 
 |v0.7| [On-device Mobile](tutorial/android/) | Paused | Android + TF lite  | 
 |v0.6| [UI](UI) | Complete | Typescript -  [link](https://sanjeevini.me) | 

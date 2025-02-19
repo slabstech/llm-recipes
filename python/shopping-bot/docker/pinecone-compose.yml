@@ -1,0 +1,21 @@
+services:
+  index1:
+    image: ghcr.io/pinecone-io/pinecone-index:latest
+    environment:
+      PORT: 5080
+      INDEX_TYPE: serverless
+      DIMENSION: 2 
+      METRIC: cosine
+    ports:
+      - "5081:5081"
+    platform: linux/amd64
+  index2:
+    image: ghcr.io/pinecone-io/pinecone-index:latest
+    environment:
+      PORT: 5081
+      INDEX_TYPE: pod
+      DIMENSION: 2 
+      METRIC: dotproduct
+    ports:
+      - "5082:5082"
+    platform: linux/amd64
