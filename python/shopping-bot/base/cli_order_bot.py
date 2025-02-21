@@ -57,11 +57,8 @@ def parse_and_search_order(user_input, restaurants):
     If no quantity is specified, assume 1.
     """
     
-    model = "mistral-large-latest"
-        
- 
-
     try:
+        model = "mistral-large-latest"
        
         messages = [
                 {
