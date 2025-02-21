@@ -1,32 +1,32 @@
 import gradio as gr
+import uuid
 from order_logic import fetch_menu_from_api, process_order
 
-# Chat function for Gradio
-def chat_function(user_input, history, order, restaurants, awaiting_confirmation):
+# Chat function for Gradio with session ID
+def chat_function(user_input, history, session_id):
     if history is None:
         history = []
     
-    # Process user input using order logic
-    response, new_order, new_awaiting = process_order(user_input, order, restaurants, awaiting_confirmation)
+    # Process user input using order logic with session ID
+    response = process_order(session_id, user_input)
     history.append([user_input, response])
-    return history, new_order, restaurants, new_awaiting, ""
+    return history, ""
 
-# Initial load function to display greeting
+# Initial load function to display greeting and generate session ID
 def load_greeting():
+    session_id = str(uuid.uuid4())  # Generate unique session ID
     error, loaded_restaurants = fetch_menu_from_api()
     initial_message = ("Welcome to the Food Order Bot! What would you like to order? "
                       "(e.g., 'I want 2 butter chickens and a veg pizza')\n"
                       "You can also type 'show order' to see your current order or 'remove [item]' to remove an item.")
     if error:
-        return [[None, error]], {}, loaded_restaurants, False
-    return [[None, initial_message]], {}, loaded_restaurants, False
+        return [[None, error]], session_id
+    return [[None, initial_message]], session_id
 
 # Gradio interface setup
 with gr.Blocks(title="Food Order Bot") as demo:
-    # State variables
-    order_state = gr.State(value={})
-    restaurants_state = gr.State(value={})
-    awaiting_confirmation_state = gr.State(value=False)
+    # State variable for session ID
+    session_id_state = gr.State()
     
     # Chatbot component
     chatbot = gr.Chatbot(
@@ -51,17 +51,17 @@ with gr.Blocks(title="Food Order Bot") as demo:
     </style>
     """)
     
-    # Load initial greeting on start
+    # Load initial greeting and session ID on start
     demo.load(
         load_greeting,
-        outputs=[chatbot, order_state, restaurants_state, awaiting_confirmation_state]
+        outputs=[chatbot, session_id_state]
     )
     
     # Submit handler
     chat_input.submit(
         chat_function,
-        inputs=[chat_input, chatbot, order_state, restaurants_state, awaiting_confirmation_state],
-        outputs=[chatbot, order_state, restaurants_state, awaiting_confirmation_state, chat_input]
+        inputs=[chat_input, chatbot, session_id_state],
+        outputs=[chatbot, chat_input]
     )
 
 demo.launch()
