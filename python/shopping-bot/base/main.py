@@ -13,16 +13,17 @@ client = Mistral(api_key=api_key)
 MENU_API_URL = "http://localhost:5000/menu"
 USERS_API_URL = "http://localhost:5000/users/{}"
 
-# Tool call to fetch menu from API
+# Tool call to fetch all restaurants and their menus from API
 def fetch_menu_from_api():
     try:
         response = requests.get(MENU_API_URL, timeout=5)
         response.raise_for_status()
         data = response.json()
-        return data.get("menu", {})
+        return data.get("restaurants", {})
     except requests.RequestException as e:
         print(f"Failed to fetch menu from API: {e}")
         return {}
+    
 
 # Tool call to fetch user credentials from API
 def fetch_user_credentials_from_api(user_id="user1"):
@@ -45,13 +46,17 @@ def display_menu(menu):
         print(f"{key}. {item['name']} - ₹{item['price']}")
     print("============================\n")
 
-# Function to parse order using Mistral API
-def parse_order_input(user_input, menu):
-    order = {}
-    menu_str = ", ".join([f"{item['name']}" for item in menu.values()])
+# Function to search menu and parse order using Mistral API
+def parse_and_search_order(user_input, restaurants):
+    # Flatten all menu items into a single list for Mistral
+    all_items = []
+    for rest_id, rest_data in restaurants.items():
+        for item_id, item in rest_data["menu"].items():
+            all_items.append(f"{item['name']} (from {rest_data['name']})")
+    menu_str = ", ".join(all_items)
     
     prompt = f"""
-    You are a food order bot. The menu is: {menu_str}.
+    You are a food order bot. The menu items available across multiple restaurants are: {menu_str}.
     Parse the user's input into a structured order (item names and quantities).
     User input: "{user_input}"
     Respond in JSON format: 
@@ -89,18 +94,26 @@ def parse_order_input(user_input, menu):
         if "error" in result:
             return None, result["error"]
         
+        order = {}
         messages = []
         for order_item in result:
             item_name = order_item["item"]
             qty = order_item["quantity"]
             
-            for item_id, item in menu.items():
-                if item["name"].lower() == item_name.lower():
-                    order[item_id] = qty
-                    messages.append(f"Added {qty} x {item['name']} to your order.")
+            # Search across all restaurants
+            found = False
+            for rest_id, rest_data in restaurants.items():
+                for item_id, item in rest_data["menu"].items():
+                    if item["name"].lower() == item_name.lower():
+                        order_key = f"{rest_id}:{item_id}"  # Unique key: restaurant_id:item_id
+                        order[order_key] = qty
+                        messages.append(f"Added {qty} x {item['name']} (from {rest_data['name']}) to your order.")
+                        found = True
+                        break
+                if found:
                     break
-            else:
-                messages.append(f"Sorry, '{item_name}' is not on the menu.")
+            if not found:
+                messages.append(f"Sorry, '{item_name}' is not available at any restaurant.")
         
         return order, "\n".join(messages)
     
@@ -126,18 +139,20 @@ def get_delivery_details(user_id="user1"):
     return {"name": name, "address": address, "phone": phone}
 
 # Function to process the order
-def process_order(order, details, menu):
+def process_order(order, details, restaurants):
     if not order:
         print("\nNo items in your order. Goodbye!")
         return
     
     print("\n=== Order Summary ===")
     total = 0
-    for item_id, qty in order.items():
-        item = menu[item_id]
+    for order_key, qty in order.items():
+        rest_id, item_id = order_key.split(":")
+        item = restaurants[rest_id]["menu"][item_id]
+        rest_name = restaurants[rest_id]["name"]
         cost = item["price"] * qty
         total += cost
-        print(f"{item['name']} x{qty} - ₹{cost}")
+        print(f"{item['name']} x{qty} (from {rest_name}) - ₹{cost}")
     print(f"Total: ₹{total}")
     print(f"Delivery to: {details['name']}, {details['address']}, {details['phone']}")
     print("=====================\n")
@@ -148,38 +163,37 @@ def process_order(order, details, menu):
 
 # Main function to run the bot
 def main():
-    print("Welcome to the Zomato Order Bot!")
-    print("Loading menu and user data from APIs...\n")
+    print("Welcome to the Food Order Bot!")
+    print("Loading restaurant data from API...\n")
     
-    # Fetch menu using tool call
-    menu = fetch_menu_from_api()
-    if not menu:
-        print("Unable to proceed without a menu. Exiting.")
+    # Fetch all restaurants and their menus
+    restaurants = fetch_menu_from_api()
+    if not restaurants:
+        print("Unable to proceed without restaurant data. Exiting.")
         return
     
-    display_menu(menu)
     order = {}
     
-    # Take order via natural language input
+    # Take order via natural language input without showing the menu
     while True:
         user_input = input("What would you like to order? (or 'done' to finish): ").strip()
         if user_input.lower() == "done":
             break
         
-        new_order, message = parse_order_input(user_input, menu)
+        new_order, message = parse_and_search_order(user_input, restaurants)
         print(message)
         if new_order:
-            for item_id, qty in new_order.items():
-                if item_id in order:
-                    order[item_id] += qty  # Add to existing quantity
+            for order_key, qty in new_order.items():
+                if order_key in order:
+                    order[order_key] += qty  # Add to existing quantity
                 else:
-                    order[item_id] = qty
+                    order[order_key] = qty
     
     # Fetch delivery details and process order
     if order:
         details = get_delivery_details()
         if details:
-            process_order(order, details, menu)
+            process_order(order, details, restaurants)
         else:
             print("Cannot process order without delivery details.")
     else:
