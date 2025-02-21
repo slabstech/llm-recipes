@@ -20,3 +20,4 @@ Shopping Bot
 
   - Pinecone setup - https://docs.pinecone.io/guides/operations/local-development
   - llamaindex setup - https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/
+  - https://www.theunwindai.com/p/build-an-ai-real-estate-agent

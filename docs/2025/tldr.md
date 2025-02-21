@@ -8,3 +8,6 @@ Training LLMs on GPU Clusters -  https://huggingface.co/spaces/nanotron/ultrasca
 
 - CUDA AI Engineer - Sakana AI - https://pub.sakana.ai/static/paper.pdf
     - https://pub.sakana.ai/ai-cuda-engineer/
+
+
+- https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/
