@@ -173,13 +173,13 @@ def process_final_order(current_order, restaurants, confirm_multi_restaurant):
     return f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon.", True
 
 # Gradio UI
-with gr.Blocks(title="Zomato Order Bot") as demo:
+with gr.Blocks(title="Food Order Bot") as demo:
     # State to store the order
     order_state = gr.State(value={})
     restaurants_state = gr.State(value={})
     
     # Welcome message
-    gr.Markdown("## Welcome to the Zomato Order Bot!")
+    gr.Markdown("## Welcome to the Food Order Bot!")
     
     # Step 1: Load restaurants and take order input
     with gr.Row():
