@@ -29,8 +29,12 @@ except Exception as e:
     raise
 
 # API endpoints from the Flask mock server
-MENU_API_URL = "http://localhost:5000/menu"
-USERS_API_URL = "http://localhost:5000/users/{}"
+#MENU_API_URL = "http://localhost:5000/menu"
+#USERS_API_URL = "http://localhost:5000/users/{}"
+
+## hosted on HF spaces
+MENU_API_URL = "https://gaganyatri-mock-restaurant-api.hf.space/menu"
+USERS_API_URL = "https://gaganyatri-mock-restaurant-api.hf.space/users/{}"
 
 # Tool call to fetch all restaurants and their menus from API
 def fetch_menu_from_api():
