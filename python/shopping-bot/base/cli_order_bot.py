@@ -36,16 +36,6 @@ def fetch_user_credentials_from_api(user_id="user1"):
         print(f"Failed to fetch user credentials from API: {e}")
         return {}
 
-# Function to display the menu
-def display_menu(menu):
-    if not menu:
-        print("No menu available.")
-        return
-    print("\n=== Zomato Order Bot Menu ===")
-    for key, item in menu.items():
-        print(f"{key}. {item['name']} - ₹{item['price']}")
-    print("============================\n")
-
 # Function to search menu and parse order using Mistral API
 def parse_and_search_order(user_input, restaurants):
     # Flatten all menu items into a single list for Mistral
@@ -58,6 +48,7 @@ def parse_and_search_order(user_input, restaurants):
     prompt = f"""
     You are a food order bot. The menu items available across multiple restaurants are: {menu_str}.
     Parse the user's input into a structured order (item names and quantities).
+    The user may request multiple items in a single query.
     User input: "{user_input}"
     Respond in JSON format: 
     - For valid orders: [{{"item": "item_name", "quantity": number}}, ...]
@@ -161,6 +152,13 @@ def process_order(order, details, restaurants):
     time.sleep(2)
     print("Order placed successfully! You'll receive a confirmation soon.")
 
+# Function to check if all items are from a single restaurant
+def is_single_restaurant(order):
+    if not order:
+        return True
+    restaurant_ids = {order_key.split(":")[0] for order_key in order.keys()}
+    return len(restaurant_ids) == 1
+
 # Main function to run the bot
 def main():
     print("Welcome to the Food Order Bot!")
@@ -189,13 +187,35 @@ def main():
                 else:
                     order[order_key] = qty
     
-    # Fetch delivery details and process order
+    # Process order with restaurant check
     if order:
-        details = get_delivery_details()
-        if details:
-            process_order(order, details, restaurants)
+        if is_single_restaurant(order):
+            details = get_delivery_details()
+            if details:
+                process_order(order, details, restaurants)
+            else:
+                print("Cannot process order without delivery details.")
         else:
-            print("Cannot process order without delivery details.")
+            print("\nYour order contains items from multiple restaurants:")
+            total = 0
+            for order_key, qty in order.items():
+                rest_id, item_id = order_key.split(":")
+                item = restaurants[rest_id]["menu"][item_id]
+                rest_name = restaurants[rest_id]["name"]
+                cost = item["price"] * qty
+                total += cost
+                print(f"{item['name']} x{qty} (from {rest_name}) - ₹{cost}")
+            print(f"Total: ₹{total}")
+            
+            confirm = input("Typically, orders are from a single restaurant. Confirm order? (yes/no): ").strip().lower()
+            if confirm == "yes":
+                details = get_delivery_details()
+                if details:
+                    process_order(order, details, restaurants)
+                else:
+                    print("Cannot process order without delivery details.")
+            else:
+                print("Order cancelled. Please order from a single restaurant.")
     else:
         print("No order to process. Thanks for visiting!")
 
