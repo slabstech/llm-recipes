@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import logging
+from typing import Dict, Optional, List
 
 load_dotenv()
 
@@ -29,7 +30,7 @@ except Exception as e:
     raise
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(Exception))
-def parse_and_search_order(user_input, restaurants, selected_restaurant=None):
+def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaurant: Optional[str] = None) -> tuple[str, Dict]:
     logger.info(f"Parsing order input: {user_input} with selected restaurant: {selected_restaurant}")
     try:
         all_items = []
@@ -54,6 +55,7 @@ def parse_and_search_order(user_input, restaurants, selected_restaurant=None):
         - For valid orders: [{{"item": "item_name", "quantity": number}}, ...]
         - For invalid orders: {{"error": "message"}}
         Match item names exactly (case-insensitive). If no quantity is specified, assume 1.
+        Ensure your response is valid JSON.
         """
         logger.debug(f"Sending prompt to Mistral API: {prompt}")
         
@@ -64,7 +66,16 @@ def parse_and_search_order(user_input, restaurants, selected_restaurant=None):
         if not response_content:
             raise ValueError("Mistral API returned an empty response")
         
-        result = json.loads(response_content)
+        try:
+            result = json.loads(response_content)
+        except json.JSONDecodeError:
+            # Fallback: Try to extract JSON from response if it's wrapped in text
+            import re
+            json_match = re.search(r'(\[.*\]|\{.*\})', response_content, re.DOTALL)
+            if json_match:
+                result = json.loads(json_match.group(0))
+            else:
+                raise
         
         if "error" in result:
             return result["error"], {}

@@ -1,8 +1,9 @@
 import bleach
 from datetime import datetime
 import logging
+from typing import Dict, Optional
 from db import load_state, save_state
-from api import fetch_menu_from_api, authenticate, fetch_user_credentials_from_api, submit_order
+from api import fetch_menu_from_api, authenticate, fetch_user_credentials_from_api, submit_order, is_restaurant_open  # Import is_restaurant_open
 from llm import parse_and_search_order
 
 logging.basicConfig(
@@ -15,37 +16,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def is_restaurant_open(opening_hours):
-    now = datetime.now()
-    current_time = now.hour * 60 + now.minute
-    periods = opening_hours.split(", ")
-    for period in periods:
-        start_str, end_str = period.split(" – ")
-        
-        def parse_time(time_str):
-            time_str = time_str.lower()
-            is_pm = "pm" in time_str
-            time_str = time_str.replace("am", "").replace("pm", "").replace("midnight", "0").replace("noon", "12")
-            hour = int(time_str)
-            if is_pm and hour != 12:
-                hour += 12
-            elif not is_pm and hour == 12:
-                hour = 0
-            return hour * 60
-        
-        start_minutes = parse_time(start_str)
-        end_minutes = parse_time(end_str)
-        if end_minutes < start_minutes:
-            end_minutes += 24 * 60
-        if current_time >= start_minutes and (current_time <= end_minutes or current_time <= end_minutes - 24 * 60):
-            return True
-    return False
-
-def generate_order_summary(order, restaurants):
+def generate_order_summary(order: Dict, restaurants: Dict) -> str:
     if not order:
         return "No items in your order."
     summary = ["=== Current Order ==="]
-    total = 0
+    total = 0.0
     for order_key, qty in order.items():
         rest_id, category, item_id = order_key.split(":")
         item = next(i for i in restaurants[rest_id]["menu"][category] if i["id"] == item_id)
@@ -55,7 +30,7 @@ def generate_order_summary(order, restaurants):
     summary.append(f"Total: ${total:.2f}")
     return "\n".join(summary)
 
-def remove_item_from_order(item_name, order, restaurants):
+def remove_item_from_order(item_name: str, order: Dict, restaurants: Dict) -> str:
     item_name_lower = item_name.lower()
     for order_key, qty in list(order.items()):
         rest_id, category, item_id = order_key.split(":")
@@ -65,7 +40,7 @@ def remove_item_from_order(item_name, order, restaurants):
             return f"Removed {item['name']} from your order."
     return f"'{item_name}' not found in your order."
 
-def process_order(session_id, user_input, username=None, password=None):
+def process_order(session_id: str, user_input: str, username: Optional[str] = None, password: Optional[str] = None) -> str:
     order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id = load_state(session_id)
     
     user_input = bleach.clean(user_input.strip().lower())
@@ -80,10 +55,9 @@ def process_order(session_id, user_input, username=None, password=None):
             if not token:
                 return "Login failed. Invalid credentials."
             logger.debug(f"Token after login: {token}")
-            error, restaurants_data = fetch_menu_from_api(token)
+            error, restaurants = fetch_menu_from_api(token)  # Already filtered for open restaurants in api.py
             if error:
                 return f"Login successful, but failed to fetch menu: {error}"
-            restaurants = {rest_id: rest_data for rest_id, rest_data in restaurants_data.items() if is_restaurant_open(rest_data.get("opening_hours", ""))}
             user_id = username
             open_list = "\n".join([f"- {data['name']} ({data.get('opening_hours', 'Hours not specified')})" for data in restaurants.values()])
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)
@@ -94,10 +68,9 @@ def process_order(session_id, user_input, username=None, password=None):
         
         if not restaurants:
             logger.debug(f"Fetching menu with existing token: {token}")
-            error, restaurants_data = fetch_menu_from_api(token)
+            error, restaurants = fetch_menu_from_api(token)  # Already filtered in api.py
             if error:
                 return f"Failed to fetch menu: {error}"
-            restaurants = {rest_id: rest_data for rest_id, rest_data in restaurants_data.items() if is_restaurant_open(rest_data.get("opening_hours", ""))}
             if not restaurants:
                 return "No restaurants are currently open."
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)

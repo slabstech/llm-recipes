@@ -2,8 +2,8 @@ import gradio as gr
 import uuid
 import speech_recognition as sr
 from orders import process_order
-from api import fetch_menu_from_api
 import logging
+from typing import List, Tuple, Optional
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 recognizer = sr.Recognizer()
 
-def audio_to_text(audio_file):
+def audio_to_text(audio_file: str) -> str:
     if not audio_file or not isinstance(audio_file, str):
         logger.error("Invalid audio file: must be a valid filename string")
         return "Failed to process audio. Please ensure your microphone is working and try again."
@@ -34,25 +34,25 @@ def audio_to_text(audio_file):
         logger.error(f"Unexpected error in audio processing: {str(e)}")
         return f"An error occurred: {str(e)}. Please try again."
 
-def chat_function(user_input, history, session_id, username, password):
+def chat_function(user_input: str, history: Optional[List[Tuple[str, str]]], session_id: str, username: str, password: str) -> Tuple[List[Tuple[str, str]], str, str, str]:
     if history is None:
         history = []
     response = process_order(session_id, user_input, username, password)
-    history.append([user_input, response])
+    history.append((user_input, response))
     return history, "", username, password
 
-def voice_function(audio_file, history, session_id, username, password):
+def voice_function(audio_file: str, history: Optional[List[Tuple[str, str]]], session_id: str, username: str, password: str) -> Tuple[List[Tuple[str, str]], str, str]:
     if history is None:
         history = []
     text = audio_to_text(audio_file)
     if text.startswith("Sorry") or text.startswith("Failed") or "error" in text.lower():
-        history.append([None, text])
+        history.append((None, text))
         return history, username, password
     response = process_order(session_id, text, username, password)
-    history.append([text, response])
+    history.append((text, response))
     return history, username, password
 
-def load_greeting():
+def load_greeting() -> Tuple[List[Tuple[Optional[str], str]], str, str, str]:
     session_id = str(uuid.uuid4())
     initial_message = ("Welcome to the Food Order Bot!\n"
                       "1. Log in by typing 'login <username> <password>' (e.g., 'login user1 password123')\n"

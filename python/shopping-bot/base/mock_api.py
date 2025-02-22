@@ -11,25 +11,29 @@ import logging
 
 app = FastAPI(title="Zomato API Mock")
 
+# Set logging to DEBUG for more visibility
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,  # Changed to DEBUG
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
 
-# Ensure this path is correct based on your fix
-MENU_FILE = "restaurants.json"  # Adjust if you moved it, e.g., "./data/restaurants.json"
+MENU_FILE = "restaurants.json"
 
 def load_menu_data() -> Dict:
     if not os.path.exists(MENU_FILE):
         logger.error(f"Menu file not found at {MENU_FILE}")
-        return {}
+        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")  # Raise exception instead of silent failure
     with open(MENU_FILE, "r") as f:
         data = json.load(f)
         return data.get("restaurants", {})
 
-RESTAURANTS = load_menu_data()
+try:
+    RESTAURANTS = load_menu_data()
+except FileNotFoundError as e:
+    logger.critical(f"Failed to start server: {str(e)}")
+    raise
 
 USERS = {
     "user1": {"name": "John Doe", "address": "123 Main St, Bangalore", "phone": "9876543210", "password": "password123"},
@@ -65,8 +69,8 @@ class OrderResponse(BaseModel):
     total: float
     status: str
 
-async def get_current_user(authorization: Optional[str] = Header(default=None, alias="Authorization")):
-    if not authorization or not authorization.startswith("Bearer "):
+async def get_current_user(authorization: str = Header(...)):  # Remove Optional, require header
+    if not authorization.startswith("Bearer "):
         logger.error(f"Invalid API-Key format: {authorization}")
         raise HTTPException(status_code=403, detail="Invalid API-Key")
     token = authorization.split(" ")[1]
