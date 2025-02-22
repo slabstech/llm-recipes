@@ -20,6 +20,9 @@ Shopping Bot
     ```curl -X POST http://localhost:7860/login -H "Content-Type: application/json" -d '{"username": "user1", "password": "password123"}'```
 
 
+- Voice UX
+    - sudo apt install portaudio19-dev
+
 - hhtps
     - sudo apt install openssl
     - pip install pyOpenSSL
