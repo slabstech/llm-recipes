@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Redis client setup
 try:
     redis_client = redis.Redis(host='localhost', port=8105, db=0, decode_responses=True)
-    redis_client.ping()  # Test connection
+    redis_client.ping()
     logger.info("Connected to Redis successfully")
 except redis.ConnectionError as e:
     logger.error(f"Failed to connect to Redis: {str(e)}")
@@ -39,9 +39,10 @@ except Exception as e:
     logger.error(f"Failed to initialize Mistral client: {str(e)}")
     raise
 
-# API endpoints
-MENU_API_URL = "https://gaganyatri-mock-restaurant-api.hf.space/menu"
-USERS_API_URL = "https://gaganyatri-mock-restaurant-api.hf.space/users/{}"  # Update to production endpoint later
+# API endpoints from the mock API (to be replaced with real API in production)
+MENU_API_URL = "http://localhost:7861/menu"
+USERS_API_URL = "http://localhost:7861/users/{}"
+LOGIN_API_URL = "http://localhost:7861/login"
 
 # Tool call to fetch all restaurants and their menus from API with retry
 @retry(
@@ -62,18 +63,42 @@ def fetch_menu_from_api():
         logger.error(f"Failed to fetch menu from API: {str(e)}")
         raise
 
-# Tool call to fetch user credentials from API with retry
+# Function to authenticate and get token
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type(requests.RequestException),
+    before_sleep=lambda retry_state: logger.info(f"Retrying authenticate: attempt {retry_state.attempt_number}")
+)
+def authenticate(username, password):
+    logger.info(f"Attempting to authenticate user: {username}")
+    try:
+        response = requests.post(
+            LOGIN_API_URL,
+            json={"username": username, "password": password},
+            timeout=5
+        )
+        response.raise_for_status()
+        token = response.json().get("access_token")
+        logger.info(f"Successfully authenticated user {username} and received token")
+        return token
+    except requests.RequestException as e:
+        logger.error(f"Failed to authenticate user {username}: {str(e)}")
+        raise
+
+# Tool call to fetch user credentials from API with retry and authentication
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
     retry=retry_if_exception_type(requests.RequestException),
     before_sleep=lambda retry_state: logger.info(f"Retrying fetch_user_credentials_from_api: attempt {retry_state.attempt_number}")
 )
-def fetch_user_credentials_from_api(user_id="user1"):
+def fetch_user_credentials_from_api(user_id, token):
     logger.info(f"Fetching user credentials for user_id: {user_id}")
     try:
         url = USERS_API_URL.format(user_id)
-        response = requests.get(url, timeout=5)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(url, headers=headers, timeout=5)
         response.raise_for_status()
         logger.info(f"Successfully fetched user credentials for {user_id}")
         return None, response.json()
@@ -111,19 +136,8 @@ def parse_and_search_order(user_input, restaurants):
         
         model = "mistral-large-latest"
         messages = [
-            {
-                "role": "system",
-                "content": "Please provide a concise answer in English. Output the response in the requested format. Do not explain the output. Do not add anything new"
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": prompt
-                    }
-                ]
-            }
+            {"role": "system", "content": "Please provide a concise answer in English. Output the response in the requested format. Do not explain the output. Do not add anything new"},
+            {"role": "user", "content": [{"type": "text", "text": prompt}]}
         ]
         
         chat_response = client.chat.complete(model=model, messages=messages)
@@ -202,14 +216,16 @@ def remove_item_from_order(item_name, order, restaurants):
     return f"'{item_name}' not found in your order."
 
 # Functions to manage state in Redis
-def save_state(session_id, order, restaurants, awaiting_confirmation):
+def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=None, token=None):
     try:
         state = {
             "order": order,
             "restaurants": restaurants,
-            "awaiting_confirmation": awaiting_confirmation
+            "awaiting_confirmation": awaiting_confirmation,
+            "user_id": user_id,
+            "token": token
         }
-        redis_client.setex(session_id, 3600, json.dumps(state))  # Expire in 1 hour
+        redis_client.setex(session_id, 3600, json.dumps(state))
         logger.info(f"Saved state for session {session_id}")
     except redis.RedisError as e:
         logger.error(f"Failed to save state to Redis: {str(e)}")
@@ -219,32 +235,53 @@ def load_state(session_id):
         state_json = redis_client.get(session_id)
         if state_json:
             state = json.loads(state_json)
-            return state["order"], state["restaurants"], state["awaiting_confirmation"]
+            return state["order"], state["restaurants"], state["awaiting_confirmation"], state.get("user_id"), state.get("token")
         logger.info(f"No state found for session {session_id}, initializing new state")
-        return {}, {}, False
+        return {}, {}, False, None, None
     except redis.RedisError as e:
         logger.error(f"Failed to load state from Redis: {str(e)}")
-        return {}, {}, False
+        return {}, {}, False, None, None
 
-# Core order processing logic with Redis state
-def process_order(session_id, user_input):
+# Core order processing logic with Redis state and authentication
+def process_order(session_id, user_input, username=None, password=None):
     logger.info(f"Processing user input for session {session_id}: {user_input}")
-    order, restaurants, awaiting_confirmation = load_state(session_id)
+    order, restaurants, awaiting_confirmation, user_id, token = load_state(session_id)
     
     if not restaurants:
         error, loaded_restaurants = fetch_menu_from_api()
         if error:
             return error
         restaurants = loaded_restaurants
-        save_state(session_id, order, restaurants, awaiting_confirmation)
+        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
     
     user_input = user_input.strip().lower()
     
     try:
+        # Handle login command
+        if user_input.startswith("login "):
+            parts = user_input.split(" ", 2)
+            if len(parts) != 3:
+                return "Please provide username and password (e.g., 'login user1 password123')."
+            username, password = parts[1], parts[2]
+            token = authenticate(username, password)
+            if not token:
+                return "Login failed. Invalid credentials."
+            user_id = username
+            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
+            return f"Logged in as {user_id}. What would you like to order?"
+        
+        # Require login for most commands
+        if not user_id and user_input not in ["login"]:
+            return "Please log in first (e.g., 'login user1 password123')."
+        
         # Handle confirmation for multi-restaurant orders
         if awaiting_confirmation:
             if user_input in ["yes", "y"]:
-                error, credentials = fetch_user_credentials_from_api()
+                if not token:
+                    token = authenticate(username, password)
+                    if not token:
+                        return "Authentication failed. Unable to process order."
+                error, credentials = fetch_user_credentials_from_api(user_id, token)
                 if error:
                     logger.error(f"Cannot proceed due to: {error}")
                     return error
@@ -256,12 +293,12 @@ def process_order(session_id, user_input):
                 delivery_info = f"Delivery to: {name}, {address}, {phone}"
                 logger.info("Order confirmed and processed successfully")
                 response = f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon."
-                save_state(session_id, {}, restaurants, False)
+                save_state(session_id, {}, restaurants, False, user_id, token)
                 return response
             elif user_input in ["no", "n"]:
                 logger.info("Order cancelled by user")
                 response = "Order cancelled. Please order from a single restaurant. What would you like to order next?"
-                save_state(session_id, {}, restaurants, False)
+                save_state(session_id, {}, restaurants, False, user_id, token)
                 return response
             else:
                 logger.warning(f"Invalid confirmation response: {user_input}")
@@ -275,7 +312,11 @@ def process_order(session_id, user_input):
             
             summary = generate_order_summary(order, restaurants)
             if is_single_restaurant(order):
-                error, credentials = fetch_user_credentials_from_api()
+                if not token:
+                    token = authenticate(username, password)
+                    if not token:
+                        return "Authentication failed. Unable to process order."
+                error, credentials = fetch_user_credentials_from_api(user_id, token)
                 if error:
                     logger.error(f"Cannot proceed due to: {error}")
                     return error
@@ -286,11 +327,11 @@ def process_order(session_id, user_input):
                 delivery_info = f"Delivery to: {name}, {address}, {phone}"
                 logger.info("Order processed successfully from single restaurant")
                 response = f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon."
-                save_state(session_id, {}, restaurants, False)
+                save_state(session_id, {}, restaurants, False, user_id, token)
                 return response
             else:
                 logger.info("Order contains items from multiple restaurants")
-                save_state(session_id, order, restaurants, True)
+                save_state(session_id, order, restaurants, True, user_id, token)
                 return f"{summary}\n\nYour order contains items from multiple restaurants. Typically, orders are from a single restaurant. Confirm order? (yes/no)"
         
         # Handle "show order" command
@@ -306,7 +347,7 @@ def process_order(session_id, user_input):
                 logger.warning("No item specified for removal")
                 return "Please specify an item to remove (e.g., 'remove butter chicken')."
             feedback = remove_item_from_order(item_name, order, restaurants)
-            save_state(session_id, order, restaurants, awaiting_confirmation)
+            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
             return f"{feedback}\n\nWhat else would you like to order? (Type 'done' to finish)"
         
         # Parse order input
@@ -317,7 +358,7 @@ def process_order(session_id, user_input):
                     order[order_key] += qty
                 else:
                     order[order_key] = qty
-        save_state(session_id, order, restaurants, awaiting_confirmation)
+        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
         return f"{feedback}\n\nWhat else would you like to order? (Type 'done' to finish)"
     
     except Exception as e:

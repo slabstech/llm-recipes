@@ -14,3 +14,7 @@ Shopping Bot
     - food order bot - https://huggingface.co/spaces/gaganyatri/food_order_bot
 
 - Mock server Endpoint -  "https://gaganyatri-mock-restaurant-api.hf.space/" 
+
+
+- Check for login 
+    ```curl -X POST http://localhost:7860/login -H "Content-Type: application/json" -d '{"username": "user1", "password": "password123"}'```
