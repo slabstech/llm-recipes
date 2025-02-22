@@ -7,25 +7,19 @@ import uvicorn
 import json
 import os
 import uuid
-import logging
+from logging_config import setup_logging  # Import shared config
 
 app = FastAPI(title="Zomato API Mock")
-
-# Set logging to DEBUG for more visibility
-logging.basicConfig(
-    level=logging.DEBUG,  # Changed to DEBUG
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler()]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 MENU_FILE = "restaurants.json"
 
 def load_menu_data() -> Dict:
     if not os.path.exists(MENU_FILE):
         logger.error(f"Menu file not found at {MENU_FILE}")
-        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")  # Raise exception instead of silent failure
+        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")
     with open(MENU_FILE, "r") as f:
+        logger.debug(f"Loading menu data from {MENU_FILE}")
         data = json.load(f)
         return data.get("restaurants", {})
 
@@ -69,7 +63,7 @@ class OrderResponse(BaseModel):
     total: float
     status: str
 
-async def get_current_user(authorization: str = Header(...)):  # Remove Optional, require header
+async def get_current_user(authorization: str = Header(...)):
     if not authorization.startswith("Bearer "):
         logger.error(f"Invalid API-Key format: {authorization}")
         raise HTTPException(status_code=403, detail="Invalid API-Key")
@@ -111,7 +105,9 @@ async def get_menu(current_user: str = Depends(get_current_user)):
 
 @app.get("/users/{user_id}")
 async def get_user(user_id: str, current_user: str = Depends(get_current_user)):
+    logger.debug(f"Fetching user details for {user_id} by {current_user}")
     if user_id not in USERS:
+        logger.warning(f"User {user_id} not found")
         raise HTTPException(status_code=404, detail="User not found")
     user = USERS[user_id]
     return {
@@ -125,17 +121,21 @@ async def get_user(user_id: str, current_user: str = Depends(get_current_user)):
 
 @app.post("/orders", response_model=OrderResponse)
 async def create_order(order: OrderRequest, current_user: str = Depends(get_current_user)):
+    logger.info(f"Creating order for user: {current_user}")
     total = 0.0
     for item in order.items:
         rest_id = item.restaurant_id
         if rest_id not in RESTAURANTS:
+            logger.error(f"Restaurant {rest_id} not found")
             raise HTTPException(status_code=400, detail=f"Restaurant {rest_id} not found")
         restaurant = RESTAURANTS[rest_id]
         category = item.category
         if category not in restaurant["menu"]:
+            logger.error(f"Category {category} not found in restaurant {rest_id}")
             raise HTTPException(status_code=400, detail=f"Category {category} not found in restaurant {rest_id}")
         menu_item = next((i for i in restaurant["menu"][category] if i["id"] == item.item_id), None)
         if not menu_item:
+            logger.error(f"Item {item.item_id} not found in category {category}")
             raise HTTPException(status_code=400, detail=f"Item {item.item_id} not found in category {category}")
         total += menu_item["price"] * item.quantity
     
@@ -148,7 +148,7 @@ async def create_order(order: OrderRequest, current_user: str = Depends(get_curr
         "user_id": current_user
     }
     ORDERS[order_id] = order_data
-    
+    logger.info(f"Order {order_id} created successfully")
     return OrderResponse(
         order_id=order_id,
         items=order.items,
@@ -174,6 +174,7 @@ async def search_restaurants(
     order: Optional[str] = None,
     current_user: str = Depends(get_current_user)
 ):
+    logger.info(f"Searching restaurants for user: {current_user}")
     return {
         "success": True,
         "data": list(RESTAURANTS.values())

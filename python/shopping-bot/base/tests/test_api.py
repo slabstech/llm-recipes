@@ -1,4 +1,5 @@
 import pytest
+import requests  # Add this import
 from api import fetch_menu_from_api, authenticate, fetch_user_credentials_from_api, submit_order
 from unittest.mock import patch, Mock
 

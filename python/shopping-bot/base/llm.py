@@ -6,18 +6,9 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 import logging
 import re
 from typing import Dict, Optional, List
+from logging_config import setup_logging  # Import shared config
 
-load_dotenv()
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(os.getenv("LOG_FILE", "food_order_bot.log")),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 try:
     MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
@@ -77,6 +68,7 @@ def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaura
                 raise
         
         if "error" in result:
+            logger.warning(f"Order parsing failed: {result['error']}")
             return f"Sorry, I couldn't understand your order: {result['error']}. Please try rephrasing it (e.g., '2 Butter Idlis').", {}
         
         order = {}
@@ -98,7 +90,7 @@ def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaura
                 feedback.append(f"Added {qty} x {item_name} (from {restaurants[rest_id]['name']}) to your order.")
             else:
                 feedback.append(f"Sorry, '{item_name}' is not available on the menu. Please check the menu and try again.")
-        
+        logger.info(f"Successfully parsed order: {order}")
         return "\n".join(feedback), order
     
     except json.JSONDecodeError as e:

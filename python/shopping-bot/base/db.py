@@ -2,19 +2,9 @@ import sqlite3
 import json
 import os
 from dotenv import load_dotenv
-import logging
+from logging_config import setup_logging  # Import shared config
 
-load_dotenv()
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(os.getenv("LOG_FILE", "food_order_bot.log")),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 DB_FILE = os.getenv("DB_FILE", "zomato_orders.db")
 
@@ -23,6 +13,7 @@ def init_db(force_reset=False):
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         if force_reset:
+            logger.debug("Dropping existing sessions table")
             cursor.execute("DROP TABLE IF EXISTS sessions")
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS sessions (
@@ -49,6 +40,7 @@ def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=No
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
+        logger.debug(f"Saving state for session {session_id} with order: {order}")
         cursor.execute("""
             INSERT OR REPLACE INTO sessions (session_id, order_data, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -76,6 +68,7 @@ def load_state(session_id):
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
+        logger.debug(f"Loading state for session {session_id}")
         cursor.execute("SELECT order_data, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id FROM sessions WHERE session_id = ?", (session_id,))
         result = cursor.fetchone()
         if result:

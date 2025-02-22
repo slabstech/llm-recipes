@@ -5,16 +5,9 @@ from typing import Dict, Optional
 from db import load_state, save_state
 from api import fetch_menu_from_api, authenticate, fetch_user_credentials_from_api, submit_order, is_restaurant_open
 from llm import parse_and_search_order
+from logging_config import setup_logging  # Import shared config
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("food_order_bot.log"),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 def generate_order_summary(order: Dict, restaurants: Dict) -> str:
     if not order:
@@ -37,11 +30,12 @@ def remove_item_from_order(item_name: str, order: Dict, restaurants: Dict) -> st
         item = next(i for i in restaurants[rest_id]["menu"][category] if i["id"] == item_id)
         if item["name"].lower() == item_name_lower:
             del order[order_key]
+            logger.info(f"Removed item '{item_name}' from order")
             return f"Removed {item['name']} from your order."
+    logger.warning(f"Item '{item_name}' not found in order")
     return f"'{item_name}' not found in your order."
 
 def display_menu(restaurants: Dict) -> str:
-    """Display a formatted menu of all items from open restaurants."""
     if not restaurants:
         return "No open restaurants available to display a menu."
     
@@ -53,11 +47,11 @@ def display_menu(restaurants: Dict) -> str:
             for item in items:
                 menu_lines.append(f"    - {item['name']} (${item['price']:.2f})")
     menu_lines.append("\nType an order like '1 Butter Idli' or 'list restaurants' to continue.")
+    logger.info(f"Displayed menu for {len(restaurants)} restaurants")
     return "\n".join(menu_lines)
 
 def process_order(session_id: str, user_input: str, username: Optional[str] = None, password: Optional[str] = None) -> str:
     order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id = load_state(session_id)
-    
     user_input = bleach.clean(user_input.strip().lower())
     
     try:
@@ -76,6 +70,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             user_id = username
             open_list = "\n".join([f"- {data['name']} ({data.get('opening_hours', 'Hours not specified')})" for data in restaurants.values()])
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)
+            logger.info(f"User {user_id} logged in successfully")
             return f"Logged in as {user_id}. Open restaurants:\n{open_list}\nWhat would you like to order?"
         
         if not user_id:
@@ -92,6 +87,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
         
         if user_input == "list restaurants":
             open_list = "\n".join([f"- {data['name']} ({data.get('opening_hours', 'Hours not specified')})" for data in restaurants.values()])
+            logger.info(f"Listed {len(restaurants)} open restaurants")
             return f"Currently open restaurants:\n{open_list}"
         
         if user_input == "menu":
@@ -112,6 +108,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             if not order:
                 return "You haven't added any items to your order yet. What would you like to order?"
             summary = generate_order_summary(order, restaurants)
+            logger.info(f"Order review requested for session {session_id}")
             return f"{summary}\nPlease type 'confirm' to place your order or 'cancel' to discard it."
         
         if user_input == "confirm" and order:
@@ -128,6 +125,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             delivery_info = f"Delivery to: {name}, {address}, {phone}"
             response = f"{summary}\n{delivery_info}\n\nOrder placed successfully! Order ID: {order_response['order_id']}"
             save_state(session_id, {}, restaurants, False, user_id, token, None, order_response['order_id'])
+            logger.info(f"Order confirmed for session {session_id}, Order ID: {order_response['order_id']}")
             return response
         elif user_input == "confirm" and not order:
             return "There's no order to confirm. Please add items to your order first (e.g., '1 Butter Idli')."
@@ -135,6 +133,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
         if user_input == "cancel" and order:
             order.clear()
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, None, None)
+            logger.info(f"Order cancelled for session {session_id}")
             return "Your order has been cancelled. What would you like to order next?"
         elif user_input == "cancel" and not order:
             return "There's no order to cancel."
@@ -145,6 +144,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
                 selected_restaurant = list(new_order.keys())[0].split(":")[0]
             for order_key, qty in new_order.items():
                 order[order_key] = order.get(order_key, 0) + qty
+            logger.info(f"Added items to order for session {session_id}: {new_order}")
         save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)
         return f"{feedback}\n\nWhat else would you like to order from {restaurants[selected_restaurant]['name']}? (Type 'done' to review your order)"
     

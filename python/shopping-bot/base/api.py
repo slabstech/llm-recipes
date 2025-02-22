@@ -3,20 +3,12 @@ import os
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from datetime import datetime
-import logging
+from logging_config import setup_logging  # Import shared config
 from typing import Dict, Optional, Tuple
 
 load_dotenv()
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(os.getenv("LOG_FILE", "food_order_bot.log")),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 BASE_URL = os.getenv("BASE_URL", "http://localhost:7861")
 MENU_API_URL = f"{BASE_URL}/menu"
@@ -65,6 +57,7 @@ def fetch_menu_from_api(token: str) -> Tuple[Optional[str], Dict]:
             rest_id: rest_data for rest_id, rest_data in restaurants.items()
             if "opening_hours" in rest_data and is_restaurant_open(rest_data["opening_hours"])
         }
+        logger.info(f"Fetched {len(open_restaurants)} open restaurants")
         return None, open_restaurants
     except requests.RequestException as e:
         logger.error(f"Failed to fetch menu from API: {str(e)} - Response: {e.response.text if e.response else 'No response'}")
@@ -89,7 +82,7 @@ def authenticate(username: str, password: str) -> Optional[str]:
         return token
     except requests.RequestException as e:
         logger.error(f"Failed to authenticate user {username}: {str(e)}")
-        return None  # Handled in orders.py
+        return None
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
 def fetch_user_credentials_from_api(user_id: str, token: str) -> Tuple[Optional[str], Dict]:
@@ -107,6 +100,7 @@ def fetch_user_credentials_from_api(user_id: str, token: str) -> Tuple[Optional[
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
 def submit_order(order: Dict, token: str) -> Tuple[Optional[str], Dict]:
+    logger.info(f"Submitting order for token: {token}")
     try:
         headers = {"Authorization": f"Bearer {token}"}
         order_items = [
@@ -115,6 +109,7 @@ def submit_order(order: Dict, token: str) -> Tuple[Optional[str], Dict]:
         ]
         response = requests.post(ORDERS_API_URL, json={"items": order_items}, headers=headers, timeout=10, verify=False)
         response.raise_for_status()
+        logger.info("Order submitted successfully")
         return None, response.json()
     except requests.RequestException as e:
         logger.error(f"Failed to submit order: {str(e)}")

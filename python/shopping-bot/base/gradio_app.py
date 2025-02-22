@@ -2,15 +2,10 @@ import gradio as gr
 import uuid
 import speech_recognition as sr
 from orders import process_order
-import logging
+from logging_config import setup_logging  # Import shared config
 from typing import List, Tuple, Optional
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("food_order_bot.log"), logging.StreamHandler()]
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 recognizer = sr.Recognizer()
 
@@ -37,6 +32,7 @@ def audio_to_text(audio_file: str) -> str:
 def chat_function(user_input: str, history: Optional[List[Tuple[str, str]]], session_id: str, username: str, password: str) -> Tuple[List[Tuple[str, str]], str, str, str]:
     if history is None:
         history = []
+    logger.debug(f"Processing chat input: {user_input}")
     response = process_order(session_id, user_input, username, password)
     history.append((user_input, response))
     return history, "", username, password
@@ -48,6 +44,7 @@ def voice_function(audio_file: str, history: Optional[List[Tuple[str, str]]], se
     if text.startswith("Sorry") or text.startswith("Failed") or "error" in text.lower():
         history.append((None, text))
         return history, username, password
+    logger.debug(f"Processing voice input: {text}")
     response = process_order(session_id, text, username, password)
     history.append((text, response))
     return history, username, password
@@ -60,6 +57,7 @@ def load_greeting() -> Tuple[List[Tuple[Optional[str], str]], str, str, str]:
                       "3. Order items (e.g., '1 Butter Idli') - limited to one restaurant after first item\n"
                       "4. Type 'done' to review, then 'confirm' to place or 'cancel' to discard your order\n"
                       "5. Use 'show order' or 'remove [item]' to manage your order")
+    logger.info(f"Initialized new session: {session_id}")
     return [[None, initial_message]], session_id, "", ""
 
 with gr.Blocks(title="Food Order Bot") as demo:
