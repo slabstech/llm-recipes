@@ -4,7 +4,7 @@ from mistralai import Mistral
 import json
 import logging
 import os
-import redis
+import sqlite3
 import bleach
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
@@ -23,19 +23,28 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Redis client setup with configurable settings
-try:
-    redis_client = redis.Redis(
-        host=os.getenv("REDIS_HOST", "localhost"),
-        port=int(os.getenv("REDIS_PORT", "6379")),
-        db=int(os.getenv("REDIS_DB", "0")),
-        decode_responses=True
-    )
-    redis_client.ping()
-    logger.info("Connected to Redis successfully")
-except redis.ConnectionError as e:
-    logger.error(f"Failed to connect to Redis: {str(e)}")
-    raise
+# SQLite setup
+DB_FILE = os.getenv("DB_FILE", "zomato_orders.db")
+
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sessions (
+            session_id TEXT PRIMARY KEY,
+            order_data TEXT,
+            restaurants TEXT,
+            awaiting_confirmation INTEGER,
+            user_id TEXT,
+            token TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+    logger.info("SQLite database initialized")
+
+# Initialize database on startup
+init_db()
 
 # Mistral API key from environment variable
 try:
@@ -226,34 +235,47 @@ def remove_item_from_order(item_name, order, restaurants):
     logger.warning(f"Item not found in order: {item_name}")
     return f"'{item_name}' not found in your order."
 
-# Functions to manage state in Redis
+# Functions to manage state in SQLite
 def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=None, token=None):
     try:
-        state = {
-            "order": order,
-            "restaurants": restaurants,
-            "awaiting_confirmation": awaiting_confirmation,
-            "user_id": user_id,
-            "token": token
-        }
-        redis_client.setex(session_id, 3600, json.dumps(state))
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT OR REPLACE INTO sessions (session_id, order_data, restaurants, awaiting_confirmation, user_id, token)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            session_id,
+            json.dumps(order),
+            json.dumps(restaurants),
+            int(awaiting_confirmation),
+            user_id,
+            token
+        ))
+        conn.commit()
         logger.info(f"Saved state for session {session_id}")
-    except redis.RedisError as e:
-        logger.error(f"Failed to save state to Redis: {str(e)}")
+    except sqlite3.Error as e:
+        logger.error(f"Failed to save state to SQLite: {str(e)}")
+    finally:
+        conn.close()
 
 def load_state(session_id):
     try:
-        state_json = redis_client.get(session_id)
-        if state_json:
-            state = json.loads(state_json)
-            return state["order"], state["restaurants"], state["awaiting_confirmation"], state.get("user_id"), state.get("token")
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute("SELECT order_data, restaurants, awaiting_confirmation, user_id, token FROM sessions WHERE session_id = ?", (session_id,))
+        result = cursor.fetchone()
+        if result:
+            order, restaurants, awaiting_confirmation, user_id, token = result
+            return json.loads(order), json.loads(restaurants), bool(awaiting_confirmation), user_id, token
         logger.info(f"No state found for session {session_id}, initializing new state")
         return {}, {}, False, None, None
-    except redis.RedisError as e:
-        logger.error(f"Failed to load state from Redis: {str(e)}")
+    except sqlite3.Error as e:
+        logger.error(f"Failed to load state from SQLite: {str(e)}")
         return {}, {}, False, None, None
+    finally:
+        conn.close()
 
-# Core order processing logic with Redis state, authentication, and input validation
+# Core order processing logic with SQLite state, authentication, and input validation
 def process_order(session_id, user_input, username=None, password=None):
     logger.info(f"Processing user input for session {session_id}: {user_input}")
     order, restaurants, awaiting_confirmation, user_id, token = load_state(session_id)
@@ -357,7 +379,7 @@ def process_order(session_id, user_input, username=None, password=None):
         if user_input == "show order":
             summary = generate_order_summary(order, restaurants)
             logger.info("Showing current order")
-            return f"{summary}\n\nWhat else would you like to order? (Type 'done' to finish)"
+            return summary
         
         # Handle "remove [item]" command
         if user_input.startswith("remove "):
@@ -370,9 +392,9 @@ def process_order(session_id, user_input, username=None, password=None):
                 return "Item name must be less than 50 characters."
             feedback = remove_item_from_order(item_name, order, restaurants)
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
-            return f"{feedback}\n\nWhat else would you like to order? (Type 'done' to finish)"
+            return feedback
         
-        # Parse order input (additional validation)
+        # Parse order input
         if len(user_input) > 200:
             logger.warning("Order input too long")
             return "Order input must be less than 200 characters."

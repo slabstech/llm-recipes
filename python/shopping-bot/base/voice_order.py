@@ -17,6 +17,10 @@ recognizer = sr.Recognizer()
 
 # Function to convert audio to text
 def audio_to_text(audio_file):
+    if not audio_file or not isinstance(audio_file, str):
+        logger.error("Invalid audio file: must be a valid filename string")
+        return "Failed to process audio. Please ensure your microphone is working and try again."
+    
     try:
         with sr.AudioFile(audio_file) as source:
             audio_data = recognizer.record(source)
@@ -25,13 +29,13 @@ def audio_to_text(audio_file):
             return text
     except sr.UnknownValueError:
         logger.warning("Could not understand audio")
-        return "Sorry, I couldn't understand your voice command. Please try again."
+        return "Sorry, I couldn't understand your voice command. Please speak clearly and try again."
     except sr.RequestError as e:
         logger.error(f"Speech recognition error: {str(e)}")
-        return f"Speech recognition failed: {str(e)}"
+        return f"Speech recognition failed: {str(e)}. Please check your internet connection."
     except Exception as e:
         logger.error(f"Unexpected error in audio processing: {str(e)}")
-        return f"An error occurred: {str(e)}"
+        return f"An error occurred: {str(e)}. Please try again."
 
 # Chat function for Gradio with session ID and login credentials (for text input)
 def chat_function(user_input, history, session_id, username, password):
@@ -49,7 +53,7 @@ def voice_function(audio_file, history, session_id, username, password):
         history = []
     
     text = audio_to_text(audio_file)
-    if text.startswith("Sorry") or "error" in text.lower():
+    if text.startswith("Sorry") or text.startswith("Failed") or "error" in text.lower():
         history.append([None, text])
         return history, username, password
     
