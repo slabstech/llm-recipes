@@ -112,6 +112,10 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             if not order:
                 return "You haven't added any items to your order yet. What would you like to order?"
             summary = generate_order_summary(order, restaurants)
+            return f"{summary}\nPlease type 'confirm' to place your order or 'cancel' to discard it."
+        
+        if user_input == "confirm" and order:
+            summary = generate_order_summary(order, restaurants)
             error, credentials = fetch_user_credentials_from_api(user_id, token)
             if error:
                 return "I couldn't process your order because I can't retrieve your details. Please try again or log out and back in."
@@ -125,6 +129,15 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             response = f"{summary}\n{delivery_info}\n\nOrder placed successfully! Order ID: {order_response['order_id']}"
             save_state(session_id, {}, restaurants, False, user_id, token, None, order_response['order_id'])
             return response
+        elif user_input == "confirm" and not order:
+            return "There's no order to confirm. Please add items to your order first (e.g., '1 Butter Idli')."
+        
+        if user_input == "cancel" and order:
+            order.clear()
+            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, None, None)
+            return "Your order has been cancelled. What would you like to order next?"
+        elif user_input == "cancel" and not order:
+            return "There's no order to cancel."
         
         feedback, new_order = parse_and_search_order(user_input, restaurants, selected_restaurant)
         if new_order:
@@ -133,7 +146,7 @@ def process_order(session_id: str, user_input: str, username: Optional[str] = No
             for order_key, qty in new_order.items():
                 order[order_key] = order.get(order_key, 0) + qty
         save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant, order_id)
-        return f"{feedback}\n\nWhat else would you like to order from {restaurants[selected_restaurant]['name']}? (Type 'done' to finish)"
+        return f"{feedback}\n\nWhat else would you like to order from {restaurants[selected_restaurant]['name']}? (Type 'done' to review your order)"
     
     except Exception as e:
         logger.error(f"Unexpected error in order processing: {str(e)}")

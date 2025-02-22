@@ -56,9 +56,10 @@ def load_greeting() -> Tuple[List[Tuple[Optional[str], str]], str, str, str]:
     session_id = str(uuid.uuid4())
     initial_message = ("Welcome to the Food Order Bot!\n"
                       "1. Log in by typing 'login <username> <password>' (e.g., 'login user1 password123')\n"
-                      "2. After logging in, type 'list restaurants' to see open restaurants or 'menu' to view all items\n"
-                      "3. Order items (e.g., 'I want 2 Butter Idlis') - limited to one restaurant after first item\n"
-                      "4. Use 'show order', 'remove [item]', or 'done' to manage your order")
+                      "2. After logging in, type 'list restaurants' or 'menu' to see options\n"
+                      "3. Order items (e.g., '1 Butter Idli') - limited to one restaurant after first item\n"
+                      "4. Type 'done' to review, then 'confirm' to place or 'cancel' to discard your order\n"
+                      "5. Use 'show order' or 'remove [item]' to manage your order")
     return [[None, initial_message]], session_id, "", ""
 
 with gr.Blocks(title="Food Order Bot") as demo:
@@ -69,7 +70,7 @@ with gr.Blocks(title="Food Order Bot") as demo:
     chatbot = gr.Chatbot(label="Chat with Food Order Bot", height=600, scale=1)
     voice_input = gr.Audio(label="Speak Your Order", type="filepath")
     chat_input = gr.Textbox(
-        placeholder="Type 'login username password', 'list restaurants', 'menu', your order, 'done', 'show order', or 'remove [item]'",
+        placeholder="Type 'login username password', 'list restaurants', 'menu', your order, 'done', 'confirm', 'cancel', 'show order', or 'remove [item]'",
         label="Your Order"
     )
     
