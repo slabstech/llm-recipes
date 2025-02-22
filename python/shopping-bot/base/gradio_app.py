@@ -2,7 +2,8 @@ import gradio as gr
 import uuid
 import speech_recognition as sr
 from orders import process_order
-from logging_config import setup_logging  # Import shared config
+from logging_config import setup_logging
+from config import config  # Import config
 from typing import List, Tuple, Optional
 
 logger = setup_logging(__name__)

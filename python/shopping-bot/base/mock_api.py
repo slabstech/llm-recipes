@@ -6,20 +6,19 @@ from typing import Dict, Optional, List
 import uvicorn
 import json
 import os
+from logging_config import setup_logging
+from db import save_order, load_order
+from config import config  # Import config
 import uuid
-from logging_config import setup_logging  # Import shared config
-
 app = FastAPI(title="Zomato API Mock")
 logger = setup_logging(__name__)
 
-MENU_FILE = "restaurants.json"
-
 def load_menu_data() -> Dict:
-    if not os.path.exists(MENU_FILE):
-        logger.error(f"Menu file not found at {MENU_FILE}")
-        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")
-    with open(MENU_FILE, "r") as f:
-        logger.debug(f"Loading menu data from {MENU_FILE}")
+    if not os.path.exists(config.MENU_FILE):
+        logger.error(f"Menu file not found at {config.MENU_FILE}")
+        raise FileNotFoundError(f"Menu file {config.MENU_FILE} not found")
+    with open(config.MENU_FILE, "r") as f:
+        logger.debug(f"Loading menu data from {config.MENU_FILE}")
         data = json.load(f)
         return data.get("restaurants", {})
 
@@ -34,11 +33,7 @@ USERS = {
     "user2": {"name": "Jane Smith", "address": "456 Elm St, Bangalore", "phone": "1234567890", "password": "securepass456"}
 }
 
-ORDERS: Dict[str, dict] = {}
-
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
-
+# Pydantic Models
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -70,7 +65,7 @@ async def get_current_user(authorization: str = Header(...)):
     token = authorization.split(" ")[1]
     logger.debug(f"Received token: {token}")
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
         logger.debug(f"Decoded JWT payload: {payload}")
         user_id: str = payload.get("user_id")
         if user_id is None or user_id not in USERS:
@@ -89,7 +84,7 @@ async def login(login_data: LoginRequest):
         token = jwt.encode({
             "user_id": username,
             "exp": datetime.utcnow() + timedelta(hours=1)
-        }, SECRET_KEY, algorithm=ALGORITHM)
+        }, config.SECRET_KEY, algorithm=config.ALGORITHM)
         logger.info(f"Generated token for {username}: {token}")
         return {"access_token": token, "token_type": "bearer"}
     logger.error(f"Login failed for {username}")
@@ -140,21 +135,30 @@ async def create_order(order: OrderRequest, current_user: str = Depends(get_curr
         total += menu_item["price"] * item.quantity
     
     order_id = str(uuid.uuid4())
-    order_data = {
-        "order_id": order_id,
-        "items": [item.dict() for item in order.items],
-        "total": total,
-        "status": "Placed",
-        "user_id": current_user
-    }
-    ORDERS[order_id] = order_data
-    logger.info(f"Order {order_id} created successfully")
+    items_list = [item.dict() for item in order.items]
+    save_order(order_id, current_user, items_list, total)
+    logger.info(f"Order {order_id} created and saved to database")
     return OrderResponse(
         order_id=order_id,
         items=order.items,
         total=total,
         status="Placed"
     )
+
+@app.get("/orders/{order_id}")
+async def get_order(order_id: str, current_user: str = Depends(get_current_user)):
+    logger.info(f"Fetching order {order_id} for user {current_user}")
+    order_data = load_order(order_id)
+    if not order_data:
+        logger.warning(f"Order {order_id} not found")
+        raise HTTPException(status_code=404, detail="Order not found")
+    if order_data["user_id"] != current_user:
+        logger.error(f"User {current_user} not authorized to access order {order_id}")
+        raise HTTPException(status_code=403, detail="Not authorized to access this order")
+    return {
+        "success": True,
+        "data": order_data
+    }
 
 @app.get("/search")
 async def search_restaurants(

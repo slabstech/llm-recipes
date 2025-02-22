@@ -1,20 +1,23 @@
 import sqlite3
 import json
 import os
-from dotenv import load_dotenv
-from logging_config import setup_logging  # Import shared config
+from logging_config import setup_logging
+from config import config  # Import config
+from typing import Dict, Optional, List
 
 logger = setup_logging(__name__)
 
-DB_FILE = os.getenv("DB_FILE", "zomato_orders.db")
+DB_FILE = config.DB_FILE  # Use config value
 
 def init_db(force_reset=False):
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         if force_reset:
-            logger.debug("Dropping existing sessions table")
+            logger.debug("Dropping existing tables")
             cursor.execute("DROP TABLE IF EXISTS sessions")
+            cursor.execute("DROP TABLE IF EXISTS orders")
+        
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS sessions (
                 session_id TEXT PRIMARY KEY,
@@ -27,8 +30,19 @@ def init_db(force_reset=False):
                 order_id TEXT
             )
         """)
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id TEXT PRIMARY KEY,
+                user_id TEXT,
+                items TEXT,
+                total REAL,
+                status TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         conn.commit()
-        logger.info("SQLite database initialized with updated schema")
+        logger.info("SQLite database initialized with sessions and orders tables")
     except sqlite3.Error as e:
         logger.error(f"Failed to initialize database: {str(e)}")
         raise
@@ -79,6 +93,59 @@ def load_state(session_id):
     except sqlite3.Error as e:
         logger.error(f"Failed to load state: {str(e)}")
         raise Exception("Sorry, I couldn't load your session. Please try restarting or contact support.")
+    finally:
+        if conn:
+            conn.close()
+
+def save_order(order_id: str, user_id: str, items: List[Dict], total: float, status: str = "Placed"):
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        logger.debug(f"Saving order {order_id} for user {user_id}")
+        cursor.execute("""
+            INSERT OR REPLACE INTO orders (order_id, user_id, items, total, status)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            order_id,
+            user_id,
+            json.dumps(items),
+            total,
+            status
+        ))
+        conn.commit()
+        logger.info(f"Saved order {order_id} for user {user_id}")
+    except sqlite3.Error as e:
+        logger.error(f"Failed to save order: {str(e)}")
+        raise Exception("Sorry, I couldn't save your order. Please try again or contact support.")
+    finally:
+        if conn:
+            conn.close()
+
+def load_order(order_id: str) -> Optional[Dict]:
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        logger.debug(f"Loading order {order_id}")
+        cursor.execute("SELECT order_id, user_id, items, total, status, created_at FROM orders WHERE order_id = ?", (order_id,))
+        result = cursor.fetchone()
+        if result:
+            order_data = {
+                "order_id": result[0],
+                "user_id": result[1],
+                "items": json.loads(result[2]),
+                "total": result[3],
+                "status": result[4],
+                "created_at": result[5]
+            }
+            logger.debug(f"Loaded order {order_id}: {order_data}")
+            return order_data
+        logger.info(f"No order found for order_id {order_id}")
+        return None
+    except sqlite3.Error as e:
+        logger.error(f"Failed to load order: {str(e)}")
+        raise Exception("Sorry, I couldn't load the order. Please try again or contact support.")
     finally:
         if conn:
             conn.close()

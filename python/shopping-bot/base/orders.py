@@ -5,7 +5,8 @@ from typing import Dict, Optional
 from db import load_state, save_state
 from api import fetch_menu_from_api, authenticate, fetch_user_credentials_from_api, submit_order, is_restaurant_open
 from llm import parse_and_search_order
-from logging_config import setup_logging  # Import shared config
+from logging_config import setup_logging
+from config import config  # Import config
 
 logger = setup_logging(__name__)
 

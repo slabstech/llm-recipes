@@ -1,25 +1,18 @@
 from mistralai import Mistral
 import json
-import os
-from dotenv import load_dotenv
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-import logging
 import re
-from typing import Dict, Optional, List
-from logging_config import setup_logging  # Import shared config
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from logging_config import setup_logging
+from config import config  # Import config
+from typing import Dict, Optional
 
 logger = setup_logging(__name__)
 
-try:
-    MISTRAL_API_KEY = os.environ["MISTRAL_API_KEY"]
-    client = Mistral(api_key=MISTRAL_API_KEY)
-    logger.info("Mistral API client initialized successfully")
-except KeyError as e:
-    logger.error("MISTRAL_API_KEY environment variable not set")
-    raise EnvironmentError("MISTRAL_API_KEY environment variable is required") from e
-except Exception as e:
-    logger.error(f"Failed to initialize Mistral client: {str(e)}")
-    raise
+if not config.MISTRAL_API_KEY:
+    logger.error("MISTRAL_API_KEY not set in environment")
+    raise EnvironmentError("MISTRAL_API_KEY environment variable is required")
+client = Mistral(api_key=config.MISTRAL_API_KEY)
+logger.info("Mistral API client initialized successfully")
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(Exception))
 def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaurant: Optional[str] = None) -> tuple[str, Dict]:

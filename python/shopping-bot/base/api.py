@@ -1,20 +1,16 @@
 import requests
-import os
-from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from datetime import datetime
-from logging_config import setup_logging  # Import shared config
+from logging_config import setup_logging
+from config import config  # Import config
 from typing import Dict, Optional, Tuple
-
-load_dotenv()
 
 logger = setup_logging(__name__)
 
-BASE_URL = os.getenv("BASE_URL", "http://localhost:7861")
-MENU_API_URL = f"{BASE_URL}/menu"
-USERS_API_URL = f"{BASE_URL}/users/{{}}"
-LOGIN_API_URL = f"{BASE_URL}/login"
-ORDERS_API_URL = f"{BASE_URL}/orders"
+MENU_API_URL = config.MENU_API_URL
+USERS_API_URL = config.USERS_API_URL
+LOGIN_API_URL = config.LOGIN_API_URL
+ORDERS_API_URL = config.ORDERS_API_URL
 
 def is_restaurant_open(opening_hours: str) -> bool:
     now = datetime.now()

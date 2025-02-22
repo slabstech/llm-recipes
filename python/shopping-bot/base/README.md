@@ -10,6 +10,9 @@ Setup for Shopping Bot
 - get menu with bearer -
      ```curl -H "Authorization: Bearer <bearer-key>" http://localhost:7861/menu```
 
+
+- get order infor
+    ```curl -H "Authorization: Bearer <token>" http://localhost:7861/orders/<order_id> ```
 - Use fircrawl to scrape data.
 
 - Store data in db
