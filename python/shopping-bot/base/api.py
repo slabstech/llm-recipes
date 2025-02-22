@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from datetime import datetime
 import logging
-from typing import Dict, Optional, List
+from typing import Dict, Optional, Tuple
+
 load_dotenv()
 
 logging.basicConfig(
@@ -23,7 +24,7 @@ USERS_API_URL = f"{BASE_URL}/users/{{}}"
 LOGIN_API_URL = f"{BASE_URL}/login"
 ORDERS_API_URL = f"{BASE_URL}/orders"
 
-def is_restaurant_open(opening_hours):
+def is_restaurant_open(opening_hours: str) -> bool:
     now = datetime.now()
     current_time = now.hour * 60 + now.minute
     periods = opening_hours.split(", ")
@@ -48,12 +49,12 @@ def is_restaurant_open(opening_hours):
     return False
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
-def fetch_menu_from_api(token: str) -> tuple[Optional[str], Dict]:
+def fetch_menu_from_api(token: str) -> Tuple[Optional[str], Dict]:
     logger.info(f"Fetching menu from API: {MENU_API_URL} with token: {token}")
     try:
         headers = {"Authorization": f"Bearer {token}"}
         logger.debug(f"Sending request with headers: {headers}")
-        response = requests.get(MENU_API_URL, headers=headers, timeout=10, verify=False)  # Increased timeout
+        response = requests.get(MENU_API_URL, headers=headers, timeout=10, verify=False)
         response.raise_for_status()
         data = response.json()
         logger.debug(f"API response: {data}")
@@ -67,10 +68,10 @@ def fetch_menu_from_api(token: str) -> tuple[Optional[str], Dict]:
         return None, open_restaurants
     except requests.RequestException as e:
         logger.error(f"Failed to fetch menu from API: {str(e)} - Response: {e.response.text if e.response else 'No response'}")
-        return str(e), {}
+        return "Sorry, I couldn't connect to the menu service. Please try again later.", {}
     except ValueError as e:
         logger.error(f"API returned invalid data: {str(e)}")
-        return str(e), {}
+        return "Oops, the menu data seems off. Please try again or contact support.", {}
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
 def authenticate(username: str, password: str) -> Optional[str]:
@@ -79,7 +80,7 @@ def authenticate(username: str, password: str) -> Optional[str]:
         response = requests.post(
             LOGIN_API_URL,
             json={"username": username, "password": password},
-            timeout=10,  # Increased timeout
+            timeout=10,
             verify=False
         )
         response.raise_for_status()
@@ -88,33 +89,33 @@ def authenticate(username: str, password: str) -> Optional[str]:
         return token
     except requests.RequestException as e:
         logger.error(f"Failed to authenticate user {username}: {str(e)}")
-        return None
+        return None  # Handled in orders.py
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
-def fetch_user_credentials_from_api(user_id: str, token: str) -> tuple[Optional[str], Dict]:
+def fetch_user_credentials_from_api(user_id: str, token: str) -> Tuple[Optional[str], Dict]:
     logger.info(f"Fetching user credentials for user_id: {user_id}")
     try:
         url = USERS_API_URL.format(user_id)
         headers = {"Authorization": f"Bearer {token}"}
-        response = requests.get(url, headers=headers, timeout=10, verify=False)  # Increased timeout
+        response = requests.get(url, headers=headers, timeout=10, verify=False)
         response.raise_for_status()
         logger.info(f"Successfully fetched user credentials for {user_id}")
         return None, response.json().get("data", {})
     except requests.RequestException as e:
         logger.error(f"Failed to fetch user credentials: {str(e)}")
-        return str(e), {}
+        return "Sorry, I couldn't retrieve your user details. Please try again or log out and back in.", {}
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10), retry=retry_if_exception_type(requests.RequestException))
-def submit_order(order: Dict, token: str) -> tuple[Optional[str], Dict]:
+def submit_order(order: Dict, token: str) -> Tuple[Optional[str], Dict]:
     try:
         headers = {"Authorization": f"Bearer {token}"}
         order_items = [
             {"item_id": key.split(":")[2], "quantity": qty, "restaurant_id": key.split(":")[0], "category": key.split(":")[1]}
             for key, qty in order.items()
         ]
-        response = requests.post(ORDERS_API_URL, json={"items": order_items}, headers=headers, timeout=10, verify=False)  # Increased timeout
+        response = requests.post(ORDERS_API_URL, json={"items": order_items}, headers=headers, timeout=10, verify=False)
         response.raise_for_status()
         return None, response.json()
     except requests.RequestException as e:
         logger.error(f"Failed to submit order: {str(e)}")
-        return str(e), {}
+        return "There was a problem submitting your order. Please try again or contact support.", {}

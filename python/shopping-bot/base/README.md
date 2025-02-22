@@ -7,6 +7,8 @@ Setup for Shopping Bot
 
 - ```curl -X POST -H "Content-Type: application/json" -d '{"username":"user1","password":"password123"}' http://localhost:7861/login```
 
+- get menu with bearer -
+     ```curl -H "Authorization: Bearer <bearer-key>" http://localhost:7861/menu```
 
 - Use fircrawl to scrape data.
 

@@ -66,6 +66,7 @@ def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=No
         logger.info(f"Saved state for session {session_id} with token: {token}")
     except sqlite3.Error as e:
         logger.error(f"Failed to save state: {str(e)}")
+        raise Exception("Sorry, I couldn't save your session. Please try again or contact support.")
     finally:
         if conn:
             conn.close()
@@ -84,10 +85,9 @@ def load_state(session_id):
         return {}, {}, False, None, None, None, None
     except sqlite3.Error as e:
         logger.error(f"Failed to load state: {str(e)}")
-        return {}, {}, False, None, None, None, None
+        raise Exception("Sorry, I couldn't load your session. Please try restarting or contact support.")
     finally:
         if conn:
             conn.close()
 
-# Initialize database on import unless explicitly skipped
-init_db(force_reset=False)  # Only drops table if force_reset=True
+init_db(force_reset=False)

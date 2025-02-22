@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import logging
+import re
 from typing import Dict, Optional, List
 
 load_dotenv()
@@ -69,8 +70,6 @@ def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaura
         try:
             result = json.loads(response_content)
         except json.JSONDecodeError:
-            # Fallback: Try to extract JSON from response if it's wrapped in text
-            import re
             json_match = re.search(r'(\[.*\]|\{.*\})', response_content, re.DOTALL)
             if json_match:
                 result = json.loads(json_match.group(0))
@@ -78,7 +77,7 @@ def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaura
                 raise
         
         if "error" in result:
-            return result["error"], {}
+            return f"Sorry, I couldn't understand your order: {result['error']}. Please try rephrasing it (e.g., '2 Butter Idlis').", {}
         
         order = {}
         feedback = []
@@ -98,16 +97,16 @@ def parse_and_search_order(user_input: str, restaurants: Dict, selected_restaura
                 order[order_key] = qty
                 feedback.append(f"Added {qty} x {item_name} (from {restaurants[rest_id]['name']}) to your order.")
             else:
-                feedback.append(f"Sorry, '{item_name}' is not available.")
+                feedback.append(f"Sorry, '{item_name}' is not available on the menu. Please check the menu and try again.")
         
         return "\n".join(feedback), order
     
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse Mistral API response as JSON: {str(e)} - Raw response: '{response_content}'")
-        return f"Error parsing order: Invalid response from API - {str(e)}", {}
+        return "Sorry, I couldn't process your order due to an issue with the response. Please try rephrasing it or try again later.", {}
     except ValueError as e:
         logger.error(f"Mistral API error: {str(e)} - Raw response: '{response_content}'")
-        return f"Error parsing order: {str(e)}", {}
+        return "Oops, something went wrong while understanding your order. Please try again or simplify your request (e.g., '1 Butter Idli').", {}
     except Exception as e:
         logger.error(f"Unexpected error in parse_and_search_order: {str(e)}")
-        return f"Error parsing order: {str(e)}", {}
+        return "Something unexpected happened while processing your order. Please try again or contact support if this persists.", {}
