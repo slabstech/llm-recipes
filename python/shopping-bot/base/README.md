@@ -1,29 +1,26 @@
-Shopping Bot 
+Setup for Shopping Bot
+
+- local mock server
+    - uvicorn mock_api:app --host 0.0.0.0 --port 7861
+
+- ```curl -X POST -H "Content-Type: application/json" -d '{"username":"user1","password":"password123"}' http://localhost:7861/login```
+
+- get menu with bearer -
+     ```curl -H "Authorization: Bearer <bearer-key>" http://localhost:7861/menu```
 
 
-- Food Order Bot - https://huggingface.co/spaces/gaganyatri/food_order_bot
-
-- redis server 
-    - ```sudo apt install redis-server```
-
-    - start local redis server
-        - ```redis-server --port 8105```
-
-- deployed source 
-    - mock server -     https://huggingface.co/spaces/gaganyatri/mock_restaurant_api
-    - food order bot - https://huggingface.co/spaces/gaganyatri/food_order_bot
-
-- Mock server Endpoint -  "https://gaganyatri-mock-restaurant-api.hf.space/" 
+- get order infor
+    ```curl -H "Authorization: Bearer <token>" http://localhost:7861/orders/<order_id> ```
 
 
-- Check for login 
-    ```curl -X POST http://localhost:7860/login -H "Content-Type: application/json" -d '{"username": "user1", "password": "password123"}'```
+- Use fircrawl to scrape data.
 
+- Store data in db
 
 - Voice UX
     - sudo apt install portaudio19-dev
 
-- hhtps
+- https for local certificates
     - sudo apt install openssl
     - pip install pyOpenSSL
     - openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
