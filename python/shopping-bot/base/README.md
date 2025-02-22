@@ -1,7 +1,12 @@
 Setup for Shopping Bot
 
-- Check for login 
-    ```curl -X POST http://localhost:7860/login -H "Content-Type: application/json" -d '{"username": "user1", "password": "password123"}'```
+
+
+- local mock server
+    - uvicorn mock_api:app --host 0.0.0.0 --port 7861
+
+- ```curl -X POST -H "Content-Type: application/json" -d '{"username":"user1","password":"password123"}' http://localhost:7861/login```
+
 
 - Use fircrawl to scrape data.
 

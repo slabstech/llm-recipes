@@ -1,11 +1,12 @@
 import gradio as gr
 import uuid
 import speech_recognition as sr
-from order_logic import fetch_menu_from_api, process_order
+from orders import process_order
+from api import fetch_menu_from_api
 import logging
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[logging.FileHandler("food_order_bot.log"), logging.StreamHandler()]
 )
