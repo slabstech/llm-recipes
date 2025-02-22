@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import jwt
 import datetime
+from OpenSSL import SSL
 
 app = Flask(__name__)
 
@@ -11,19 +12,14 @@ RESTAURANTS = {
     "rest3": {"name": "Pizza Palace", "menu": {"5": {"name": "Veg Pizza", "price": 350}, "6": {"name": "Pepperoni Pizza", "price": 400}}}
 }
 
-# Mock user data (multiple users)
+# Mock user data
 USERS = {
     "user1": {"name": "John Doe", "address": "123 Main St, Delhi", "phone": "9876543210", "password": "password123"},
     "user2": {"name": "Jane Smith", "address": "456 Elm St, Mumbai", "phone": "1234567890", "password": "securepass456"}
 }
 
-# Secret key for JWT (replace with a secure key in production)
+# Secret key for JWT (replace with secure key in production)
 SECRET_KEY = "your-secret-key"
-
-# Mock Menu API endpoint
-@app.route('/menu', methods=['GET'])
-def get_menu():
-    return jsonify({"restaurants": RESTAURANTS})
 
 # Mock Login endpoint (OAuth2-like token issuance)
 @app.route('/login', methods=['POST'])
@@ -39,6 +35,11 @@ def login():
         }, SECRET_KEY, algorithm="HS256")
         return jsonify({"access_token": token}), 200
     return jsonify({"error": "Invalid credentials"}), 401
+
+# Mock Menu API endpoint
+@app.route('/menu', methods=['GET'])
+def get_menu():
+    return jsonify({"restaurants": RESTAURANTS})
 
 # Mock Users API endpoint with token authentication
 @app.route('/users/<user_id>', methods=['GET'])
@@ -60,4 +61,5 @@ def get_user(user_id):
         return jsonify({"error": "Invalid token"}), 401
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7861)
+    # Run Flask with HTTPS using self-signed certificate
+    app.run(host="0.0.0.0", port=7861, ssl_context=('cert.pem', 'key.pem'))

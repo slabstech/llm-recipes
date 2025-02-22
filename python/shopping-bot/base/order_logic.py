@@ -39,10 +39,10 @@ except Exception as e:
     logger.error(f"Failed to initialize Mistral client: {str(e)}")
     raise
 
-# API endpoints from the mock API (to be replaced with real API in production)
-MENU_API_URL = "http://localhost:7861/menu"
-USERS_API_URL = "http://localhost:7861/users/{}"
-LOGIN_API_URL = "http://localhost:7861/login"
+# API endpoints updated for HTTPS
+MENU_API_URL = "https://localhost:7861/menu"
+USERS_API_URL = "https://localhost:7861/users/{}"
+LOGIN_API_URL = "https://localhost:7861/login"
 
 # Tool call to fetch all restaurants and their menus from API with retry
 @retry(
@@ -54,7 +54,8 @@ LOGIN_API_URL = "http://localhost:7861/login"
 def fetch_menu_from_api():
     logger.info(f"Fetching menu from API: {MENU_API_URL}")
     try:
-        response = requests.get(MENU_API_URL, timeout=5)
+        # Disable SSL verification for self-signed cert in dev (remove in production)
+        response = requests.get(MENU_API_URL, timeout=5, verify=False)
         response.raise_for_status()
         data = response.json()
         logger.info("Successfully fetched menu")
@@ -63,7 +64,7 @@ def fetch_menu_from_api():
         logger.error(f"Failed to fetch menu from API: {str(e)}")
         raise
 
-# Function to authenticate and get token
+# Function to authenticate and get token with retry
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
@@ -76,7 +77,8 @@ def authenticate(username, password):
         response = requests.post(
             LOGIN_API_URL,
             json={"username": username, "password": password},
-            timeout=5
+            timeout=5,
+            verify=False  # Disable SSL verification for self-signed cert
         )
         response.raise_for_status()
         token = response.json().get("access_token")
@@ -98,7 +100,7 @@ def fetch_user_credentials_from_api(user_id, token):
     try:
         url = USERS_API_URL.format(user_id)
         headers = {"Authorization": f"Bearer {token}"}
-        response = requests.get(url, headers=headers, timeout=5)
+        response = requests.get(url, headers=headers, timeout=5, verify=False)
         response.raise_for_status()
         logger.info(f"Successfully fetched user credentials for {user_id}")
         return None, response.json()

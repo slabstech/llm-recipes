@@ -4,8 +4,10 @@ anyio==4.8.0
 async-timeout==5.0.1
 blinker==1.9.0
 certifi==2025.1.31
+cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.8
+cryptography==44.0.1
 eval_type_backport==0.2.2
 exceptiongroup==1.2.2
 fastapi==0.115.8
@@ -33,11 +35,13 @@ orjson==3.10.15
 packaging==24.2
 pandas==2.2.3
 pillow==11.1.0
+pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2
 pydub==0.25.1
 Pygments==2.19.1
 PyJWT==2.10.1
+pyOpenSSL==25.0.0
 python-dateutil==2.9.0.post0
 python-multipart==0.0.20
 pytz==2025.1
