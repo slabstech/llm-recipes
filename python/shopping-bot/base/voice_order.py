@@ -67,11 +67,15 @@ def load_greeting():
     error, loaded_restaurants = fetch_menu_from_api()
     initial_message = ("Welcome to the Food Order Bot!\n"
                       "1. Log in by typing 'login <username> <password>' (e.g., 'login user1 password123') or use the voice input.\n"
-                      "2. Speak or type your order (e.g., 'I want 2 butter chickens').\n"
-                      "3. Use 'show order', 'remove [item]', or 'done' to manage your order.")
+                      "2. Type 'list restaurants' to see open restaurants.\n"
+                      "3. Speak or type your order (e.g., 'I want 2 Butter Idlis'). Note: After your first item, you'll only order from that restaurant.\n"
+                      "4. Use 'show order', 'remove [item]', or 'done' to manage your order.")
     if error:
         return [[None, initial_message + f"\n\nError: {error}"]], session_id, "", ""
-    return [[None, initial_message]], session_id, "", ""
+    if not loaded_restaurants:
+        return [[None, initial_message + "\n\nNo restaurants are currently open."]], session_id, "", ""
+    open_list = "\n".join([f"- {data['name']} ({', '.join(data['cuisine'])})" for data in loaded_restaurants.values()])
+    return [[None, initial_message + f"\n\nCurrently open restaurants:\n{open_list}"]], session_id, "", ""
 
 # Gradio interface setup
 with gr.Blocks(title="Food Order Bot") as demo:
@@ -90,7 +94,7 @@ with gr.Blocks(title="Food Order Bot") as demo:
     voice_input = gr.Audio(label="Speak Your Order", type="filepath")
     # Text input
     chat_input = gr.Textbox(
-        placeholder="Type 'login username password', your order, 'done', 'show order', or 'remove [item]'",
+        placeholder="Type 'login username password', 'list restaurants', your order, 'done', 'show order', or 'remove [item]'",
         label="Your Order"
     )
     

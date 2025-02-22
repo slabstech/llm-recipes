@@ -8,6 +8,7 @@ import sqlite3
 import bleach
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
@@ -36,7 +37,8 @@ def init_db():
             restaurants TEXT,
             awaiting_confirmation INTEGER,
             user_id TEXT,
-            token TEXT
+            token TEXT,
+            selected_restaurant TEXT
         )
     """)
     conn.commit()
@@ -59,9 +61,39 @@ except Exception as e:
     raise
 
 # API endpoints from environment variables
-MENU_API_URL = os.getenv("MENU_API_URL", "http://localhost:7861/menu")  # Updated to match your FastAPI port
+MENU_API_URL = os.getenv("MENU_API_URL", "http://localhost:7861/menu")
 USERS_API_URL = os.getenv("USERS_API_URL", "http://localhost:7861/users/{}")
 LOGIN_API_URL = os.getenv("LOGIN_API_URL", "http://localhost:7861/login")
+
+# Function to check if a restaurant is open based on its hours
+def is_restaurant_open(opening_hours):
+    now = datetime.now()
+    current_time = now.hour * 60 + now.minute  # Convert to minutes since midnight
+    
+    # Parse opening_hours (e.g., "12midnight – 1am, 6am – 12midnight")
+    periods = opening_hours.split(", ")
+    for period in periods:
+        start_str, end_str = period.split(" – ")
+        
+        def parse_time(time_str):
+            time_str = time_str.lower()
+            is_pm = "pm" in time_str
+            time_str = time_str.replace("am", "").replace("pm", "").replace("midnight", "0").replace("noon", "12")
+            hour = int(time_str)
+            if is_pm and hour != 12:
+                hour += 12
+            elif not is_pm and hour == 12:
+                hour = 0
+            return hour * 60
+        
+        start_minutes = parse_time(start_str)
+        end_minutes = parse_time(end_str)
+        if end_minutes < start_minutes:  # Overnight period
+            end_minutes += 24 * 60
+        
+        if current_time >= start_minutes and (current_time <= end_minutes or current_time <= end_minutes - 24 * 60):
+            return True
+    return False
 
 # Tool call to fetch all restaurants and their menus from API with retry
 @retry(
@@ -76,8 +108,14 @@ def fetch_menu_from_api():
         response = requests.get(MENU_API_URL, timeout=5, verify=False)
         response.raise_for_status()
         data = response.json()
-        logger.info("Successfully fetched menu")
-        return None, data.get("restaurants", {})
+        restaurants = data.get("restaurants", {})
+        # Filter open restaurants
+        open_restaurants = {}
+        for rest_id, rest_data in restaurants.items():
+            if "opening_hours" in rest_data and is_restaurant_open(rest_data["opening_hours"]):
+                open_restaurants[rest_id] = rest_data
+        logger.info(f"Successfully fetched menu. Open restaurants: {len(open_restaurants)}")
+        return None, open_restaurants
     except requests.RequestException as e:
         logger.error(f"Failed to fetch menu from API: {str(e)}")
         raise
@@ -126,18 +164,18 @@ def fetch_user_credentials_from_api(user_id, token):
         logger.error(f"Failed to fetch user credentials: {str(e)}")
         raise
 
-# Function to search menu and parse order using Mistral API with retry
+# Function to search menu and parse order with restaurant restriction
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
     retry=retry_if_exception_type(Exception),
     before_sleep=lambda retry_state: logger.info(f"Retrying parse_and_search_order: attempt {retry_state.attempt_number}")
 )
-def parse_and_search_order(user_input, restaurants):
-    logger.info(f"Parsing order input: {user_input}")
+def parse_and_search_order(user_input, restaurants, selected_restaurant=None):
+    logger.info(f"Parsing order input: {user_input} with selected restaurant: {selected_restaurant}")
     try:
         all_items = []
-        item_map = {}  # To map item names to their restaurant and category details
+        item_map = {}
         for rest_id, rest_data in restaurants.items():
             for category, items in rest_data["menu"].items():
                 for item in items:
@@ -185,6 +223,9 @@ def parse_and_search_order(user_input, restaurants):
             if item_key in item_map:
                 details = item_map[item_key]
                 rest_id = details["rest_id"]
+                if selected_restaurant and rest_id != selected_restaurant:
+                    feedback.append(f"Sorry, '{item_name}' is from {restaurants[rest_id]['name']}. You can only order from {restaurants[selected_restaurant]['name']} in this session.")
+                    continue
                 category = details["category"]
                 item_id = details["item_id"]
                 order_key = f"{rest_id}:{category}:{item_id}"
@@ -222,7 +263,6 @@ def generate_order_summary(order, restaurants):
     for order_key, qty in order.items():
         rest_id, category, item_id = order_key.split(":")
         rest_data = restaurants[rest_id]
-        # Find the item in the category list
         item = next(i for i in rest_data["menu"][category] if i["id"] == item_id)
         rest_name = rest_data["name"]
         cost = item["price"] * qty
@@ -247,20 +287,21 @@ def remove_item_from_order(item_name, order, restaurants):
     return f"'{item_name}' not found in your order."
 
 # Functions to manage state in SQLite
-def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=None, token=None):
+def save_state(session_id, order, restaurants, awaiting_confirmation, user_id=None, token=None, selected_restaurant=None):
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT OR REPLACE INTO sessions (session_id, order_data, restaurants, awaiting_confirmation, user_id, token)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO sessions (session_id, order_data, restaurants, awaiting_confirmation, user_id, token, selected_restaurant)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             session_id,
             json.dumps(order),
             json.dumps(restaurants),
             int(awaiting_confirmation),
             user_id,
-            token
+            token,
+            selected_restaurant
         ))
         conn.commit()
         logger.info(f"Saved state for session {session_id}")
@@ -273,30 +314,32 @@ def load_state(session_id):
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
-        cursor.execute("SELECT order_data, restaurants, awaiting_confirmation, user_id, token FROM sessions WHERE session_id = ?", (session_id,))
+        cursor.execute("SELECT order_data, restaurants, awaiting_confirmation, user_id, token, selected_restaurant FROM sessions WHERE session_id = ?", (session_id,))
         result = cursor.fetchone()
         if result:
-            order, restaurants, awaiting_confirmation, user_id, token = result
-            return json.loads(order), json.loads(restaurants), bool(awaiting_confirmation), user_id, token
+            order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant = result
+            return json.loads(order), json.loads(restaurants), bool(awaiting_confirmation), user_id, token, selected_restaurant
         logger.info(f"No state found for session {session_id}, initializing new state")
-        return {}, {}, False, None, None
+        return {}, {}, False, None, None, None
     except sqlite3.Error as e:
         logger.error(f"Failed to load state from SQLite: {str(e)}")
-        return {}, {}, False, None, None
+        return {}, {}, False, None, None, None
     finally:
         conn.close()
 
 # Core order processing logic with SQLite state, authentication, and input validation
 def process_order(session_id, user_input, username=None, password=None):
     logger.info(f"Processing user input for session {session_id}: {user_input}")
-    order, restaurants, awaiting_confirmation, user_id, token = load_state(session_id)
+    order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant = load_state(session_id)
     
     if not restaurants:
         error, loaded_restaurants = fetch_menu_from_api()
         if error:
             return error
         restaurants = loaded_restaurants
-        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
+        if not restaurants:
+            return "No restaurants are currently open."
+        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant)
     
     # Input validation and sanitization
     if not user_input or user_input.isspace():
@@ -319,14 +362,20 @@ def process_order(session_id, user_input, username=None, password=None):
             if not token:
                 return "Login failed. Invalid credentials."
             user_id = username
-            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
-            return f"Logged in as {user_id}. What would you like to order?"
+            open_list = "\n".join([f"- {data['name']} ({', '.join(data['cuisine'])})" for data in restaurants.values()])
+            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant)
+            return f"Logged in as {user_id}. Here are the open restaurants:\n{open_list}\nWhat would you like to order?"
         
         # Require login for most commands
         if not user_id and user_input not in ["login"]:
             return "Please log in first (e.g., 'login user1 password123')."
         
-        # Handle confirmation for multi-restaurant orders
+        # Handle "list restaurants" command
+        if user_input == "list restaurants":
+            open_list = "\n".join([f"- {data['name']} ({', '.join(data['cuisine'])})" for data in restaurants.values()])
+            return f"Currently open restaurants:\n{open_list}"
+        
+        # Handle confirmation for multi-restaurant orders (shouldn't occur with new logic, kept for compatibility)
         if awaiting_confirmation:
             if user_input in ["yes", "y"]:
                 if not token:
@@ -345,12 +394,12 @@ def process_order(session_id, user_input, username=None, password=None):
                 delivery_info = f"Delivery to: {name}, {address}, {phone}"
                 logger.info("Order confirmed and processed successfully")
                 response = f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon."
-                save_state(session_id, {}, restaurants, False, user_id, token)
+                save_state(session_id, {}, restaurants, False, user_id, token, None)
                 return response
             elif user_input in ["no", "n"]:
                 logger.info("Order cancelled by user")
-                response = "Order cancelled. Please order from a single restaurant. What would you like to order next?"
-                save_state(session_id, {}, restaurants, False, user_id, token)
+                response = "Order cancelled. What would you like to order next?"
+                save_state(session_id, {}, restaurants, False, user_id, token, None)
                 return response
             else:
                 logger.warning(f"Invalid confirmation response: {user_input}")
@@ -363,28 +412,23 @@ def process_order(session_id, user_input, username=None, password=None):
                 return "No order to process. What would you like to order?"
             
             summary = generate_order_summary(order, restaurants)
-            if is_single_restaurant(order):
+            if not token:
+                token = authenticate(username, password)
                 if not token:
-                    token = authenticate(username, password)
-                    if not token:
-                        return "Authentication failed. Unable to process order."
-                error, credentials = fetch_user_credentials_from_api(user_id, token)
-                if error:
-                    logger.error(f"Cannot proceed due to: {error}")
-                    return error
-                
-                name = credentials.get("name", "Unknown")
-                address = credentials.get("address", "Unknown Address")
-                phone = credentials.get("phone", "Unknown Phone")
-                delivery_info = f"Delivery to: {name}, {address}, {phone}"
-                logger.info("Order processed successfully from single restaurant")
-                response = f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon."
-                save_state(session_id, {}, restaurants, False, user_id, token)
-                return response
-            else:
-                logger.info("Order contains items from multiple restaurants")
-                save_state(session_id, order, restaurants, True, user_id, token)
-                return f"{summary}\n\nYour order contains items from multiple restaurants. Typically, orders are from a single restaurant. Confirm order? (yes/no)"
+                    return "Authentication failed. Unable to process order."
+            error, credentials = fetch_user_credentials_from_api(user_id, token)
+            if error:
+                logger.error(f"Cannot proceed due to: {error}")
+                return error
+            
+            name = credentials.get("name", "Unknown")
+            address = credentials.get("address", "Unknown Address")
+            phone = credentials.get("phone", "Unknown Phone")
+            delivery_info = f"Delivery to: {name}, {address}, {phone}"
+            logger.info("Order processed successfully")
+            response = f"{summary}\n{delivery_info}\n\nProcessing your order...\nOrder placed successfully! You'll receive a confirmation soon."
+            save_state(session_id, {}, restaurants, False, user_id, token, None)
+            return response
         
         # Handle "show order" command
         if user_input == "show order":
@@ -402,22 +446,26 @@ def process_order(session_id, user_input, username=None, password=None):
                 logger.warning("Item name too long")
                 return "Item name must be less than 50 characters."
             feedback = remove_item_from_order(item_name, order, restaurants)
-            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
+            save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant)
             return feedback
         
         # Parse order input
         if len(user_input) > 200:
             logger.warning("Order input too long")
             return "Order input must be less than 200 characters."
-        feedback, new_order = parse_and_search_order(user_input, restaurants)
+        feedback, new_order = parse_and_search_order(user_input, restaurants, selected_restaurant)
         if new_order:
+            if not selected_restaurant and new_order:
+                # Set the selected restaurant based on the first item ordered
+                selected_restaurant = list(new_order.keys())[0].split(":")[0]
+                logger.info(f"Selected restaurant set to: {restaurants[selected_restaurant]['name']}")
             for order_key, qty in new_order.items():
                 if order_key in order:
                     order[order_key] += qty
                 else:
                     order[order_key] = qty
-        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
-        return f"{feedback}\n\nWhat else would you like to order? (Type 'done' to finish)"
+        save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token, selected_restaurant)
+        return f"{feedback}\n\nWhat else would you like to order from {restaurants[selected_restaurant]['name']}? (Type 'done' to finish)"
     
     except Exception as e:
         logger.error(f"Unexpected error in order processing: {str(e)}")
