@@ -1,65 +1,92 @@
-from flask import Flask, jsonify, request
-import jwt
-import datetime
-from OpenSSL import SSL
+from fastapi import FastAPI, HTTPException, Depends, Header
+from pydantic import BaseModel
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
+from typing import Dict, Optional
+import uvicorn
+import ssl
 
-app = Flask(__name__)
+app = FastAPI(title="Restaurant API")
 
-# Mock data with multiple restaurants
+# Mock data (same as before)
 RESTAURANTS = {
     "rest1": {"name": "Spice Haven", "menu": {"1": {"name": "Butter Chicken", "price": 250}, "2": {"name": "Paneer Tikka", "price": 200}}},
     "rest2": {"name": "Biryani Bliss", "menu": {"3": {"name": "Chicken Biryani", "price": 300}, "4": {"name": "Veg Biryani", "price": 220}}},
     "rest3": {"name": "Pizza Palace", "menu": {"5": {"name": "Veg Pizza", "price": 350}, "6": {"name": "Pepperoni Pizza", "price": 400}}}
 }
 
-# Mock user data
 USERS = {
     "user1": {"name": "John Doe", "address": "123 Main St, Delhi", "phone": "9876543210", "password": "password123"},
     "user2": {"name": "Jane Smith", "address": "456 Elm St, Mumbai", "phone": "1234567890", "password": "securepass456"}
 }
 
-# Secret key for JWT (replace with secure key in production)
 SECRET_KEY = "your-secret-key"
+ALGORITHM = "HS256"
 
-# Mock Login endpoint (OAuth2-like token issuance)
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get("username")
-    password = data.get("password")
+# Pydantic models for request validation
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class UserResponse(BaseModel):
+    name: str
+    address: str
+    phone: str
+
+# Token dependency
+async def get_current_user(authorization: Optional[str] = Header(default=None)):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    token = authorization.split(" ")[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("user_id")
+        if user_id is None or user_id not in USERS:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return user_id
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+# Login endpoint
+@app.post("/login")
+async def login(login_data: LoginRequest):
+    username = login_data.username
+    password = login_data.password
     
     if username in USERS and USERS[username]["password"] == password:
         token = jwt.encode({
             "user_id": username,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        }, SECRET_KEY, algorithm="HS256")
-        return jsonify({"access_token": token}), 200
-    return jsonify({"error": "Invalid credentials"}), 401
+            "exp": datetime.utcnow() + timedelta(hours=1)
+        }, SECRET_KEY, algorithm=ALGORITHM)
+        return {"access_token": token, "token_type": "bearer"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
 
-# Mock Menu API endpoint
-@app.route('/menu', methods=['GET'])
-def get_menu():
-    return jsonify({"restaurants": RESTAURANTS})
+# Menu endpoint
+@app.get("/menu")
+async def get_menu():
+    return {"restaurants": RESTAURANTS}
 
-# Mock Users API endpoint with token authentication
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return jsonify({"error": "Unauthorized"}), 401
+# User endpoint with authentication
+@app.get("/users/{user_id}", response_model=UserResponse)
+async def get_user(user_id: str, current_user: str = Depends(get_current_user)):
+    if current_user != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to access this user")
     
-    token = auth_header.split(" ")[1]
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        if payload["user_id"] == user_id and user_id in USERS:
-            user_data = {k: v for k, v in USERS[user_id].items() if k != "password"}
-            return jsonify(user_data)
-        return jsonify({"error": "Unauthorized or user not found"}), 401
-    except jwt.ExpiredSignatureError:
-        return jsonify({"error": "Token expired"}), 401
-    except jwt.InvalidTokenError:
-        return jsonify({"error": "Invalid token"}), 401
+    if user_id in USERS:
+        user_data = {k: v for k, v in USERS[user_id].items() if k != "password"}
+        return user_data
+    raise HTTPException(status_code=404, detail="User not found")
+
+# SSL configuration
+#ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+#ssl_context.load_cert_chain('cert.pem', 'key.pem')
 
 if __name__ == "__main__":
-    # Run Flask with HTTPS using self-signed certificate
-    app.run(host="0.0.0.0", port=7861, ssl_context=('cert.pem', 'key.pem'))
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=7861,
+#        ssl_keyfile="key.pem",
+#        ssl_certfile="cert.pem"
+    )

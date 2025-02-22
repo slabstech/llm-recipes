@@ -1,23 +1,10 @@
-Shopping Bot
+ShoppingBot
 
-- Steps - 
-    - Setup dummy data [local setup](src/data/README.md)
-  - Create pinecone server
-  - Populate data in DB/Pinecone
+- Demo Link - https://huggingface.co/spaces/gaganyatri/food_order_bot
 
-- Pinecone Server
-  - cd docker
-  - docker compose -f pinecone-compose.yml up -d
-
-- Use Voice Agents to Order Online
+- Deployed source 
+    - mock server -     https://huggingface.co/spaces/gaganyatri/mock_restaurant_api
+    - food order bot - https://huggingface.co/spaces/gaganyatri/food_order_bot
 
 
-- Reference
-  - https://github.com/lucastononro/llm-food-delivery
-  - https://docs.stripe.com/agents
-  - https://github.com/stripe/agent-toolkit
-  - https://www.perplexity.ai/hub/blog/shop-like-a-pro
-
-  - Pinecone setup - https://docs.pinecone.io/guides/operations/local-development
-  - llamaindex setup - https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/
-  - https://www.theunwindai.com/p/build-an-ai-real-estate-agent
+[Additional README](base/README.md)

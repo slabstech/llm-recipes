@@ -1,0 +1,15 @@
+# Use the official Python image from the Docker Hub
+FROM python:3.12-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+RUN pip install -r requirements.txt
+# Make port 7860 available to the world outside this container
+EXPOSE 7860
+
+# Run mock_api.py when the container launches
+CMD ["python", "mock_api.py"]
