@@ -1,0 +1,30 @@
+openai:
+  api_key: $OPENAI_API_KEY
+  temperature: 0.0
+  max_tokens: 256
+
+nomad:
+  embed_api_key: $NOMAD_EMBED_API_KEY
+  embedding_model: "nomad-embed-v1"
+
+pinecone:
+  api_key: $PINECONE_API_KEY
+  environment: $PINECONE_ENVIRONMENT
+
+prompts:
+  chat:
+    filepath: "./src/prompts/chat/system.txt"
+  functions:
+    filepath: "./src/prompts/functions/signatures.json"
+
+ollama:
+  api_key: $OLLAMA_API_KEY
+  chat_model: "deepseek-r1"
+
+whisper:
+  model_transcript: "whisper-1"
+  model_transcript_language: "en"
+
+tts:
+  model: "tts-1"
+  voice: "shimmer"
