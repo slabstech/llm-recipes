@@ -1,0 +1,219 @@
+{
+    "restaurants": {
+      "rest1": {
+        "name": "The Rameshwaram Cafe",
+        "location": "Indiranagar, Bangalore",
+        "cuisine": ["South Indian", "Beverages"],
+        "ratings": {
+          "delivery": 4.4
+        },
+        "delivery_reviews": 2261,
+        "cost_for_one": 100,
+        "delivery_time_minutes": 63,
+        "opening_hours": "12midnight – 1am, 6am – 12midnight",
+        "phone": "+919071179191",
+        "url": "https://www.zomato.com/bangalore/the-rameshwaram-cafe-3-indiranagar-bangalore/order",
+        "menu": {
+          "Idli & Vada": [
+            {"id": "1", "name": "Butter Idli", "price": 100, "description": "Large Thatte Idli Topped With Pure Butter. Served With 2 Types Of Chutney"},
+            {"id": "2", "name": "Ghee Idli", "price": 100, "description": "Large Thatte Idli Topped With Ghee. Served With 2 Types Of Chutney"},
+            {"id": "3", "name": "Ghee Paddu", "price": 125, "description": "6 Pcs Of Spiced Dosa Batter Balls Roasted And Served With 2 Types", "bestseller": true},
+            {"id": "4", "name": "Ghee Pudi Idli", "price": 125, "description": "Large Thatte Idli Topped With Ghee And A Generous Serving Of Ghee. Served", "bestseller": true},
+            {"id": "5", "name": "Ghee Sambar Button Idli", "price": 115, "description": "12 Pieces Of Bite Size Idlis Served With 500 Ml Of Sambar", "bestseller": true},
+            {"id": "6", "name": "Idiyappam", "price": 100, "description": ""},
+            {"id": "7", "name": "Idli 2Nos", "price": 65, "description": "Idli 2Nos."},
+            {"id": "8", "name": "Mini Vada Sambar Dip", "price": 100, "description": "2 Pcs Of Mini Vadas Served With 500 Ml Of Sambar"},
+            {"id": "9", "name": "Rasam Idli (2 Pcs)", "price": 110, "description": "Rasam Idli (2 Pcs)."},
+            {"id": "10", "name": "Rasam Vada", "price": 100, "description": "Rasam Vada."},
+            {"id": "11", "name": "Rava Idli", "price": 101, "description": "Rava Idli."},
+            {"id": "12", "name": "Tatte Idli", "price": 55, "description": "Thatte Idli Is Idli Steamed In Plates And Is Bigger Than The Regular", "bestseller": true},
+            {"id": "13", "name": "Uddina Vada", "price": 70, "description": "Crispy Vada Served With 2 Types Of Chutney And Sambar", "bestseller": true}
+          ],
+          "Dosa": [
+            {"id": "28", "name": "Butter Masala Dosa", "price": 180, "description": "Butter Masala Dosa.", "bestseller": true},
+            {"id": "29", "name": "Garlic Roast Dosa", "price": 180, "description": "Crispy Dosa With A Smear Of Garlic Chutney. Served With 2 Type Of"},
+            {"id": "30", "name": "Ghee Khali Dosa (2 Pcs)", "price": 160, "description": "2 Pieces Of Soft And Fluffy Dosas Finished With Ghee. Served With 2"},
+            {"id": "31", "name": "Ghee Onion Dosa (2 Pcs)", "price": 180, "description": "Dosa Topped With Onion And Double Roasted. 2 Pcs. Served With"},
+            {"id": "32", "name": "Ghee Plain Dosa", "price": 145, "description": "Ghee Roasted Cripsy Dosa. Served With Chutney And Sambar."},
+            {"id": "33", "name": "Ghee Pudi Masala Dosa", "price": 180, "description": "Ghee Roasted Cripsy Dosa With A Dash Of Spice Powder And Potato Masala", "bestseller": true},
+            {"id": "34", "name": "Ghee Pudi Plain Dosa", "price": 165, "description": "Cripsy Dosa With Generous Sprinkle Of Spicy In-House Podi And Ghee. Served With"},
+            {"id": "35", "name": "Ghee Ragi Dosa (2 Pcs)", "price": 145, "description": "2 Pieces Of Ghee Sprinkled Ragi Dosa. Served With 2 Types Of Chutney"},
+            {"id": "36", "name": "Jain Masala Dosa With Jain Sambar", "price": 175, "description": "Jain Friendly Masala Dosa. Contains No Onion Or Garlic. Served With 2 Types"},
+            {"id": "37", "name": "Multi-Grain Dosa (2 Pcs)", "price": 155, "description": "2 Pieces Of Multigrain Dosas Topped With Butter Served With 2 Types Of"},
+            {"id": "38", "name": "Neer Dosa", "price": 180, "description": "Neer dosa"},
+            {"id": "39", "name": "Open Butter Masala", "price": 190, "description": "Mildly Thick Dosa With A Sprinkle Of Pudi, Topped With Masala And Butter"},
+            {"id": "40", "name": "Pudina Roast Dosa", "price": 180, "description": ""}
+          ]
+        }
+      },
+      "rest2": {
+        "name": "IDC Kitchen",
+        "location": "Richmond Road, Bangalore",
+        "cuisine": ["South Indian", "Beverages"],
+        "ratings": {
+          "delivery": 4.4
+        },
+        "cost_for_one": 100,
+        "delivery_time_minutes": 46,
+        "url": "https://www.zomato.com/bangalore/idc-kitchen-richmond-road-bangalore/order",
+        "promoted": true,
+        "menu": {
+          "South Indian": [
+            {"id": "1", "name": "Masala Dosa", "price": 80, "description": "Crispy dosa with potato filling"},
+            {"id": "2", "name": "Idli Sambhar", "price": 60, "description": "Steamed idlis with sambhar"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Filter Coffee", "price": 40, "description": "Traditional South Indian coffee"}
+          ]
+        }
+      },
+      "rest3": {
+        "name": "Namaste",
+        "location": "Ulsoor, Bangalore",
+        "cuisine": ["South Indian", "Chinese", "Beverages"],
+        "ratings": {
+          "delivery": 4.2
+        },
+        "cost_for_one": 100,
+        "delivery_time_minutes": 52,
+        "url": "https://www.zomato.com/bangalore/namaste-1-ulsoor-bangalore/order",
+        "menu": {
+          "South Indian": [
+            {"id": "1", "name": "Plain Dosa", "price": 70, "description": "Simple crispy dosa"},
+            {"id": "2", "name": "Vada", "price": 50, "description": "Fried lentil doughnut"}
+          ],
+          "Chinese": [
+            {"id": "3", "name": "Veg Fried Rice", "price": 120, "description": "Stir-fried rice with vegetables"}
+          ]
+        }
+      },
+      "rest4": {
+        "name": "McDonald's",
+        "location": "MG Road, Bangalore",
+        "cuisine": ["Burger", "Fast Food", "Beverages"],
+        "ratings": {
+          "delivery": 4.0
+        },
+        "cost_for_one": 200,
+        "delivery_time_minutes": 40,
+        "url": "https://www.zomato.com/bangalore/mcdonalds-mg-road/order",
+        "promoted": true,
+        "discount": "₹175 OFF",
+        "menu": {
+          "Burgers": [
+            {"id": "1", "name": "McAloo Tikki", "price": 60, "description": "Spiced potato patty burger"},
+            {"id": "2", "name": "McChicken", "price": 120, "description": "Crispy chicken burger"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Coke", "price": 50, "description": "Chilled cola"}
+          ]
+        }
+      },
+      "rest5": {
+        "name": "Sri Udupi Park",
+        "location": "Residency Road, Bangalore",
+        "cuisine": ["South Indian", "Chinese", "Street Food", "Beverages", "North Indian", "Shake"],
+        "ratings": {
+          "delivery": 4.4
+        },
+        "cost_for_one": 100,
+        "delivery_time_minutes": 41,
+        "url": "https://www.zomato.com/bangalore/sri-udupi-park-residency-road/order",
+        "promoted": true,
+        "menu": {
+          "South Indian": [
+            {"id": "1", "name": "Rava Idli", "price": 70, "description": "Semolina idli with chutney"},
+            {"id": "2", "name": "Mysore Masala Dosa", "price": 90, "description": "Spicy masala dosa"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Masala Chai", "price": 30, "description": "Spiced tea"}
+          ]
+        }
+      },
+      "rest6": {
+        "name": "The Filter Coffee",
+        "location": "Koramangala 5th Block, Bangalore",
+        "cuisine": ["South Indian", "Coffee"],
+        "ratings": {
+          "delivery": 4.5
+        },
+        "cost_for_one": 150,
+        "delivery_time_minutes": 46,
+        "url": "https://www.zomato.com/bangalore/the-filter-coffee-koramangala-5th-block-bangalore/order",
+        "promoted": true,
+        "menu": {
+          "South Indian": [
+            {"id": "1", "name": "Pongal", "price": 80, "description": "Rice and lentil dish"},
+            {"id": "2", "name": "Uttapam", "price": 90, "description": "Thick pancake with toppings"}
+          ],
+          "Coffee": [
+            {"id": "3", "name": "Filter Coffee", "price": 50, "description": "Authentic South Indian coffee"}
+          ]
+        }
+      },
+      "rest7": {
+        "name": "Paakashala",
+        "location": "MG Road, Bangalore",
+        "cuisine": ["South Indian", "North Indian", "Biryani", "Chinese", "Street Food", "Sandwich", "Ice Cream", "Beverages"],
+        "ratings": {
+          "delivery": 4.3
+        },
+        "cost_for_one": 100,
+        "delivery_time_minutes": 36,
+        "url": "https://www.zomato.com/bangalore/paakashala-mg-road-bangalore/order",
+        "discount": "₹150 OFF",
+        "menu": {
+          "Biryani": [
+            {"id": "1", "name": "Veg Biryani", "price": 120, "description": "Spiced vegetable biryani"},
+            {"id": "2", "name": "Chicken Biryani", "price": 150, "description": "Chicken biryani with raita"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Lassi", "price": 40, "description": "Sweet yogurt drink"}
+          ]
+        }
+      },
+      "rest8": {
+        "name": "EatFit",
+        "location": "Vasanth Nagar, Bangalore",
+        "cuisine": ["Healthy Food", "Pizza", "North Indian", "Burger", "Biryani", "Chinese", "Desserts", "Beverages"],
+        "ratings": {
+          "delivery": 4.4
+        },
+        "cost_for_one": 200,
+        "delivery_time_minutes": 47,
+        "url": "https://www.zomato.com/bangalore/eatfit-vasanth-nagar-bangalore/order",
+        "promoted": true,
+        "discount": "40% OFF",
+        "menu": {
+          "Healthy Food": [
+            {"id": "1", "name": "Grilled Chicken Salad", "price": 150, "description": "Lean chicken with greens"},
+            {"id": "2", "name": "Quinoa Bowl", "price": 120, "description": "Nutritious quinoa with veggies"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Green Smoothie", "price": 80, "description": "Spinach and fruit blend"}
+          ]
+        }
+      },
+      "rest9": {
+        "name": "Subway",
+        "location": "Lavelle Road, Bangalore",
+        "cuisine": ["Healthy Food", "Sandwich", "Fast Food", "Wraps", "Salad", "Beverages"],
+        "ratings": {
+          "delivery": 3.9
+        },
+        "cost_for_one": 250,
+        "delivery_time_minutes": 42,
+        "url": "https://www.zomato.com/bangalore/subway-lavelle-road/order",
+        "promoted": true,
+        "menu": {
+          "Sandwiches": [
+            {"id": "1", "name": "Veg Shammi Sub", "price": 180, "description": "Vegetarian patty sandwich"},
+            {"id": "2", "name": "Chicken Tikka Sub", "price": 200, "description": "Spiced chicken sandwich"}
+          ],
+          "Beverages": [
+            {"id": "3", "name": "Iced Tea", "price": 60, "description": "Refreshing iced tea"}
+          ]
+        }
+      }
+    }
+  }

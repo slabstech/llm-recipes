@@ -5,19 +5,90 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 import uvicorn
 import ssl
+import json
+import os
 
 app = FastAPI(title="Restaurant API")
 
-# Mock data (same as before)
-RESTAURANTS = {
-    "rest1": {"name": "Spice Haven", "menu": {"1": {"name": "Butter Chicken", "price": 250}, "2": {"name": "Paneer Tikka", "price": 200}}},
-    "rest2": {"name": "Biryani Bliss", "menu": {"3": {"name": "Chicken Biryani", "price": 300}, "4": {"name": "Veg Biryani", "price": 220}}},
-    "rest3": {"name": "Pizza Palace", "menu": {"5": {"name": "Veg Pizza", "price": 350}, "6": {"name": "Pepperoni Pizza", "price": 400}}}
-}
+# In your FastAPI code
+MENU_FILE = "restaurants.json"
 
+def load_menu_data() -> Dict:
+    if not os.path.exists(MENU_FILE):
+        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")
+    with open(MENU_FILE, "r") as f:
+        data = json.load(f)
+        return data["restaurants"]
+
+RESTAURANTS = load_menu_data()
+
+'''
+
+# Load menu from JSON file
+MENU_FILE = "rest-menu-1.json"
+
+def load_menu_data() -> Dict:
+    if not os.path.exists(MENU_FILE):
+        raise FileNotFoundError(f"Menu file {MENU_FILE} not found")
+    with open(MENU_FILE, "r") as f:
+        return json.load(f)
+
+# Restaurant data with menu loaded from file
+try:
+    menu_data = load_menu_data()
+    RESTAURANTS = {
+        "rest1": {
+            "name": "The Rameshwaram Cafe",
+            "location": "Indiranagar, Bangalore",
+            "cuisine": ["South Indian", "Beverages"],
+            "ratings": {
+                "dining": 1.0,
+                "delivery": 4.4
+            },
+            "delivery_reviews": 2261,
+            "opening_hours": "12midnight – 1am, 6am – 12midnight",
+            "phone": "+919071179191",
+            "menu": menu_data["menu"]
+        }
+    }
+except FileNotFoundError as e:
+    print(f"Error: {e}")
+    RESTAURANTS = {
+        "rest1": {
+            "name": "The Rameshwaram Cafe",
+            "location": "Indiranagar, Bangalore",
+            "cuisine": ["South Indian", "Beverages"],
+            "ratings": {
+                "dining": 1.0,
+                "delivery": 4.4
+            },
+            "delivery_reviews": 2261,
+            "opening_hours": "12midnight – 1am, 6am – 12midnight",
+            "phone": "+919071179191",
+            "menu": {}  # Empty menu if file not found
+        }
+    }
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON: {e}")
+    RESTAURANTS = {
+        "rest1": {
+            "name": "The Rameshwaram Cafe",
+            "location": "Indiranagar, Bangalore",
+            "cuisine": ["South Indian", "Beverages"],
+            "ratings": {
+                "dining": 1.0,
+                "delivery": 4.4
+            },
+            "delivery_reviews": 2261,
+            "opening_hours": "12midnight – 1am, 6am – 12midnight",
+            "phone": "+919071179191",
+            "menu": {}  # Empty menu if JSON is invalid
+        }
+    }
+'''
 USERS = {
-    "user1": {"name": "John Doe", "address": "123 Main St, Delhi", "phone": "9876543210", "password": "password123"},
-    "user2": {"name": "Jane Smith", "address": "456 Elm St, Mumbai", "phone": "1234567890", "password": "securepass456"}
+    "user1": {"name": "John Doe", "address": "123 Main St, Bangalore", "phone": "9876543210", "password": "password123"},
+    "user2": {"name": "Jane Smith", "address": "456 Elm St, Bangalore", "phone": "1234567890", "password": "securepass456"}
 }
 
 SECRET_KEY = "your-secret-key"
@@ -77,10 +148,6 @@ async def get_user(user_id: str, current_user: str = Depends(get_current_user)):
         user_data = {k: v for k, v in USERS[user_id].items() if k != "password"}
         return user_data
     raise HTTPException(status_code=404, detail="User not found")
-
-# SSL configuration
-#ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-#ssl_context.load_cert_chain('cert.pem', 'key.pem')
 
 if __name__ == "__main__":
     uvicorn.run(

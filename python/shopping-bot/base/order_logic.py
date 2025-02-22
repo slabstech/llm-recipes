@@ -59,9 +59,9 @@ except Exception as e:
     raise
 
 # API endpoints from environment variables
-MENU_API_URL = os.getenv("MENU_API_URL", "https://localhost:5000/menu")
-USERS_API_URL = os.getenv("USERS_API_URL", "https://localhost:5000/users/{}")
-LOGIN_API_URL = os.getenv("LOGIN_API_URL", "https://localhost:5000/login")
+MENU_API_URL = os.getenv("MENU_API_URL", "http://localhost:7861/menu")  # Updated to match your FastAPI port
+USERS_API_URL = os.getenv("USERS_API_URL", "http://localhost:7861/users/{}")
+LOGIN_API_URL = os.getenv("LOGIN_API_URL", "http://localhost:7861/login")
 
 # Tool call to fetch all restaurants and their menus from API with retry
 @retry(
@@ -137,9 +137,17 @@ def parse_and_search_order(user_input, restaurants):
     logger.info(f"Parsing order input: {user_input}")
     try:
         all_items = []
+        item_map = {}  # To map item names to their restaurant and category details
         for rest_id, rest_data in restaurants.items():
-            for item_id, item in rest_data["menu"].items():
-                all_items.append(f"{item['name']} (from {rest_data['name']})")
+            for category, items in rest_data["menu"].items():
+                for item in items:
+                    item_name = item["name"]
+                    all_items.append(f"{item_name} (from {rest_data['name']})")
+                    item_map[item_name.lower()] = {
+                        "rest_id": rest_id,
+                        "category": category,
+                        "item_id": item["id"]
+                    }
         menu_str = ", ".join(all_items)
         
         prompt = f"""
@@ -173,18 +181,18 @@ def parse_and_search_order(user_input, restaurants):
             item_name = order_item["item"]
             qty = order_item["quantity"]
             
-            found = False
-            for rest_id, rest_data in restaurants.items():
-                for item_id, item in rest_data["menu"].items():
-                    if item["name"].lower() == item_name.lower():
-                        order_key = f"{rest_id}:{item_id}"
-                        order[order_key] = qty
-                        feedback.append(f"Added {qty} x {item['name']} (from {rest_data['name']}) to your order.")
-                        found = True
-                        break
-                if found:
-                    break
-            if not found:
+            item_key = item_name.lower()
+            if item_key in item_map:
+                details = item_map[item_key]
+                rest_id = details["rest_id"]
+                category = details["category"]
+                item_id = details["item_id"]
+                order_key = f"{rest_id}:{category}:{item_id}"
+                order[order_key] = qty
+                
+                rest_name = restaurants[rest_id]["name"]
+                feedback.append(f"Added {qty} x {item_name} (from {rest_name}) to your order.")
+            else:
                 feedback.append(f"Sorry, '{item_name}' is not available at any restaurant.")
         
         logger.info(f"Order parsed successfully: {order}")
@@ -212,9 +220,11 @@ def generate_order_summary(order, restaurants):
     summary = ["=== Current Order ==="]
     total = 0
     for order_key, qty in order.items():
-        rest_id, item_id = order_key.split(":")
-        item = restaurants[rest_id]["menu"][item_id]
-        rest_name = restaurants[rest_id]["name"]
+        rest_id, category, item_id = order_key.split(":")
+        rest_data = restaurants[rest_id]
+        # Find the item in the category list
+        item = next(i for i in rest_data["menu"][category] if i["id"] == item_id)
+        rest_name = rest_data["name"]
         cost = item["price"] * qty
         total += cost
         summary.append(f"{item['name']} x{qty} (from {rest_name}) - ₹{cost}")
@@ -224,11 +234,12 @@ def generate_order_summary(order, restaurants):
 # Function to remove an item from the order
 def remove_item_from_order(item_name, order, restaurants):
     logger.info(f"Attempting to remove item: {item_name}")
-    item_name = item_name.lower()
+    item_name_lower = item_name.lower()
     for order_key, qty in list(order.items()):
-        rest_id, item_id = order_key.split(":")
-        item = restaurants[rest_id]["menu"][item_id]
-        if item["name"].lower() == item_name:
+        rest_id, category, item_id = order_key.split(":")
+        rest_data = restaurants[rest_id]
+        item = next(i for i in rest_data["menu"][category] if i["id"] == item_id)
+        if item["name"].lower() == item_name_lower:
             del order[order_key]
             logger.info(f"Removed {item['name']} from order")
             return f"Removed {item['name']} from your order."
@@ -386,7 +397,7 @@ def process_order(session_id, user_input, username=None, password=None):
             item_name = user_input.replace("remove ", "").strip()
             if not item_name:
                 logger.warning("No item specified for removal")
-                return "Please specify an item to remove (e.g., 'remove butter chicken')."
+                return "Please specify an item to remove (e.g., 'remove Butter Idli')."
             if len(item_name) > 50:
                 logger.warning("Item name too long")
                 return "Item name must be less than 50 characters."
