@@ -4,8 +4,10 @@ from typing import Optional
 
 load_dotenv()
 
+
 class Config:
     """Centralized configuration loaded from .env."""
+
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key")
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
     DB_FILE: str = os.getenv("DB_FILE", "zomato_orders.db")
@@ -20,5 +22,6 @@ class Config:
     USERS_API_URL: str = f"{BASE_URL}/users/{{}}"
     LOGIN_API_URL: str = f"{BASE_URL}/login"
     ORDERS_API_URL: str = f"{BASE_URL}/orders"
+
 
 config = Config()

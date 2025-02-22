@@ -7,11 +7,12 @@ import logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("food_order_bot.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("food_order_bot.log"), logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
 recognizer = sr.Recognizer()
+
 
 def audio_to_text(audio_file):
     if not audio_file or not isinstance(audio_file, str):
@@ -33,12 +34,14 @@ def audio_to_text(audio_file):
         logger.error(f"Unexpected error in audio processing: {str(e)}")
         return f"An error occurred: {str(e)}. Please try again."
 
+
 def chat_function(user_input, history, session_id, username, password):
     if history is None:
         history = []
     response = process_order(session_id, user_input, username, password)
     history.append([user_input, response])
     return history, "", username, password
+
 
 def voice_function(audio_file, history, session_id, username, password):
     if history is None:
@@ -51,28 +54,33 @@ def voice_function(audio_file, history, session_id, username, password):
     history.append([text, response])
     return history, username, password
 
+
 def load_greeting():
     session_id = str(uuid.uuid4())
-    initial_message = ("Welcome to the Food Order Bot!\n"
-                      "1. Log in by typing 'login <username> <password>' (e.g., 'login user1 password123')\n"
-                      "2. After logging in, type 'list restaurants' to see open restaurants\n"
-                      "3. Order items (e.g., 'I want 2 Butter Idlis') - limited to one restaurant after first item\n"
-                      "4. Use 'show order', 'remove [item]', or 'done' to manage your order")
+    initial_message = (
+        "Welcome to the Food Order Bot!\n"
+        "1. Log in by typing 'login <username> <password>' (e.g., 'login user1 password123')\n"
+        "2. After logging in, type 'list restaurants' to see open restaurants\n"
+        "3. Order items (e.g., 'I want 2 Butter Idlis') - limited to one restaurant after first item\n"
+        "4. Use 'show order', 'remove [item]', or 'done' to manage your order"
+    )
     return [[None, initial_message]], session_id, "", ""
+
 
 with gr.Blocks(title="Food Order Bot") as demo:
     session_id_state = gr.State()
     username_state = gr.State(value="")
     password_state = gr.State(value="")
-    
+
     chatbot = gr.Chatbot(label="Chat with Food Order Bot", height=600, scale=1)
     voice_input = gr.Audio(label="Speak Your Order", type="filepath")
     chat_input = gr.Textbox(
         placeholder="Type 'login username password', 'list restaurants', your order, 'done', 'show order', or 'remove [item]'",
-        label="Your Order"
+        label="Your Order",
     )
-    
-    gr.Markdown("""
+
+    gr.Markdown(
+        """
     <style>
         .chatbot-container { 
             resize: vertical; 
@@ -81,23 +89,24 @@ with gr.Blocks(title="Food Order Bot") as demo:
             max-height: 80vh; 
         }
     </style>
-    """)
-    
+    """
+    )
+
     demo.load(
         load_greeting,
-        outputs=[chatbot, session_id_state, username_state, password_state]
+        outputs=[chatbot, session_id_state, username_state, password_state],
     )
-    
+
     chat_input.submit(
         chat_function,
         inputs=[chat_input, chatbot, session_id_state, username_state, password_state],
-        outputs=[chatbot, chat_input, username_state, password_state]
+        outputs=[chatbot, chat_input, username_state, password_state],
     )
-    
+
     voice_input.change(
         voice_function,
         inputs=[voice_input, chatbot, session_id_state, username_state, password_state],
-        outputs=[chatbot, username_state, password_state]
+        outputs=[chatbot, username_state, password_state],
     )
 
 demo.launch()

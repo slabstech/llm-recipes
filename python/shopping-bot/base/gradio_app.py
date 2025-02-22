@@ -9,6 +9,7 @@ logger = setup_logging(__name__)
 
 recognizer = sr.Recognizer()
 
+
 def audio_to_text(audio_file: str) -> str:
     if not audio_file or not isinstance(audio_file, str):
         logger.error("Invalid audio file: must be a valid filename string")
@@ -29,7 +30,15 @@ def audio_to_text(audio_file: str) -> str:
         logger.error(f"Unexpected error in audio processing: {str(e)}")
         return "Oops! Something went wrong with voice recognition. Please try again or type your order instead."
 
-def chat_function(user_input: str, history: Optional[List[Tuple[str, str]]], session_id: str, token: str, username: str, password: str) -> Tuple[List[Tuple[str, str]], str, str, str]:
+
+def chat_function(
+    user_input: str,
+    history: Optional[List[Tuple[str, str]]],
+    session_id: str,
+    token: str,
+    username: str,
+    password: str,
+) -> Tuple[List[Tuple[str, str]], str, str, str]:
     if history is None:
         history = []
     logger.debug(f"Processing chat input: {user_input}")
@@ -40,17 +49,31 @@ def chat_function(user_input: str, history: Optional[List[Tuple[str, str]]], ses
         else:
             username, password = parts[1], parts[2]
             token = login(username, password)
-            response = process_order(session_id, user_input, token, username, password) if token else "Login failed. Please check your credentials."
+            response = (
+                process_order(session_id, user_input, token, username, password)
+                if token
+                else "Login failed. Please check your credentials."
+            )
     else:
         response = process_order(session_id, user_input, token)
     # Split the response into lines and append each as a separate bot message
     response_lines = response.split("\n")
     for line in response_lines:
         if line.strip():  # Only add non-empty lines
-            history.append((user_input if line == response_lines[0] else None, line.strip()))
+            history.append(
+                (user_input if line == response_lines[0] else None, line.strip())
+            )
     return history, "", token, username
 
-def voice_function(audio_file: str, history: Optional[List[Tuple[str, str]]], session_id: str, token: str, username: str, password: str) -> Tuple[List[Tuple[str, str]], str, str, str]:
+
+def voice_function(
+    audio_file: str,
+    history: Optional[List[Tuple[str, str]]],
+    session_id: str,
+    token: str,
+    username: str,
+    password: str,
+) -> Tuple[List[Tuple[str, str]], str, str, str]:
     if history is None:
         history = []
     text = audio_to_text(audio_file)
@@ -68,7 +91,11 @@ def voice_function(audio_file: str, history: Optional[List[Tuple[str, str]]], se
         else:
             username, password = parts[1], parts[2]
             token = login(username, password)
-            response = process_order(session_id, text, token, username, password) if token else "Login failed. Please check your credentials."
+            response = (
+                process_order(session_id, text, token, username, password)
+                if token
+                else "Login failed. Please check your credentials."
+            )
     else:
         response = process_order(session_id, text, token)
     # Split the response into lines and append each as a separate bot message
@@ -78,6 +105,7 @@ def voice_function(audio_file: str, history: Optional[List[Tuple[str, str]]], se
             history.append((text if line == response_lines[0] else None, line.strip()))
     return history, token, username, password
 
+
 def load_greeting() -> Tuple[List[Tuple[Optional[str], str]], str, str, str, str]:
     session_id = str(uuid.uuid4())
     initial_messages = [
@@ -86,26 +114,28 @@ def load_greeting() -> Tuple[List[Tuple[Optional[str], str]], str, str, str, str
         "2. After logging in, type 'list restaurants' or 'menu' to see options",
         "3. Order items (e.g., '1 Butter Idli') - limited to one restaurant after first item",
         "4. Type 'done' to review, then 'confirm' to place or 'cancel' to discard your order",
-        "5. Use 'show order' or 'remove [item]' to manage your order"
+        "5. Use 'show order' or 'remove [item]' to manage your order",
     ]
     logger.info(f"Initialized new session: {session_id}")
     history = [(None, msg) for msg in initial_messages]
     return history, session_id, "", "", ""
+
 
 with gr.Blocks(title="Food Order Bot") as demo:
     session_id_state = gr.State()
     token_state = gr.State(value="")
     username_state = gr.State(value="")
     password_state = gr.State(value="")
-    
+
     chatbot = gr.Chatbot(label="Chat with Food Order Bot", height=600, scale=1)
     voice_input = gr.Audio(label="Speak Your Order", type="filepath")
     chat_input = gr.Textbox(
         placeholder="Type 'login username password', 'list restaurants', 'menu', your order, 'done', 'confirm', 'cancel', 'show order', or 'remove [item]'",
-        label="Your Order"
+        label="Your Order",
     )
-    
-    gr.Markdown("""
+
+    gr.Markdown(
+        """
     <style>
         .chatbot-container { 
             resize: vertical; 
@@ -114,23 +144,44 @@ with gr.Blocks(title="Food Order Bot") as demo:
             max-height: 80vh; 
         }
     </style>
-    """)
-    
+    """
+    )
+
     demo.load(
         load_greeting,
-        outputs=[chatbot, session_id_state, token_state, username_state, password_state]
+        outputs=[
+            chatbot,
+            session_id_state,
+            token_state,
+            username_state,
+            password_state,
+        ],
     )
-    
+
     chat_input.submit(
         chat_function,
-        inputs=[chat_input, chatbot, session_id_state, token_state, username_state, password_state],
-        outputs=[chatbot, chat_input, token_state, username_state]
+        inputs=[
+            chat_input,
+            chatbot,
+            session_id_state,
+            token_state,
+            username_state,
+            password_state,
+        ],
+        outputs=[chatbot, chat_input, token_state, username_state],
     )
-    
+
     voice_input.change(
         voice_function,
-        inputs=[voice_input, chatbot, session_id_state, token_state, username_state, password_state],
-        outputs=[chatbot, token_state, username_state, password_state]
+        inputs=[
+            voice_input,
+            chatbot,
+            session_id_state,
+            token_state,
+            username_state,
+            password_state,
+        ],
+        outputs=[chatbot, token_state, username_state, password_state],
     )
 
 demo.launch()
