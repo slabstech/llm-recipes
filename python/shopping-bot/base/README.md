@@ -12,3 +12,7 @@ Setup for Shopping Bot
     - pip install pyOpenSSL
     - openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
     - sudo apt install nginx
+
+- Playwright - scraper
+ sudo apt-get install libavif13    
+    - playwright install

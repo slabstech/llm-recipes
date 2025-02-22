@@ -1,0 +1,6 @@
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Zomato",
+    "url": "https://www.zomato.com"
+}
