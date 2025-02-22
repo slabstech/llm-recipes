@@ -5,8 +5,7 @@ import httpx
 from typing import Dict, Optional, List
 from models import OrderItem, OrderRequest
 from llm import process_with_tools
-import json 
-
+import json
 logger = setup_logging(__name__)
 
 def generate_order_summary(order: Dict, restaurants: Dict) -> str:
@@ -48,6 +47,20 @@ def display_menu(restaurants: Dict) -> str:
     menu_lines.append("\nType an order like '1 Butter Idli' or 'list restaurants' to continue.")
     logger.info(f"Displayed menu for {len(restaurants)} restaurants")
     return "\n".join(menu_lines)
+
+def filter_restaurants_by_city(restaurants: Dict, city: str) -> Dict:
+    """Filter restaurants by city (default to Bengaluru if not specified)."""
+    if not city or city.lower() == "bengaluru":
+        return restaurants  # All restaurants are in Bengaluru by default
+    available_cities = {"New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Bengaluru"}
+    if city.lower() not in available_cities:
+        return {}
+    # Simulate filtering (in real app, use a DB or API to filter by city)
+    filtered = {}
+    for rest_id, rest_data in restaurants.items():
+        if rest_data.get("city", "Bengaluru").lower() == city.lower():
+            filtered[rest_id] = rest_data
+    return filtered
 
 async def execute_tool_call(tool_call, session_data: Dict, restaurants_data: Dict) -> str:
     function_name = tool_call.function.name
@@ -94,79 +107,110 @@ async def execute_tool_call(tool_call, session_data: Dict, restaurants_data: Dic
                 return "Please log in first by saying 'login <username> <password>' (e.g., 'login user1 password123')."
 
             if function_name == "list_restaurants":
-                open_list = "\n".join([f"- {data['name']} ({data.get('opening_hours', 'Hours not specified')})" for data in restaurants.values()])
-                logger.info(f"Listed {len(restaurants)} open restaurants")
-                return f"Currently open restaurants:\n{open_list}"
+                city = arguments.get("city", "Bengaluru")
+                filtered_restaurants = filter_restaurants_by_city(restaurants, city)
+                if not filtered_restaurants:
+                    return f"Sorry, no restaurants available in {city}."
+                open_list = "\n".join([f"- {data['name']} ({data.get('opening_hours', 'Hours not specified')})" for data in filtered_restaurants.values()])
+                logger.info(f"Listed {len(filtered_restaurants)} open restaurants in {city}")
+                return f"Currently open restaurants in {city}:\n{open_list}"
+
+            if function_name == "list_cities":
+                cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Bengaluru"]
+                city_list = "\n".join([f"- {city}" for city in cities])
+                return f"We are currently operational in:\n{city_list}"
 
             if function_name == "show_menu":
-                return display_menu(restaurants)
+                restaurant_name = arguments.get("restaurant_name")
+                city = arguments.get("city", "Bengaluru")
+                filtered_restaurants = filter_restaurants_by_city(restaurants, city)
+                if restaurant_name:
+                    filtered_restaurants = {
+                        rest_id: data for rest_id, data in filtered_restaurants.items()
+                        if data["name"].lower() == restaurant_name.lower()
+                    }
+                    if not filtered_restaurants:
+                        return f"Sorry, '{restaurant_name}' is not found or not open in {city}."
+                return display_menu(filtered_restaurants or restaurants)
 
             if function_name == "add_to_order":
                 item_name = arguments["item_name"]
                 quantity = arguments.get("quantity", 1)
-                from llm import parse_and_search_order  # Local import to avoid circularity
-                feedback, new_order = parse_and_search_order(f"{quantity} {item_name}", restaurants, selected_restaurant)
-                if new_order:
-                    if not selected_restaurant:
-                        selected_restaurant = list(new_order.keys())[0].split(":")[0]
-                    for order_key, qty in new_order.items():
-                        order[order_key] = order.get(order_key, 0) + qty
-                    logger.info(f"Added items to order: {new_order}")
-                    save_state(session_id, order, restaurants, False, user_id, token, selected_restaurant, None)
-                return feedback
+                restaurant_name = arguments.get("restaurant_name")
+                city = arguments.get("city", "Bengaluru")
+                # Filter restaurants by city
+                filtered_restaurants = filter_restaurants_by_city(restaurants, city)
+                if restaurant_name:
+                    filtered_restaurants = {
+                        rest_id: data for rest_id, data in filtered_restaurants.items()
+                        if data["name"].lower() == restaurant_name.lower()
+                    }
+                if not filtered_restaurants:
+                    return f"Sorry, no matching restaurants found in {city}. Please specify a valid restaurant."
+
+                # Use process_order API to add the item
+                user_input = f"{quantity} {item_name}"
+                if restaurant_name:
+                    user_input += f" from {restaurant_name}"
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": user_input, "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if response.status_code != 200:
+                    return f"Error adding item: {response.text}. Please try again."
+                return response.text
 
             if function_name == "remove_from_order":
                 item_name = arguments["item_name"]
-                feedback = remove_item_from_order(item_name, order, restaurants)
-                save_state(session_id, order, restaurants, False, user_id, token, selected_restaurant, None)
-                return feedback
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": f"remove {item_name}", "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if response.status_code != 200:
+                    return f"Error removing item: {response.text}. Please try again."
+                return response.text
 
             if function_name == "show_order":
-                return generate_order_summary(order, restaurants)
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": "show order", "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if response.status_code != 200:
+                    return f"Error showing order: {response.text}. Please try again."
+                return response.text
 
             if function_name == "review_order":
-                if not order:
-                    return "You haven't added any items to your order yet. What would you like to order?"
-                summary = generate_order_summary(order, restaurants)
-                logger.info(f"Order review requested for session {session_id}")
-                return f"{summary}\nPlease say 'confirm' to place your order or 'cancel' to discard it."
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": "done", "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if response.status_code != 200:
+                    return f"Error reviewing order: {response.text}. Please try again."
+                return response.text
 
             if function_name == "confirm_order":
-                if not order:
-                    return "There's no order to confirm. Please add items to your order first."
-                summary = generate_order_summary(order, restaurants)
-                response = await client.get(config.USERS_API_URL.format(user_id), headers={"Authorization": f"Bearer {token}"})
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": "confirm", "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
                 if response.status_code != 200:
-                    return "I couldn't process your order because I can't retrieve your details. Please try again or log out and back in."
-                credentials = response.json().get("data", {})
-                order_request = OrderRequest(items=[
-                    OrderItem(
-                        item_id=key.split(":")[2],
-                        quantity=qty,
-                        restaurant_id=key.split(":")[0],
-                        category=key.split(":")[1]
-                    ) for key, qty in order.items()
-                ])
-                order_response = await client.post(config.ORDERS_API_URL, json=order_request.dict(), headers={"Authorization": f"Bearer {token}"})
-                if order_response.status_code != 200:
-                    return "Sorry, there was an issue placing your order. Please try again or contact support if this continues."
-                order_data = order_response.json()
-                name = credentials.get("name", "Unknown")
-                address = credentials.get("address", "Unknown Address")
-                phone = credentials.get("phone", "Unknown Phone")
-                delivery_info = f"Delivery to: {name}, {address}, {phone}"
-                response = f"{summary}\n{delivery_info}\n\nOrder placed successfully! Order ID: {order_data['order_id']}"
-                save_state(session_id, {}, restaurants, False, user_id, token, None, order_data['order_id'])
-                logger.info(f"Order confirmed for session {session_id}, Order ID: {order_data['order_id']}")
-                return response
+                    return f"Error confirming order: {response.text}. Please try again."
+                return response.text
 
             if function_name == "cancel_order":
-                if not order:
-                    return "There's no order to cancel."
-                order.clear()
-                save_state(session_id, order, restaurants, False, user_id, token, None, None)
-                logger.info(f"Order cancelled for session {session_id}")
-                return "Your order has been cancelled. What would you like to order next?"
+                response = await client.post(
+                    f"{config.BASE_URL}/process_order",
+                    json={"session_id": session_id, "user_input": "cancel", "token": token},
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if response.status_code != 200:
+                    return f"Error cancelling order: {response.text}. Please try again."
+                return response.text
 
             return f"Unknown command: {function_name}. Please try again."
         except Exception as e:

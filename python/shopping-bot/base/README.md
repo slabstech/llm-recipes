@@ -1,7 +1,5 @@
 Setup for Shopping Bot
 
-
-
 - local mock server
     - uvicorn mock_api:app --host 0.0.0.0 --port 7861
 
@@ -13,6 +11,8 @@ Setup for Shopping Bot
 
 - get order infor
     ```curl -H "Authorization: Bearer <token>" http://localhost:7861/orders/<order_id> ```
+
+
 - Use fircrawl to scrape data.
 
 - Store data in db
@@ -25,4 +25,3 @@ Setup for Shopping Bot
     - pip install pyOpenSSL
     - openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
     - sudo apt install nginx
-
