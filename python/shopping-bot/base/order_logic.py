@@ -5,22 +5,32 @@ import json
 import logging
 import os
 import redis
+import bleach
+from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("food_order_bot.log"),
+        logging.FileHandler(os.getenv("LOG_FILE", "food_order_bot.log")),
         logging.StreamHandler()
     ]
 )
 logger = logging.getLogger(__name__)
 
-# Redis client setup
+# Redis client setup with configurable settings
 try:
-    redis_client = redis.Redis(host='localhost', port=8105, db=0, decode_responses=True)
+    redis_client = redis.Redis(
+        host=os.getenv("REDIS_HOST", "localhost"),
+        port=int(os.getenv("REDIS_PORT", "6379")),
+        db=int(os.getenv("REDIS_DB", "0")),
+        decode_responses=True
+    )
     redis_client.ping()
     logger.info("Connected to Redis successfully")
 except redis.ConnectionError as e:
@@ -39,10 +49,10 @@ except Exception as e:
     logger.error(f"Failed to initialize Mistral client: {str(e)}")
     raise
 
-# API endpoints updated for HTTPS
-MENU_API_URL = "https://localhost:7861/menu"
-USERS_API_URL = "https://localhost:7861/users/{}"
-LOGIN_API_URL = "https://localhost:7861/login"
+# API endpoints from environment variables
+MENU_API_URL = os.getenv("MENU_API_URL", "https://localhost:5000/menu")
+USERS_API_URL = os.getenv("USERS_API_URL", "https://localhost:5000/users/{}")
+LOGIN_API_URL = os.getenv("LOGIN_API_URL", "https://localhost:5000/login")
 
 # Tool call to fetch all restaurants and their menus from API with retry
 @retry(
@@ -54,7 +64,6 @@ LOGIN_API_URL = "https://localhost:7861/login"
 def fetch_menu_from_api():
     logger.info(f"Fetching menu from API: {MENU_API_URL}")
     try:
-        # Disable SSL verification for self-signed cert in dev (remove in production)
         response = requests.get(MENU_API_URL, timeout=5, verify=False)
         response.raise_for_status()
         data = response.json()
@@ -78,7 +87,7 @@ def authenticate(username, password):
             LOGIN_API_URL,
             json={"username": username, "password": password},
             timeout=5,
-            verify=False  # Disable SSL verification for self-signed cert
+            verify=False
         )
         response.raise_for_status()
         token = response.json().get("access_token")
@@ -244,7 +253,7 @@ def load_state(session_id):
         logger.error(f"Failed to load state from Redis: {str(e)}")
         return {}, {}, False, None, None
 
-# Core order processing logic with Redis state and authentication
+# Core order processing logic with Redis state, authentication, and input validation
 def process_order(session_id, user_input, username=None, password=None):
     logger.info(f"Processing user input for session {session_id}: {user_input}")
     order, restaurants, awaiting_confirmation, user_id, token = load_state(session_id)
@@ -256,15 +265,23 @@ def process_order(session_id, user_input, username=None, password=None):
         restaurants = loaded_restaurants
         save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
     
-    user_input = user_input.strip().lower()
+    # Input validation and sanitization
+    if not user_input or user_input.isspace():
+        logger.warning("Empty or whitespace-only input received")
+        return "Please provide a valid input."
+    user_input = bleach.clean(user_input.strip().lower())
     
     try:
         # Handle login command
         if user_input.startswith("login "):
             parts = user_input.split(" ", 2)
             if len(parts) != 3:
+                logger.warning("Invalid login command format")
                 return "Please provide username and password (e.g., 'login user1 password123')."
             username, password = parts[1], parts[2]
+            if not username or not password or len(username) > 50 or len(password) > 50:
+                logger.warning("Invalid username or password length")
+                return "Username and password must be non-empty and less than 50 characters."
             token = authenticate(username, password)
             if not token:
                 return "Login failed. Invalid credentials."
@@ -348,11 +365,17 @@ def process_order(session_id, user_input, username=None, password=None):
             if not item_name:
                 logger.warning("No item specified for removal")
                 return "Please specify an item to remove (e.g., 'remove butter chicken')."
+            if len(item_name) > 50:
+                logger.warning("Item name too long")
+                return "Item name must be less than 50 characters."
             feedback = remove_item_from_order(item_name, order, restaurants)
             save_state(session_id, order, restaurants, awaiting_confirmation, user_id, token)
             return f"{feedback}\n\nWhat else would you like to order? (Type 'done' to finish)"
         
-        # Parse order input
+        # Parse order input (additional validation)
+        if len(user_input) > 200:
+            logger.warning("Order input too long")
+            return "Order input must be less than 200 characters."
         feedback, new_order = parse_and_search_order(user_input, restaurants)
         if new_order:
             for order_key, qty in new_order.items():

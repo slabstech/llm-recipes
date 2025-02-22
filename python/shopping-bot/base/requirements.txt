@@ -2,6 +2,7 @@ aiofiles==23.2.1
 annotated-types==0.7.0
 anyio==4.8.0
 async-timeout==5.0.1
+bleach==6.2.0
 blinker==1.9.0
 certifi==2025.1.31
 cffi==1.17.1
@@ -43,6 +44,7 @@ Pygments==2.19.1
 PyJWT==2.10.1
 pyOpenSSL==25.0.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 python-multipart==0.0.20
 pytz==2025.1
 PyYAML==6.0.2
@@ -65,5 +67,6 @@ typing_extensions==4.12.2
 tzdata==2025.1
 urllib3==2.3.0
 uvicorn==0.34.0
+webencodings==0.5.1
 websockets==14.2
 Werkzeug==3.1.3
