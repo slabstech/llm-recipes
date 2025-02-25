@@ -1,0 +1,12 @@
+certifi==2025.1.31
+charset-normalizer==3.4.1
+filelock==3.17.0
+fsspec==2025.2.0
+huggingface-hub==0.29.1
+idna==3.10
+packaging==24.2
+PyYAML==6.0.2
+requests==2.32.3
+tqdm==4.67.1
+typing_extensions==4.12.2
+urllib3==2.3.0
