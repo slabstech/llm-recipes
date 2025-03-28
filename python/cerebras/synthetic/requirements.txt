@@ -1,0 +1,6 @@
+fastapi 
+uvicorn 
+torch 
+diffusers 
+huggingface_hub 
+safetensors
