@@ -5,3 +5,7 @@ diffusers
 huggingface_hub 
 safetensors
 transformers
+pillow
+numpy
+blenderproc
+python-multipart
