@@ -4,3 +4,4 @@ torch
 diffusers 
 huggingface_hub 
 safetensors
+transformers
