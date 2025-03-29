@@ -57,3 +57,42 @@ curl -X POST "https://slabstech-image-gen-edit.hf.space/inpaint/" \
   -F "mask_coordinates=100,100,300,300" \
   -o inpainted_image.png
 
+
+
+--
+
+curl -X 'POST' \
+  'https://slabstech-image-gen-edit-stability.hf.space/edit-image/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@original.jpg;type=image/jpeg' \
+  -F 'instruction=make the tank grey in a snow weather' \
+  -F 'steps=50' \
+  -F 'text_cfg_scale=7.5' \
+  -F 'image_cfg_scale=1.5' \
+  -F 'seed=1371' -o grey-tank-snow-background.png
+
+
+curl -X 'POST' \
+  'https://slabstech-image-gen-edit-stability.hf.space/edit-image/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@original.jpg;type=image/jpeg' \
+  -F 'instruction=camouflage the tank to fit in a forest background' \
+  -F 'steps=50' \
+  -F 'text_cfg_scale=7.5' \
+  -F 'image_cfg_scale=1.5' \
+  -F 'seed=1371' -o camouflage-tank-forst.png
+
+
+
+curl -X 'POST' \
+  'https://slabstech-image-gen-edit-stability.hf.space/edit-image/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@original.jpg;type=image/jpeg' \
+  -F 'instruction=check the surrounding and camouflage based on the environment' \
+  -F 'steps=100' \
+  -F 'text_cfg_scale=7.5' \
+  -F 'image_cfg_scale=1.5' \
+  -F 'seed=1371' -o tank-camouflage-green.png
