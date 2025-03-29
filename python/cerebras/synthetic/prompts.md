@@ -49,3 +49,11 @@ curl -X 'POST' \
 
 
 
+--
+
+curl -X POST "https://slabstech-image-gen-edit.hf.space/inpaint/" \
+  -F "file=@1200px-T-55_4.jpg;type=image/jpeg" \
+  -F "prompt=a lush green forest" \
+  -F "mask_coordinates=100,100,300,300" \
+  -o inpainted_image.png
+
