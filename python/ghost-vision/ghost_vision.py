@@ -18,7 +18,7 @@ from transformers import AutoProcessor, AutoModelForZeroShotObjectDetection
 from sam2.sam2_image_predictor import SAM2ImagePredictor
 import cv2
 import os
-from typing import Optional
+from typing import List, Optional
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -105,7 +105,7 @@ def load_sam() -> SAM2ImagePredictor:
         sam_predictor.model.to(device)
     return sam_predictor
 
-# Image processing helper functions (unchanged, included for completeness)
+# Image processing helper functions
 def process_image_with_dino(image: Image.Image, text_query: str = DEFAULT_TEXT_QUERY):
     processor, model = load_dino()
     inputs = processor(images=image, text=text_query, return_tensors="pt").to(device)
@@ -158,6 +158,84 @@ def process_image(input_image: Image.Image, instruction: str, steps: int, text_c
         generator=generator,
     ).images[0]
     return edited_image
+
+def prepare_guided_image(original_image: Image.Image, reference_image: Image.Image, mask_image: Image.Image) -> Image.Image:
+    original_array = np.array(original_image)
+    reference_array = np.array(reference_image)
+    mask_array = np.array(mask_image) / 255.0
+    mask_array = mask_array[:, :, np.newaxis]
+    blended_array = original_array * (1 - mask_array) + reference_array * mask_array
+    return Image.fromarray(blended_array.astype(np.uint8))
+
+def soften_mask(mask_image: Image.Image, softness: int = 5) -> Image.Image:
+    return mask_image.filter(ImageFilter.GaussianBlur(radius=softness))
+
+def generate_rectangular_mask(image_size: tuple, x1: int = 100, y1: int = 100, x2: int = 200, y2: int = 200) -> Image.Image:
+    mask = Image.new("L", image_size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rectangle([x1, y1, x2, y2], fill=255)
+    return mask
+
+def segment_tank(tank_image: Image.Image) -> tuple[Image.Image, Image.Image]:
+    tank_array = np.array(tank_image.convert("RGB"))
+    tank_array = cv2.cvtColor(tank_array, cv2.COLOR_RGB2BGR)
+    hsv = cv2.cvtColor(tank_array, cv2.COLOR_BGR2HSV)
+    lower_snow = np.array([0, 0, 180])
+    upper_snow = np.array([180, 50, 255])
+    snow_mask = cv2.inRange(hsv, lower_snow, upper_snow)
+    tank_mask = cv2.bitwise_not(snow_mask)
+    kernel = np.ones((5, 5), np.uint8)
+    tank_mask = cv2.erode(tank_mask, kernel, iterations=1)
+    tank_mask = cv2.dilate(tank_mask, kernel, iterations=1)
+    tank_mask_image = Image.fromarray(tank_mask, mode="L")
+    tank_array_rgb = np.array(tank_image.convert("RGB"))
+    mask_array = tank_mask / 255.0
+    mask_array = mask_array[:, :, np.newaxis]
+    segmented_tank = (tank_array_rgb * mask_array).astype(np.uint8)
+    alpha = tank_mask
+    segmented_tank_rgba = np.zeros((tank_image.height, tank_image.width, 4), dtype=np.uint8)
+    segmented_tank_rgba[:, :, :3] = segmented_tank
+    segmented_tank_rgba[:, :, 3] = alpha
+    segmented_tank_image = Image.fromarray(segmented_tank_rgba, mode="RGBA")
+    return segmented_tank_image, tank_mask_image
+
+async def apply_camouflage_to_tank(tank_image: Image.Image) -> Image.Image:
+    segmented_tank, tank_mask = segment_tank(tank_image)
+    pipe = load_runway_inpaint()
+    camouflaged_tank = pipe(
+        prompt="Apply a grassy camouflage pattern with shades of green and brown to the tank, preserving its structure.",
+        image=segmented_tank.convert("RGB"),
+        mask_image=tank_mask,
+        strength=0.5,
+        guidance_scale=8.0,
+        num_inference_steps=50,
+        negative_prompt="snow, ice, rock, stone, boat, unrelated objects"
+    ).images[0]
+    camouflaged_tank_rgba = np.zeros((camouflaged_tank.height, camouflaged_tank.width, 4), dtype=np.uint8)
+    camouflaged_tank_rgba[:, :, :3] = np.array(camouflaged_tank)
+    camouflaged_tank_rgba[:, :, 3] = np.array(tank_mask)
+    return Image.fromarray(camouflaged_tank_rgba, mode="RGBA")
+
+def fit_image_to_mask(original_image: Image.Image, reference_image: Image.Image, mask_x1: int, mask_y1: int, mask_x2: int, mask_y2: int) -> tuple:
+    mask_width = mask_x2 - mask_x1
+    mask_height = mask_y2 - mask_y1
+    if mask_width <= 0 or mask_height <= 0:
+        raise ValueError("Mask dimensions must be positive")
+    ref_width, ref_height = reference_image.size
+    aspect_ratio = ref_width / ref_height
+    if mask_width / mask_height > aspect_ratio:
+        new_height = mask_height
+        new_width = int(new_height * aspect_ratio)
+    else:
+        new_width = mask_width
+        new_height = int(new_width / aspect_ratio)
+    reference_image_resized = reference_image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    guided_image = original_image.copy().convert("RGB")
+    paste_x = mask_x1 + (mask_width - new_width) // 2
+    paste_y = mask_y1 + (mask_height - new_height) // 2
+    guided_image.paste(reference_image_resized, (paste_x, paste_y), reference_image_resized)
+    mask_image = generate_rectangular_mask(original_image.size, mask_x1, mask_y1, mask_x2, mask_y2)
+    return guided_image, mask_image
 
 # Endpoints
 @app.get("/generate")
@@ -238,8 +316,113 @@ async def inpaint_image(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error inpainting image: {str(e)}")
 
+@app.post("/inpaint-with-mask/")
+async def inpaint_with_mask(
+    image: UploadFile = File(...),
+    mask: UploadFile = File(...),
+    prompt: str = Form(default="Fill the masked area with appropriate content.")
+):
+    try:
+        image_bytes = await image.read()
+        mask_bytes = await mask.read()
+        original_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        mask_image = Image.open(io.BytesIO(mask_bytes)).convert("L")
+        if original_image.size != mask_image.size:
+            raise HTTPException(status_code=400, detail="Image and mask dimensions must match.")
+        pipe = load_runway_inpaint()
+        result = pipe(prompt=prompt, image=original_image, mask_image=mask_image).images[0]
+        result_bytes = io.BytesIO()
+        result.save(result_bytes, format="PNG")
+        result_bytes.seek(0)
+        return StreamingResponse(
+            result_bytes,
+            media_type="image/png",
+            headers={"Content-Disposition": "attachment; filename=inpainted_image.png"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during inpainting: {str(e)}")
+
+@app.post("/inpaint-with-reference/")
+async def inpaint_with_reference(
+    image: UploadFile = File(...),
+    reference_image: UploadFile = File(...),
+    prompt: str = Form(default="Integrate the reference content naturally into the masked area, matching style and lighting."),
+    mask_x1: int = Form(default=100),
+    mask_y1: int = Form(default=100),
+    mask_x2: int = Form(default=200),
+    mask_y2: int = Form(default=200)
+):
+    try:
+        image_bytes = await image.read()
+        reference_bytes = await reference_image.read()
+        original_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        reference_image = Image.open(io.BytesIO(reference_bytes)).convert("RGB")
+        if original_image.size != reference_image.size:
+            reference_image = reference_image.resize(original_image.size, Image.Resampling.LANCZOS)
+        mask_image = generate_rectangular_mask(original_image.size, mask_x1, mask_y1, mask_x2, mask_y2)
+        softened_mask = soften_mask(mask_image, softness=5)
+        guided_image = prepare_guided_image(original_image, reference_image, softened_mask)
+        pipe = load_runway_inpaint()
+        result = pipe(
+            prompt=prompt,
+            image=guided_image,
+            mask_image=softened_mask,
+            strength=0.75,
+            guidance_scale=7.5
+        ).images[0]
+        result_bytes = io.BytesIO()
+        result.save(result_bytes, format="PNG")
+        result_bytes.seek(0)
+        return StreamingResponse(
+            result_bytes,
+            media_type="image/png",
+            headers={"Content-Disposition": "attachment; filename=natural_inpaint_image.png"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during natural inpainting: {str(e)}")
+
+@app.post("/fit-image-to-mask/")
+async def fit_image_to_mask_endpoint(
+    image: UploadFile = File(...),
+    reference_image: UploadFile = File(...),
+    mask_x1: int = Form(default=200),
+    mask_y1: int = Form(default=200),
+    mask_x2: int = Form(default=500),
+    mask_y2: int = Form(default=500)
+):
+    try:
+        image_bytes = await image.read()
+        reference_bytes = await reference_image.read()
+        original_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        reference_image = Image.open(io.BytesIO(reference_bytes)).convert("RGB")
+        camouflaged_tank = await apply_camouflage_to_tank(reference_image)
+        guided_image, mask_image = fit_image_to_mask(original_image, camouflaged_tank, mask_x1, mask_y1, mask_x2, mask_y2)
+        softened_mask = soften_mask(mask_image, softness=2)
+        pipe = load_runway_inpaint()
+        result = pipe(
+            prompt="Blend the camouflaged tank into the grassy field with trees, ensuring a non-snowy environment, matching the style, lighting, and surroundings.",
+            image=guided_image,
+            mask_image=softened_mask,
+            strength=0.2,
+            guidance_scale=7.5,
+            num_inference_steps=50,
+            negative_prompt="snow, ice, rock, stone, boat, unrelated objects"
+        ).images[0]
+        result_bytes = io.BytesIO()
+        result.save(result_bytes, format="PNG")
+        result_bytes.seek(0)
+        return StreamingResponse(
+            result_bytes,
+            media_type="image/png",
+            headers={"Content-Disposition": "attachment; filename=fitted_image.png"}
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=f"ValueError in processing: {str(ve)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during fitting and inpainting: {str(e)}")
+
 @app.post("/detect-json/")
-async def detect_json(file: UploadFile = File(...), text_query: str = DEFAULT_TEXT_QUERY):
+async def detect_json(file: UploadFile = File(...), text_query: str = Form(default=DEFAULT_TEXT_QUERY)):
     try:
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data)).convert("RGB")
@@ -257,7 +440,7 @@ async def detect_json(file: UploadFile = File(...), text_query: str = DEFAULT_TE
         raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
 
 @app.post("/segment-image/")
-async def segment_image(file: UploadFile = File(...), text_query: str = DEFAULT_TEXT_QUERY):
+async def segment_image(file: UploadFile = File(...), text_query: str = Form(default=DEFAULT_TEXT_QUERY)):
     try:
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data)).convert("RGB")
@@ -274,11 +457,43 @@ async def segment_image(file: UploadFile = File(...), text_query: str = DEFAULT_
         img_byte_arr = io.BytesIO()
         output_image.save(img_byte_arr, format="PNG")
         img_byte_arr.seek(0)
-        return StreamingResponse(img_byte_arr, media_type="image/png")
+        return StreamingResponse(
+            img_byte_arr,
+            media_type="image/png",
+            headers={"Content-Disposition": "attachment; filename=segmented_image.png"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error segmenting image: {str(e)}")
 
-# Add other endpoints (e.g., /mask-object/, /fit-image-to-mask/) with similar lazy loading patterns as needed
+@app.post("/mask-object/")
+async def mask_object(file: UploadFile = File(...), text_query: str = Form(default=DEFAULT_TEXT_QUERY)):
+    try:
+        image_data = await file.read()
+        image = Image.open(io.BytesIO(image_data)).convert("RGB")
+        results = process_image_with_dino(image, text_query)
+        boxes = [
+            {"x_min": box[0].item(), "y_min": box[1].item(), "x_max": box[2].item(), "y_max": box[3].item()}
+            for box in results["boxes"].cpu()
+        ]
+        mask = segment_with_sam(image, boxes)
+        image_np = np.array(image)
+        object_mask = create_object_mask(image_np, mask)
+        masked_image = cv2.bitwise_and(image_np, object_mask)
+        output_image = Image.fromarray(masked_image)
+        img_byte_arr = io.BytesIO()
+        output_image.save(img_byte_arr, format="PNG")
+        img_byte_arr.seek(0)
+        return StreamingResponse(
+            img_byte_arr,
+            media_type="image/png",
+            headers={"Content-Disposition": "attachment; filename=masked_object_image.png"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error masking object: {str(e)}")
+
+@app.get("/")
+async def root():
+    return {"message": "InstructPix2Pix API is running. Use POST /edit-image/ or /inpaint/ to edit images."}
 
 if __name__ == "__main__":
     import uvicorn
