@@ -6,7 +6,8 @@ from llama_cpp import Llama
 from sse_starlette.sse import EventSourceResponse
 import os
 
-MODEL_PATH = "/models/krutrim-2-instruct-Q4_K_M.gguf"
+MODEL_URL = "https://huggingface.co/bartowski/krutrim-ai-labs_Krutrim-2-instruct-GGUF/resolve/main/krutrim-ai-labs_Krutrim-2-instruct-Q6_K.gguf"
+MODEL_PATH = "/app/models/krutrim-ai-labs_Krutrim-2-instruct-Q6_K.gguf"
 
 # Input schemas
 class CompletionRequest(BaseModel):
@@ -28,7 +29,7 @@ class ChatRequest(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if not os.path.exists(MODEL_PATH):
-        raise FileNotFoundError(f"Model not found at {MODEL_PATH}")
+        raise FileNotFoundError(f"Model not found at {MODEL_PATH}.  Ensure the Dockerfile downloaded it.")
     
     app.state.llm = Llama(
         model_path=MODEL_PATH,
