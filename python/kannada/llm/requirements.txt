@@ -1,0 +1,5 @@
+fastapi>=0.110.0
+uvicorn>=0.29.0
+llama-cpp-python>=0.2.60
+sse-starlette>=2.0.0
+python-multipart>=0.0.6
