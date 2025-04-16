@@ -28,3 +28,13 @@ export HF_HOME=/home/ubuntu/dhwani-ai-v0-0-2
 export HF_TOKEN=asdasdadasd
 
 python src/server/main.py --host 0.0.0.0 --port 7860 --config config_two
+
+
+-- 
+
+Update Firewall Rules
+
+- Add Custom TCP - Set port to 7860 . 
+
+Use http://IP-ADDress:7860/docs to access dhwani-server
+
