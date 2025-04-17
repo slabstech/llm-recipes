@@ -1,13 +1,7 @@
 VLLM
 
-llmcompressppor for codestral-mamba
 
-- pip install llmcompressor
-
--  huggingface-cli download TinyLlama/TinyLlama-1.1B-Chat-v1.0
-
-- python tiny_llama.py
+https://blog.vllm.ai/2025/04/11/transformers-backend.html
 
 
-- Reference
-    - https://github.com/vllm-project/llm-compressor/
+https://blog.vllm.ai/2025/02/17/distributed-inference.html
