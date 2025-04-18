@@ -9,7 +9,7 @@ pip instll vllm
 export VLLM_USE_V1=1
 vllm serve reducto/RolmOCR 
 
-python rolmocr_hf.py
+python rolmo/api.py
 
 python rolmocr_api.py
 
