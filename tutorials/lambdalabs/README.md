@@ -18,6 +18,10 @@ export PATH="/root/.cargo/bin:${PATH}"
 export CC=/usr/bin/gcc
 export ENV CXX=/usr/bin/g++
 
+python3.10 -m venv venv
+
+source venv/bin/activate
+
 pip install --no-cache-dir --upgrade pip setuptools psutil setuptools-rust torch
 pip install --no-cache-dir flash-attn  --no-build-isolation 
 
