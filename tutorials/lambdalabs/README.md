@@ -27,7 +27,7 @@ pip install --no-cache-dir flash-attn  --no-build-isolation
 
 pip install --no-cache-dir -r requirements.txt
 
-export HF_HOME=/home/ubuntu/dhwani-ai-v0-0-2
+export HF_HOME=data-dhwani-models
 
 export HF_TOKEN=asdasdadasd
 
