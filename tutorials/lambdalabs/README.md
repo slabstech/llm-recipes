@@ -18,12 +18,16 @@ export PATH="/root/.cargo/bin:${PATH}"
 export CC=/usr/bin/gcc
 export ENV CXX=/usr/bin/g++
 
+python3.10 -m venv venv
+
+source venv/bin/activate
+
 pip install --no-cache-dir --upgrade pip setuptools psutil setuptools-rust torch
 pip install --no-cache-dir flash-attn  --no-build-isolation 
 
 pip install --no-cache-dir -r requirements.txt
 
-export HF_HOME=/home/ubuntu/dhwani-ai-v0-0-2
+export HF_HOME=data-dhwani-models
 
 export HF_TOKEN=asdasdadasd
 
