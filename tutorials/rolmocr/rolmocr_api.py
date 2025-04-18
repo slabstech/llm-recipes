@@ -7,7 +7,7 @@ app = FastAPI(title="RolmOCR API")
 
 # Initialize OpenAI client
 client = OpenAI(api_key="123", base_url="http://localhost:8000/v1")
-model = "reducto/RolmOCR-7b"
+model = "reducto/RolmOCR"
 
 def encode_image(image: BytesIO) -> str:
     """Encode image bytes to base64 string."""

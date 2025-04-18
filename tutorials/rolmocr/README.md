@@ -1,5 +1,22 @@
 RolmOCR
 
+python3.10 -m venv venv
+
+source venv/bin/activate
+
+pip instll vllm
+
+export VLLM_USE_V1=1
+vllm serve reducto/RolmOCR 
+
+python rolmocr_hf.py
+
+python rolmocr_api.py
+
+
+For OlMOCR 
+
+
 sudo apt-get update
 
 sudo apt-get install poppler-utils ttf-mscorefonts-installer msttcorefonts fonts-crosextra-caladea fonts-crosextra-carlito gsfonts lcdf-typetools
@@ -18,17 +35,9 @@ uv pip install "sglang[all]" --find-links https://flashinfer.ai/whl/cu124/torch2
 
 pip install -r requirements.txt
 
-
-git clone --depth 1 https://github.com/allenai/olmocr.git
-
-
-cd olmocr
+pip install git+https://github.com/slabstech/olmocr.git@dhwani-docs
 
 
-- change pyproject.toml - set python to 3.10
-
-
-pip install -e .
 
 
 uvicorn olmo_api_v2:app --host 0.0.0.0 --port 7860

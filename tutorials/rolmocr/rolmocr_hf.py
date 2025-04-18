@@ -7,7 +7,7 @@ import base64
 
 client = OpenAI(api_key="123", base_url="http://localhost:8000/v1")
 
-model = "reducto/RolmOCR-7b"
+model = "reducto/RolmOCR"
 
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:
