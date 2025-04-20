@@ -1,9 +1,5 @@
 Lambda labs
 
-- Use Cloude IDE / Jupyter Labs
-
-https://huggingface.co/spaces/slabstech/dhwani-internal-api-server
-
 
 - Setup - Dhwani Model Server
 
@@ -15,6 +11,8 @@ sudo apt-get install ffmpeg build-essential
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal 
 
 export PATH="/root/.cargo/bin:${PATH}"
+
+export PATH='$HOME/.cargo/bin:${PATH}'
 export CC=/usr/bin/gcc
 export ENV CXX=/usr/bin/g++
 
@@ -42,3 +40,7 @@ Update Firewall Rules
 
 Use http://IP-ADDress:7860/docs to access dhwani-server
 
+
+- Use Cloude IDE / Jupyter Labs
+
+https://huggingface.co/spaces/slabstech/dhwani-internal-api-server
