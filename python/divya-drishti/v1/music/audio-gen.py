@@ -10,7 +10,7 @@ def generate_sound(description):
     model.set_generation_params(
         use_sampling=True,
         top_k=50,
-        duration=5
+        duration=50
     )
 
     # Generate audio (returns a tensor of shape [batch_size, channels, samples])
