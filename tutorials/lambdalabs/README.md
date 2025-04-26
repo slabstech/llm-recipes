@@ -26,7 +26,7 @@ python3.10 -m venv venv
 
 source venv/bin/activate
 
-pip install --no-cache-dir --upgrade pip setuptools psutil setuptools-rust torch
+pip install --no-cache-dir --upgrade pip setuptools psutil setuptools-rust torch num2words
 pip install --no-cache-dir flash-attn  --no-build-isolation 
 
 pip install --no-cache-dir -r requirements.txt
