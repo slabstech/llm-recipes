@@ -21,7 +21,7 @@ def generate_sound(description):
     if audio_numpy.ndim > 2:
         # Flatten extra dimensions
         audio_numpy = audio_numpy.squeeze()
-    sf.write('_audio.wav', audio_numpy, 32000)
+    sf.write('audio.wav', audio_numpy, 32000)
 
     #audio_write(f'abc', wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
     
