@@ -2,3 +2,6 @@ torch==2.6.0
 uvicorn
 fastapi
 pydantic_settings
+requests
+numpy
+soundfile
