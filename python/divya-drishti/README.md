@@ -7,3 +7,8 @@ Divya Drishti - VideoBook
 - Voice with @ai4bharat -IndicF5 - https://github.com/slabstech/tts-indic-server
 - Script parsing with @GoogleAI - Gemma3 
 
+
+
+curl -X 'GET' \
+  'http://209.20.158.215:7861/generate?prompt=dog%20barking' \
+  -H 'accept: application/json'
