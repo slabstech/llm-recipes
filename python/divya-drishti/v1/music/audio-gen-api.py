@@ -3,8 +3,8 @@ from audiocraft.models import AudioGen
 import soundfile as sf
 import os
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import Optional
 import uvicorn
 
 # Set CUDA memory configuration
@@ -76,14 +76,18 @@ def generate_audio(prompt: str, duration: float) -> str:
 async def generate_audio_endpoint(request: AudioRequest):
     """
     Endpoint to generate audio from a prompt and duration.
-    Returns the path to the generated audio file.
+    Returns the generated audio file as a downloadable response.
     """
     if request.seconds <= 0:
         raise HTTPException(status_code=400, detail="Duration must be greater than 0")
     
     try:
         output_file = generate_audio(request.prompt, request.seconds)
-        return {"message": "Audio generated successfully", "file_path": output_file}
+        return FileResponse(
+            path=output_file,
+            media_type="audio/wav",
+            filename="generated_audio.wav"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
