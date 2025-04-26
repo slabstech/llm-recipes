@@ -1,0 +1,372 @@
+{
+    "scenes": [
+      {
+        "scene_title": "Forest Clearing",
+        "background_music": {
+          "description": "Soft, ambient forest sounds with wind whistling, leaves rustling, and birds chirping sporadically.",
+          "duration": "2:00"
+        },
+        "sound_effects": [
+          {
+            "description": "A branch cracks in the distance.",
+            "timestamp": "0:30",
+            "duration": "0:05"
+          },
+          {
+            "description": "Echo of the cracking sound.",
+            "timestamp": "0:35",
+            "duration": "0:05"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "So, Leo, what were you trying to show me here?",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Patience, Emma. It's a bit... how should I say... next-level cool.",
+            "timestamp": "1:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Your surprises weren't always cool. Remember the \"super cave\" full of spiders.",
+            "timestamp": "1:15",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Hey, that was an adventure! And there are no spiders this time. I promise.",
+            "timestamp": "1:30",
+            "duration": "0:15"
+          }
+        ]
+      },
+      {
+        "scene_title": "Tree with Door",
+        "background_music": {
+          "description": "Continued ambient forest sounds.",
+          "duration": "1:30"
+        },
+        "sound_effects": [
+          {
+            "description": "The door creaks loudly as Leo pushes it open.",
+            "timestamp": "0:15",
+            "duration": "0:05"
+          },
+          {
+            "description": "A faint, echoing sound follows as the door swings back against the trunk.",
+            "timestamp": "0:30",
+            "duration": "0:05"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "What the...? Is that a real door? In a tree? Seriously?",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Yep! Now wait until you see what's behind it. Come with me!",
+            "timestamp": "1:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "I have a strange feeling about this...",
+            "timestamp": "1:15",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Strange feeling? This is adventure, Emma! Come on!",
+            "timestamp": "1:30",
+            "duration": "0:15"
+          }
+        ]
+      },
+      {
+        "scene_title": "Narrow Corridor",
+        "background_music": {
+          "description": "Eerie, atmospheric music with a hint of tension.",
+          "duration": "2:00"
+        },
+        "sound_effects": [
+          {
+            "description": "Footsteps on wet ground producing a dull, muddy sound.",
+            "timestamp": "0:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "Drops of water trickling in the distance.",
+            "timestamp": "0:30",
+            "duration": "0:10"
+          },
+          {
+            "description": "Cool and moist air with the smell of earth and wood.",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "description": "Small, flickering lights casting dancing shadows on the walls.",
+            "timestamp": "1:00",
+            "duration": "0:10"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "Okay, I'm officially impressed... but this is really creepy.",
+            "timestamp": "1:15",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Creepy? This is magic!",
+            "timestamp": "1:30",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Sure, Leo… because a dark hallway with dripping water and flickering lights isn't scary at all.",
+            "timestamp": "1:45",
+            "duration": "0:15"
+          }
+        ]
+      },
+      {
+        "scene_title": "Cave with the Lightcore",
+        "background_music": {
+          "description": "Deep, vibrating hum with a sense of wonder and mystery.",
+          "duration": "3:00"
+        },
+        "sound_effects": [
+          {
+            "description": "A large, glowing artifact floats in the center, surrounded by a deep, vibrating hum.",
+            "timestamp": "0:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "The hum is barely audible but can be felt in the chest.",
+            "timestamp": "0:30",
+            "duration": "0:10"
+          },
+          {
+            "description": "The humming becomes more intense and deeper.",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "description": "A high tone mixes into the roar, slowly increasing.",
+            "timestamp": "1:00",
+            "duration": "0:10"
+          },
+          {
+            "description": "The light of the artifact flickers.",
+            "timestamp": "1:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "A dull hum fills the air, almost like an electric charge.",
+            "timestamp": "1:30",
+            "duration": "0:10"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "Wow... Okay, that's... intense. What the hell is that?",
+            "timestamp": "1:45",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "This is the \"Lightcore\". I found it a few months ago. It was just here, in the middle of nowhere.",
+            "timestamp": "2:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "And you thought, “Hey, I’ll take this super creepy glowing thing home with me”?",
+            "timestamp": "2:15",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Not quite. It's... complicated. I wanted you to see it.",
+            "timestamp": "2:30",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Leo, I have a really bad feeling about this!",
+            "timestamp": "2:45",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Stay calm. I think... it's activating... or something.",
+            "timestamp": "3:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Or something like that? That's not reassuring!",
+            "timestamp": "3:15",
+            "duration": "0:15"
+          }
+        ]
+      },
+      {
+        "scene_title": "The Activation",
+        "background_music": {
+          "description": "Deep, vibrating hum that runs through the room.",
+          "duration": "2:00"
+        },
+        "sound_effects": [
+          {
+            "description": "The humming gets louder and a bright beam of light suddenly shoots into the darkness.",
+            "timestamp": "0:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "A deep, vibrating hum that runs through the room ends abruptly.",
+            "timestamp": "0:30",
+            "duration": "0:10"
+          },
+          {
+            "description": "The cave becomes silent, except for a faint crackling sound, like static electricity.",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "description": "The air feels heavy, almost electric, and a faint smell of ozone hangs in the cave.",
+            "timestamp": "1:00",
+            "duration": "0:10"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "Leo… What have you done?",
+            "timestamp": "1:15",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "I think… we just discovered something big.",
+            "timestamp": "1:30",
+            "duration": "0:15"
+          }
+        ]
+      },
+      {
+        "scene_title": "The Unknown",
+        "background_music": {
+          "description": "Tense, building music with a sense of impending danger.",
+          "duration": "3:00"
+        },
+        "sound_effects": [
+          {
+            "description": "A quiet humming starts again, faint and rhythmic.",
+            "timestamp": "0:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "Somewhere water drips into a small puddle.",
+            "timestamp": "0:30",
+            "duration": "0:10"
+          },
+          {
+            "description": "A high, whirring sound suddenly breaks through the silence before it dies away again.",
+            "timestamp": "0:45",
+            "duration": "0:10"
+          },
+          {
+            "description": "A soft knock comes from somewhere in the darkness, like an echo returning.",
+            "timestamp": "1:00",
+            "duration": "0:10"
+          },
+          {
+            "description": "The silence becomes oppressive.",
+            "timestamp": "1:15",
+            "duration": "0:10"
+          },
+          {
+            "description": "Footsteps on damp ground are suddenly audible, slow and heavy, as if something big is approaching.",
+            "timestamp": "1:30",
+            "duration": "0:10"
+          },
+          {
+            "description": "A deep rumble, barely audible but noticeable, fills the cave.",
+            "timestamp": "1:45",
+            "duration": "0:10"
+          }
+        ],
+        "dialogue": [
+          {
+            "speaker": "Emma",
+            "line": "What was that? Did you hear that too?",
+            "timestamp": "2:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Leo",
+            "line": "It's nothing. Probably just... the echo from the artifact.",
+            "timestamp": "2:15",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Leo... there's something. Listen carefully.",
+            "timestamp": "2:30",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Leo… we should go. Now.",
+            "timestamp": "2:45",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Maybe you're right... but what if we miss it?",
+            "timestamp": "3:00",
+            "duration": "0:15"
+          },
+          {
+            "speaker": "Emma",
+            "line": "Leo… now.",
+            "timestamp": "3:15",
+            "duration": "0:10"
+          },
+          {
+            "speaker": "Leo",
+            "line": "Okay… now.",
+            "timestamp": "3:30",
+            "duration": "0:10"
+          }
+        ]
+      },
+      {
+        "scene_title": "Escape",
+        "background_music": {
+          "description": "Tense, fast-paced music with a sense of urgency.",
+          "duration": "2:00"
+        },
+        "sound_effects": [
+          {
+            "description": "Their footsteps echo quickly through the cave, accompanied by a deep, regular rumble that seems to be getting closer and closer.",
+            "timestamp": "0:15",
+            "duration": "1:45"
+          }
+        ],
+        "dialogue": []
+      }
+    ]
+  }
