@@ -12,3 +12,12 @@ Divya Drishti - VideoBook
 curl -X 'GET' \
   'http://209.20.158.215:7861/generate?prompt=dog%20barking' \
   -H 'accept: application/json'
+
+
+  curl -X 'POST' \
+  'http://209.20.158.215:7862/synthesize/kannada/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "ಬೆಂಗಳೂರು ಕರ್ನಾಟಕ ರಾಜ್ಯದ ರಾಜಧಾನಿ "
+}'
