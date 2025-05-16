@@ -42,11 +42,22 @@ wget --header="Authorization: Bearer $HF_TOKEN" \
 -O mmproj-BF16.gguf
 
 
+./build/bin/llama-server --model gemma-3-12b-it-Q8_0.gguf --mmproj mmproj-BF16.gguf --host 0.0.0.0 --port 7860
 
 
-./build/bin/llama-gemma3-cli \
-  --model /path/to/gemma-3-12b.q8_0.gguf \
-  --mm_proj /path/to/mmproj.gguf
+./build/bin/llama-server \
+  --model gemma-3-12b-it-Q8_0.gguf \
+  --mmproj mmproj-BF16.gguf \
+  --host 0.0.0.0 \
+  --port 7860 \
+  --n-gpu-layers 100 \
+  --threads 1 \
+  --ctx-size 8192 \
+  --batch-size 512 \
+  --flash-attn 1 \
+  --no-mmap \
+  --temp 0.7 \
+  --repeat-penalty 1.1
 
 
 python -m venv --system-site-packages hf-tests
