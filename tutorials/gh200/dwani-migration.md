@@ -2,25 +2,23 @@ dwani.ai - gh200
 
 
 ASR - https://github.com/dwani-ai/asr-indic-server.git
+  - git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
 
-TTS - https://github.com/dwani-ai/tts-indic-server.git
+
 
 Docs - https://github.com/dwani-ai/docs-indic-server.git
+  - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
 
 Translate
-
-LLM
-
-dwani-server 
+  - git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
 
 
-To use pytorch on 
+TTS - https://github.com/dwani-ai/tts-indic-server-f5
+
+
+To use pytorch on GH 200 
 python -m venv --system-site-packages venv
 
-
-https://huggingface.co/spaces/dwani/gh-200-indic-translate-server 
-
-https://huggingface.co/spaces/dwani/gh-200-docs-indic-server 
 
 curl -X POST http://lambda-sip:7860/v1/chat/completions -H "Content-Type: application/json" -d '{
   "model": "gemma-3-12b-it-Q8_0.gguf",
@@ -31,6 +29,7 @@ curl -X POST http://lambda-sip:7860/v1/chat/completions -H "Content-Type: applic
 
 
 ---
+for docs-indic-server
 
 sudo apt install poppler-utils
 
@@ -89,3 +88,5 @@ index 0eec834..431216f 100644
  
  dev = [
  -->
+
+ --
