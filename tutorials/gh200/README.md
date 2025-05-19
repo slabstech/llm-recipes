@@ -19,23 +19,15 @@ cmake -B build -DGGML_CUDA=ON
 cmake --build build --config Release
 ```
 
-https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/gemma-3-12b-it-q4_0.gguf
 
 
-https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/mmproj-model-f16-12B.gguf
-
-- https://huggingface.co/collections/google/gemma-3-qat-67ee61ccacbf2be4195c265b
-
-```bash
-wget --header="Authorization: Bearer $HF_TOKEN" \
-"https://huggingface.co/unsloth/gemma-3-12b-it-GGUF/resolve/main/gemma-3-12b-it-Q8_0.gguf" \
--O gemma-3-12b-it-Q8_0.gguf
-
-
-wget --header="Authorization: Bearer $HF_TOKEN" \
-"https://huggingface.co/unsloth/gemma-3-12b-it-GGUF/resolve/main/mmproj-BF16.gguf" \
--O mmproj-BF16.gguf
+```bash 
+pip install huggingface_hub
+mkdir hf_models 
+huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_models/
 ```
+
+ ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7860   --n-gpu-layers 100   --threads 1   --ctx-size 8192   --batch-size 512
 
 ```bash
 ./build/bin/llama-server \
@@ -92,7 +84,31 @@ curl -X POST https://abcd.hf.space/v1/chat/completions\
 python -m venv --system-site-packages venv
 
 
+
+
 <!-- 
+huggingface-cli download google/gemma-3-12b-it-qat-q4_0-gguf --local-dir hf_models/
+
+https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/gemma-3-12b-it-q4_0.gguf
+
+
+https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/mmproj-model-f16-12B.gguf
+
+- https://huggingface.co/collections/google/gemma-3-qat-67ee61ccacbf2be4195c265b
+
+```bash
+wget --header="Authorization: Bearer $HF_TOKEN" \
+"https://huggingface.co/unsloth/gemma-3-12b-it-GGUF/resolve/main/gemma-3-12b-it-Q8_0.gguf" \
+-O gemma-3-12b-it-Q8_0.gguf
+
+
+wget --header="Authorization: Bearer $HF_TOKEN" \
+"https://huggingface.co/unsloth/gemma-3-12b-it-GGUF/resolve/main/mmproj-BF16.gguf" \
+-O mmproj-BF16.gguf
+```
+
+
+
 pip install transformers diffusers["torch"] tf-keras==2.17.0 accelerate
 
 pip install vllm
