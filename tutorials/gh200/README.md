@@ -19,6 +19,10 @@ cmake -B build -DGGML_CUDA=ON
 cmake --build build --config Release
 ```
 
+https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/gemma-3-12b-it-q4_0.gguf
+
+
+https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-gguf/blob/main/mmproj-model-f16-12B.gguf
 
 - https://huggingface.co/collections/google/gemma-3-qat-67ee61ccacbf2be4195c265b
 
