@@ -2,9 +2,8 @@ dwani.ai - gh200
 
 - Router
 
-git clone https://huggingface.co/spaces/dwani/dwani-server-workshop
-
-cd dwani-server-workshop
+git clone https://github.com/dwani-ai/dwani-api-server
+cd dwani-api-server
 
 python -m venv --system-site-packages venv
 
@@ -15,18 +14,21 @@ pip install -r requirements.txt
 
 python src/server/main.py --host  0.0.0.0 --port 8888
 
-ASR - https://github.com/dwani-ai/asr-indic-server.git
-  - git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
 
 
+- ASR 
+    - https://github.com/dwani-ai/asr-indic-server.git
+    - git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
 
-Docs - https://github.com/dwani-ai/docs-indic-server.git
+
+-  Docs 
+  - https://github.com/dwani-ai/docs-indic-server.git
   - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
 
-Translate
+- Translate
   - git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
 
-
+- 
 TTS - https://github.com/dwani-ai/tts-indic-server-f5
 
 

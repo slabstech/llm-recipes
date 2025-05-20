@@ -16,12 +16,14 @@ cd llama.cpp
 
 cmake -B build -DGGML_CUDA=ON
 
-cmake --build build --config Release
+cmake --build build --config Release -j2
 ```
 
 
 
 ```bash 
+python -m venv --system-site-packages venv
+source venv/bin/activate
 pip install huggingface_hub
 mkdir hf_models 
 huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_models/
