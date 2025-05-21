@@ -68,20 +68,6 @@ python src/server/translate_api.py --host 0.0.0.0 --port 7862 --device cuda
 
 
 - 
-TTS - https://github.com/dwani-ai/tts-indic-server-f5
-
-
-To use pytorch on GH 200 
-python -m venv --system-site-packages venv
-
-
-curl -X POST http://lambda-sip:7860/v1/chat/completions -H "Content-Type: application/json" -d '{
-  "model": "gemma-3-12b-it-Q8_0.gguf",
-  "messages": [
-    {"role": "user", "content": "Hello, who are you?"}
-  ]
-}'
-
 
 ---
 for docs-indic-server
@@ -171,4 +157,19 @@ index 0eec834..431216f 100644
  -->
 
  --
+
+TTS - 
+```bash
+https://github.com/dwani-ai/tts-indic-server-f5
+cd tts-indic-server-f5
+
+
+python -m venv --system-site-packages venv
+source venv/bin/activate
+pip install wheel packaging
+
+pip install -r requirements.txt
+python src/server/main.py --host 0.0.0.0 --port 7864 --config config_two
+```
+
 
