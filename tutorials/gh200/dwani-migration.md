@@ -55,6 +55,8 @@ python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
   - 
 ```bash
 git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
+cd gh-200-indic-translate-server
+
 python -m venv --system-site-packages venv
 
 source venv/bin/activate
@@ -90,6 +92,8 @@ for docs-indic-server
   - 
 ```bash
 git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
+cd gh-200-docs-indic-server
+
 python -m venv --system-site-packages venv
 
 source venv/bin/activate
@@ -102,6 +106,7 @@ python src/server/docs_api_gh_200.py  --host 0.0.0.0 --port 7861
 
 ```bash
 mkdir external
+cd external
 git clone --recursive https://github.com/dmlc/decord
 
 cd decord
@@ -132,6 +137,7 @@ pip install "numpy<2.0"
 git clone  https://github.com/allenai/olmocr.git
 
 cd olmocr
+
 pip install --upgrade pip setuptools wheel packaging
 pip install -e .
 pip install "numpy<2.0"
