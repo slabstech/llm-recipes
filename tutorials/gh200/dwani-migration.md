@@ -1,6 +1,6 @@
 dwani.ai - gh200
 
-
+```bash
 export API_KEY_SECRET="dwani-mobile-app-some-sercwer234"
 export CHAT_RATE_LIMIT="100/minute"
 export DWANI_API_BASE_URL_PDF="http://127.0.0.1:7861"
@@ -16,9 +16,10 @@ export DEFAULT_ADMIN_USER="adminsdfsdf"
 export DEFAULT_ADMIN_PASSWORD="dwani-987-123234fsfsfsfsfd"
 
 export HF_TOKEN='hf_this_is_not_a_secret__this_gaganyatri'
+```
 
 - Router
-
+```bash
 git clone https://github.com/dwani-ai/dwani-api-server
 cd dwani-api-server
 
@@ -30,31 +31,38 @@ pip install -r requirements.txt
 
 
 python src/server/main.py --host  0.0.0.0 --port 8888
-
+```
 
 
 - ASR 
     - https://github.com/dwani-ai/asr-indic-server.git
-    - git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
-    python -m venv --system-site-packages venv
-
+    - 
+```bash
+git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
+cd gh200-asr-indic-server
+    
+python -m venv --system-site-packages venv
 source venv/bin/activate
 
 pip install -r requirements.txt
 
-    python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
+python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
+
+```
 
 
 - Translate
-  - git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
-  python -m venv --system-site-packages venv
+  - 
+```bash
+git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
+python -m venv --system-site-packages venv
 
 source venv/bin/activate
 
 pip install -r requirements.txt
-  pip install "numpy<2.0"
+pip install "numpy<2.0"
 python src/server/translate_api.py --host 0.0.0.0 --port 7862 --device cuda
-
+```
 
 
 - 
@@ -79,15 +87,21 @@ for docs-indic-server
 
 -  Docs 
   - https://github.com/dwani-ai/docs-indic-server.git
-  - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
+  - 
+```bash
+git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
 python -m venv --system-site-packages venv
 
 source venv/bin/activate
 
 pip install -r requirements.txt
+pip install "numpy<2.0"
 
 python src/server/docs_api_gh_200.py  --host 0.0.0.0 --port 7861
+```
 
+```bash
+mkdir external
 git clone --recursive https://github.com/dmlc/decord
 
 cd decord
@@ -99,27 +113,29 @@ cmake .. -DUSE_CUDA=0 -DCMAKE_BUILD_TYPE=Release
 make
 
 cd ../python
+python3 setup.py install --user
 
+```
 
 // pwd=$PWD
 // echo "PYTHONPATH=$PYTHONPATH:$pwd" >> ~/.bashrc
 // source ~/.bashrc
 # option 2: install with setuptools
-python3 setup.py install --user
 
 
 
 pip install "numpy<2.0"
 
 
--
+- olmocr
+```bash
 git clone  https://github.com/allenai/olmocr.git
 
 cd olmocr
 pip install --upgrade pip setuptools wheel packaging
 pip install -e .
 pip install "numpy<2.0"
-
+```
 in olmocr :  pyproject.toml - remove sql-kernem and sglang
 set python version to 3.10
 <!--
@@ -150,9 +166,3 @@ index 0eec834..431216f 100644
 
  --
 
-
- git clone https://github.com/dwani-ai/dwani-api-server.git
-
-python -m venv --system-site-packages venv
-source venv/bin/activate
-python src/server/main.py --host 0.0.0.0 --port 78878
