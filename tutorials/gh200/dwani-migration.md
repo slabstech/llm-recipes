@@ -104,6 +104,7 @@ git clone  https://github.com/allenai/olmocr.git
 cd olmocr
 pip install --upgrade pip setuptools wheel packaging
 pip install -e .
+pip install "numpy<2.0"
 
 in olmocr :  pyproject.toml - remove sql-kernem and sglang
 set python version to 3.10
@@ -117,7 +118,7 @@ index 0eec834..431216f 100644
  authors = [
      {name = "Allen Institute for Artificial Intelligence", email = "jakep@allenai.org"}
  ]
--requires-python = ">=3.11"
+-requires-python = ">=3.11"git 
 +requires-python = ">=3.10"
  dependencies = [
    "cached-path",
@@ -134,3 +135,10 @@ index 0eec834..431216f 100644
  -->
 
  --
+
+
+ git clone https://github.com/dwani-ai/dwani-api-server.git
+
+python -m venv --system-site-packages venv
+source venv/bin/activate
+python src/server/main.py --host 0.0.0.0 --port 78878
