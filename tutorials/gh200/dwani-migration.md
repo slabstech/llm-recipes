@@ -1,5 +1,22 @@
 dwani.ai - gh200
 
+
+export API_KEY_SECRET="dwani-mobile-app-some-sercwer234"
+export CHAT_RATE_LIMIT="100/minute"
+export DWANI_API_BASE_URL_PDF="http://127.0.0.1:7861"
+export DWANI_API_BASE_URL_VISION="http://127.0.0.1:7861"
+export DWANI_API_BASE_URL_LLM="http://127.0.0.1:7861"
+export DWANI_API_BASE_URL_TTS="http://127.0.0.1:7860"
+export DWANI_API_BASE_URL_ASR="http://127.0.0.1:7863"
+export DWANI_API_BASE_URL_TRANSLATE="http://127.0.0.1:7862"
+export DWANI_API_BASE_URL_S2S="http://127.0.0.1:7861"
+export SPEECH_RATE_LIMIT="5/minute"
+export ENCRYPTION_KEY="tetegdgfdgfdfgdfgdfg"
+export DEFAULT_ADMIN_USER="adminsdfsdf"
+export DEFAULT_ADMIN_PASSWORD="dwani-987-123234fsfsfsfsfd"
+
+export HF_TOKEN='hf_this_is_not_a_secret__this_gaganyatri'
+
 - Router
 
 git clone https://github.com/dwani-ai/dwani-api-server
