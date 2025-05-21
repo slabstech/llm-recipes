@@ -19,14 +19,35 @@ python src/server/main.py --host  0.0.0.0 --port 8888
 - ASR 
     - https://github.com/dwani-ai/asr-indic-server.git
     - git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
+    python -m venv --system-site-packages venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+    python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
 
 
 -  Docs 
   - https://github.com/dwani-ai/docs-indic-server.git
   - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
+python -m venv --system-site-packages venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
 
 - Translate
   - git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
+  python -m venv --system-site-packages venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+  pip install "numpy<2.0"
+python src/server/translate_api.py --host 0.0.0.0 --port 7862 --device cuda
+
+
 
 - 
 TTS - https://github.com/dwani-ai/tts-indic-server-f5
@@ -47,7 +68,7 @@ curl -X POST http://lambda-sip:7860/v1/chat/completions -H "Content-Type: applic
 ---
 for docs-indic-server
 
-sudo apt install poppler-utils
+sudo apt install -y poppler-utils
 
 
 sudo apt-get install -y build-essential python3-dev python3-setuptools make cmake
@@ -65,9 +86,10 @@ make
 
 cd ../python
 
-pwd=$PWD
-echo "PYTHONPATH=$PYTHONPATH:$pwd" >> ~/.bashrc
-source ~/.bashrc
+
+// pwd=$PWD
+// echo "PYTHONPATH=$PYTHONPATH:$pwd" >> ~/.bashrc
+// source ~/.bashrc
 # option 2: install with setuptools
 python3 setup.py install --user
 
@@ -76,6 +98,12 @@ python3 setup.py install --user
 pip install "numpy<2.0"
 
 
+-
+git clone  https://github.com/allenai/olmocr.git
+
+cd olmocr
+pip install --upgrade pip setuptools wheel packaging
+pip install -e .
 
 in olmocr :  pyproject.toml - remove sql-kernem and sglang
 set python version to 3.10
