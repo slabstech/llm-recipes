@@ -45,15 +45,6 @@ pip install -r requirements.txt
     python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
 
 
--  Docs 
-  - https://github.com/dwani-ai/docs-indic-server.git
-  - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
-python -m venv --system-site-packages venv
-
-source venv/bin/activate
-
-pip install -r requirements.txt
-
 - Translate
   - git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
   python -m venv --system-site-packages venv
@@ -85,11 +76,17 @@ curl -X POST http://lambda-sip:7860/v1/chat/completions -H "Content-Type: applic
 ---
 for docs-indic-server
 
-sudo apt install -y poppler-utils
 
+-  Docs 
+  - https://github.com/dwani-ai/docs-indic-server.git
+  - git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
+python -m venv --system-site-packages venv
 
-sudo apt-get install -y build-essential python3-dev python3-setuptools make cmake
-sudo apt-get install -y ffmpeg libavcodec-dev libavfilter-dev libavformat-dev libavutil-dev
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+python src/server/docs_api_gh_200.py  --host 0.0.0.0 --port 7861
 
 git clone --recursive https://github.com/dmlc/decord
 
