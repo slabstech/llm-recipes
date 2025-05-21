@@ -6,7 +6,7 @@ export CHAT_RATE_LIMIT="100/minute"
 export DWANI_API_BASE_URL_PDF="http://127.0.0.1:7861"
 export DWANI_API_BASE_URL_VISION="http://127.0.0.1:7861"
 export DWANI_API_BASE_URL_LLM="http://127.0.0.1:7861"
-export DWANI_API_BASE_URL_TTS="http://127.0.0.1:7860"
+export DWANI_API_BASE_URL_TTS="http://127.0.0.1:7864"
 export DWANI_API_BASE_URL_ASR="http://127.0.0.1:7863"
 export DWANI_API_BASE_URL_TRANSLATE="http://127.0.0.1:7862"
 export DWANI_API_BASE_URL_S2S="http://127.0.0.1:7861"
@@ -160,8 +160,8 @@ index 0eec834..431216f 100644
 
 TTS - 
 ```bash
-https://github.com/dwani-ai/tts-indic-server-f5
-cd tts-indic-server-f5
+git clone https://github.com/dwani-ai/dwani-server
+cd dwani-server
 
 
 python -m venv --system-site-packages venv
