@@ -91,6 +91,7 @@ python src/server/docs_api_gh_200.py  --host 0.0.0.0 --port 7861
 ```
 
 ```bash
+cd
 mkdir external
 cd external
 git clone --recursive https://github.com/dmlc/decord
@@ -120,12 +121,16 @@ pip install "numpy<2.0"
 
 - olmocr
 ```bash
+cd ../../
 git clone  https://github.com/allenai/olmocr.git
 
 cd olmocr
 
 pip install --upgrade pip setuptools wheel packaging
+
+ // copy ppyproject.toml
 pip install -e .
+cd ../../dwani_org/gh-200-docs-indic-server/
 pip install "numpy<2.0"
 ```
 in olmocr :  pyproject.toml - remove sql-kernem and sglang

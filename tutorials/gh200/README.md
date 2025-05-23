@@ -1,12 +1,8 @@
 Gh200 - setup
 
-mkdir dwani_org
-cd dwani_org
-- llama.cpp
-- https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md
-
 
 ```bash
+sudo apt-get update
 sudo apt-get install ninja-build
 
 sudo apt-get install libcurl4-openssl-dev
@@ -14,6 +10,8 @@ sudo apt-get install libcurl4-openssl-dev
 sudo apt-get install -y build-essential python3-dev python3-setuptools make cmake
 sudo apt-get install -y ffmpeg libavcodec-dev libavfilter-dev libavformat-dev libavutil-dev
 sudo apt install -y poppler-utils
+mkdir dwani_org
+cd dwani_org
 
 
 git clone https://github.com/ggml-org/llama.cpp.git
