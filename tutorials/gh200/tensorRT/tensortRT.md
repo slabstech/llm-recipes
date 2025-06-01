@@ -25,4 +25,16 @@ pip install --upgrade pip setuptools wheel
 
  sudo apt-get -y install libopenmpi-dev && pip3 install --upgrade pip setuptools && pip3 install tensorrt_llm
 
- 
+
+----
+
+apt-get update && apt-get -y install python3.10 python3-pip openmpi-bin libopenmpi-dev
+
+
+
+
+pip3 install tensorrt_llm -U --pre --extra-index-url https://pypi.nvidia.com
+
+python3 -c "import tensorrt_llm"
+
+https://developer.nvidia.com/blog/optimizing-inference-on-llms-with-tensorrt-llm-now-publicly-available/
