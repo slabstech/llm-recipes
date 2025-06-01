@@ -64,3 +64,10 @@ pip3 uninstall torch -y
 pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu126
 
 pip install tensorrt~=10.9.0
+
+python3 -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+
+python3 examples/gpt/hf_gpt_convert.py -i gpt2 -o ./c-model/gpt2 --tensor-parallelism 1 --storage-type float16
+
+
+python3 examples/gpt/build.py --model_dir ./c-model/gpt2 --output_dir ./engine_outputs --dtype float16 --use_gpt_attention_plugin --max_output_len 40
