@@ -36,7 +36,11 @@ python3 -c "import tensorrt; print(tensorrt.__version__)"
 
 pip3 uninstall tensorrt -y
 
-pip install tensorrt
+
+pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu126
+
+
+pip install tensorrt~=10.9.0
 
 python3 -c "import tensorrt; print(tensorrt.__version__)"
 
@@ -53,3 +57,10 @@ git clone --branch v0.8.0 https://github.com/NVIDIA/TensorRT-LLM.git
 cd TensorRT-LLM
 python3 examples/gpt/hf_gpt_convert.py -i gpt2 -o ./c-model/gpt2 --tensor-parallelism 1 --storage-type float16
 
+pip3 uninstall torch -y
+// pip3 install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+
+
+pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu126
+
+pip install tensorrt~=10.9.0
