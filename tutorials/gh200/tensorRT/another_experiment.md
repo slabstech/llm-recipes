@@ -9,18 +9,18 @@ sudo docker pull trystan/tensorrt_llm:aarch64-0.17.0.post1_90
 
 sudo docker run --gpus all -it --rm --network=host --env NVIDIA_DRIVER_CAPABILITIES=all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 --name jetson_container_20250602_065549 trystan/tensorrt_llm:aarch64-0.17.0.post1_90
 
-git clone https://github.com/NVIDIA/TensorRT-LLM.git
+export HF_TOKEN=hf_your_tokn_ehere
 
-cd TensorRT-LLM/examples/pytorch/
+python sample.py
+
+// git clone https://github.com/NVIDIA/TensorRT-LLM.git
+
+// cd TensorRT-LLM/examples/pytorch/
 
 
-python quick_start.py
+// meta-llama/Llama-3.2-1B-Instruct
 
-```
-
-```bash
-pip install --upgrade tensorrt_llm --extra-index-url https://pypi.nvidia.com
-
+// python quick_start.py
 
 
 ```
@@ -32,3 +32,6 @@ Reference
 - https://github.com/NVIDIA/TensorRT-LLM.git
 - https://github.com/NVIDIA/TensorRT-LLM/tree/main/examples/pytorch
 - https://github.com/NVIDIA/TensorRT-LLM/blob/main/examples/pytorch/quickstart_multimodal.py#L107
+
+- pip install --upgrade tensorrt_llm --extra-index-url https://pypi.nvidia.com
+- https://lambda.ai/lambda-stack-deep-learning-software
