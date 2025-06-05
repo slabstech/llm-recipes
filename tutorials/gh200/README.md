@@ -36,7 +36,7 @@ mkdir hf_models
 ```bash
 huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_models/
 
- ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7860   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+ ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7881   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
 ```
 
 - qwen3

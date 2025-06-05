@@ -77,8 +77,8 @@ for docs-indic-server
   - https://github.com/dwani-ai/docs-indic-server.git
   - 
 ```bash
-git clone https://huggingface.co/spaces/dwani/gh-200-docs-indic-server
-cd gh-200-docs-indic-server
+git clone https://github.com/dwani-ai/docs-indic-server.git
+cd docs-indic-server
 
 python -m venv --system-site-packages venv
 
@@ -87,7 +87,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 pip install "numpy<2.0"
 
-python src/server/docs_api_gh_200.py  --host 0.0.0.0 --port 7861
+python src/server/docs_api.py  --host 0.0.0.0 --port 7861
 ```
 
 ```bash
