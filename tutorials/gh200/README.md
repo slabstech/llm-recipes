@@ -47,7 +47,21 @@ huggingface-cli download Qwen/Qwen3-30B-A3B-GGUF --local-dir hf_models/
 ./build/bin/llama-server   --model hf_models/Qwen3-30B-A3B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
 ```
 
+- qwen2.5vl
 
+```bash
+
+```
+
+- moondream
+```bash
+huggingface-cli download ggml-org/moondream2-20250414-GGUF --local-dir hf_models/
+ ./build/bin/llama-server   --model hf_models/moondream2-text-model-f16_ct-vicuna.gguf
+  --mmproj hf_models/moondream2-mmproj-f16-20250414.gguf
+  --host 0.0.0.0   --port 7881   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+
+
+```
 
 curl -X POST http://localhost:7860/v1/chat/completions\
   -H "Content-Type: application/json" \
