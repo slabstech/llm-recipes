@@ -57,6 +57,16 @@ huggingface-cli download ggml-org/moondream2-20250414-GGUF --local-dir hf_models
 
 ```
 
+- sarvam-m
+
+```bash
+huggingface-cli download sarvamai/sarvam-m-q8-gguf --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/ sarvam-m-q8_0.gguf --host 0.0.0.0 --port 7884 --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+```
+
+
+
 curl -X POST http://localhost:7860/v1/chat/completions\
   -H "Content-Type: application/json" \
   -d '{
