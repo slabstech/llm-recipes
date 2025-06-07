@@ -40,12 +40,29 @@ huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_mode
 ```
 
 - qwen3
+- https://huggingface.co/Qwen/Qwen3-8B-GGUF  - 8.71
+```bash
+huggingface-cli download Qwen/Qwen3-8B-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/Qwen3-8B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+```
+
+- https://huggingface.co/Qwen/Qwen3-14B-GGUF - 15 GB
+```bash
+huggingface-cli download Qwen/Qwen3-14B-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/Qwen3-14B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+```
+
+
+- https://huggingface.co/Qwen/Qwen3-30B-A3B-GGUF - 32 GB
 
 ```bash
 huggingface-cli download Qwen/Qwen3-30B-A3B-GGUF --local-dir hf_models/
 
 ./build/bin/llama-server   --model hf_models/Qwen3-30B-A3B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
 ```
+
 
 
 - moondream
@@ -62,7 +79,7 @@ huggingface-cli download ggml-org/moondream2-20250414-GGUF --local-dir hf_models
 ```bash
 huggingface-cli download sarvamai/sarvam-m-q8-gguf --local-dir hf_models/
 
-./build/bin/llama-server   --model hf_models/ sarvam-m-q8_0.gguf --host 0.0.0.0 --port 7884 --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+./build/bin/llama-server   --model hf_models/sarvam-m-q8_0.gguf --host 0.0.0.0 --port 7884 --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
 ```
 
 
