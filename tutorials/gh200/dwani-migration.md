@@ -1,4 +1,4 @@
-dwani.ai - gh200
+dwani.ai - gh200 Setup
 
 ```bash
 export API_KEY_SECRET="dwani-mobile-app-some-sercwer234"
@@ -17,8 +17,10 @@ export DEFAULT_ADMIN_PASSWORD="dwani-987-123234fsfsfsfsfd"
 
 export HF_TOKEN='hf_this_is_not_a_secret__this_gaganyatri'
 ```
+---
 
-- Router
+- ### API server 
+  - https://github.com/dwani-ai/dwani-api-server
 ```bash
 git clone https://github.com/dwani-ai/dwani-api-server
 cd dwani-api-server
@@ -33,10 +35,10 @@ pip install -r requirements.txt
 python src/server/main.py --host  0.0.0.0 --port 8888
 ```
 
+----
 
-- ASR 
+- ### ASR - Automatic Speech Recognition / Speech to Text
     - https://github.com/dwani-ai/asr-indic-server.git
-    - 
 ```bash
 git clone https://huggingface.co/spaces/dwani/gh200-asr-indic-server
 cd gh200-asr-indic-server
@@ -49,10 +51,10 @@ pip install -r requirements.txt
 python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
 
 ```
+----
 
+- ### Translate
 
-- Translate
-  - 
 ```bash
 git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
 cd gh-200-indic-translate-server
@@ -66,16 +68,9 @@ pip install "numpy<2.0"
 python src/server/translate_api.py --host 0.0.0.0 --port 7862 --device cuda
 ```
 
-
-- 
-
----
-for docs-indic-server
-
-
--  Docs 
+--- 
+- ### Documents 
   - https://github.com/dwani-ai/docs-indic-server.git
-  - 
 ```bash
 git clone https://github.com/dwani-ai/docs-indic-server.git
 cd docs-indic-server
@@ -89,6 +84,9 @@ pip install "numpy<2.0"
 
 python src/server/docs_api.py  --host 0.0.0.0 --port 7861
 ```
+
+- Dependencies
+  - decord
 
 ```bash
 cd
@@ -106,20 +104,18 @@ make
 
 cd ../python
 python3 setup.py install --user
+pip install "numpy<2.0"
 
 ```
-
+<!-- 
 // pwd=$PWD
 // echo "PYTHONPATH=$PYTHONPATH:$pwd" >> ~/.bashrc
 // source ~/.bashrc
-# option 2: install with setuptools
-
-
-
-pip install "numpy<2.0"
-
+### option 2: install with setuptools
+-->
 
 - olmocr
+
 ```bash
 cd ../../
 git clone  https://github.com/allenai/olmocr.git
@@ -163,7 +159,7 @@ index 0eec834..431216f 100644
 
  --
 
-TTS - 
+- ### TTS - Text to Speech 
 ```bash
 git clone https://github.com/dwani-ai/dwani-server
 cd dwani-server
