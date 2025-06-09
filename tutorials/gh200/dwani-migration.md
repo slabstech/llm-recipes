@@ -19,6 +19,9 @@ export HF_TOKEN='hf_this_is_not_a_secret__this_gaganyatri'
 ```
 ---
 
+
+pip install torch==2.7.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+
 - ### API server 
   - https://github.com/dwani-ai/dwani-api-server
 ```bash
@@ -55,17 +58,19 @@ python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
 ----
 
 - ### Translate
-
+- https://github.com/dwani-ai/indic-translate-server.git
 ```bash
-git clone https://huggingface.co/spaces/dwani/gh-200-indic-translate-server
-cd gh-200-indic-translate-server
+git clone https://github.com/dwani-ai/indic-translate-server.git
+cd indic-translate-server
 
 python -m venv --system-site-packages venv
 
 source venv/bin/activate
+pip install --upgrade pip setuptools wheel packaging cython
 
+pip install torch==2.7.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
-pip install "numpy<2.0"
+
 python src/server/translate_api.py --host 0.0.0.0 --port 7862 --device cuda
 ```
 
