@@ -47,7 +47,7 @@ python -m venv --system-site-packages venv
 source venv/bin/activate
 
 pip install -r requirements.txt
-pip install -r nemo-requirements.txt
+
 
 python src/server/asr_api.py --host 0.0.0.0 --port 7863 --device cuda
 
