@@ -10,7 +10,7 @@ To get started with LLM Recipes, follow these steps:
 
 1. **Clone the Repository:**
    ```sh
-   git clone https://github.com/your-repo/llm-recipes.git
+   git clone https://github.com/sachinsshetty/llm-recipes.git
    cd llm-recipes
    ```
 

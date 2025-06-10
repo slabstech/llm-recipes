@@ -29,9 +29,57 @@ python -m venv --system-site-packages venv
 source venv/bin/activate
 pip install huggingface_hub
 mkdir hf_models 
+```
+
+- gemma3
+
+```bash
 huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_models/
 
- ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7860   --n-gpu-layers 100   --threads 1   --ctx-size 8192   --batch-size 512
+ ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7881   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+```
+
+- qwen3
+- https://huggingface.co/Qwen/Qwen3-8B-GGUF  - 8.71
+```bash
+huggingface-cli download Qwen/Qwen3-8B-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/Qwen3-8B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+```
+
+- https://huggingface.co/Qwen/Qwen3-14B-GGUF - 15 GB
+```bash
+huggingface-cli download Qwen/Qwen3-14B-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/Qwen3-14B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+```
+
+
+- https://huggingface.co/Qwen/Qwen3-30B-A3B-GGUF - 32 GB
+
+```bash
+huggingface-cli download Qwen/Qwen3-30B-A3B-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/Qwen3-30B-A3B-Q8_0.gguf   --host 0.0.0.0   --port 7880 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+```
+
+
+
+- moondream
+```bash
+huggingface-cli download ggml-org/moondream2-20250414-GGUF --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/moondream2-text-model-f16_ct-vicuna.gguf --mmproj hf_models/moondream2-mmproj-f16-20250414.gguf --host 0.0.0.0 --port 7882   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+
+
+```
+
+- sarvam-m
+
+```bash
+huggingface-cli download sarvamai/sarvam-m-q8-gguf --local-dir hf_models/
+
+./build/bin/llama-server   --model hf_models/sarvam-m-q8_0.gguf --host 0.0.0.0 --port 7884 --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
 ```
 
 
