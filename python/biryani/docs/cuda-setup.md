@@ -62,7 +62,7 @@ sudo usermod -aG docker $USER
 
 sudo nvidia-ctk runtime configure --runtime=docker
 
-sudo systemctl restart 
+sudo systemctl restart docker
 
 nvidia-ctk runtime configure --runtime=docker --config=$HOME/.config/docker/daemon.json
 

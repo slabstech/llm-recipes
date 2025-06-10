@@ -1,17 +1,24 @@
 Biryani bot
 
-- SO 101 - https://huggingface.co/docs/lerobot/so101
+- Robot [actions](action.md)
 
-SO 101 - https://github.com/huggingface/lerobot/blob/main/examples/12_use_so101.md
+- Papers
+  - RTC - https://github.com/Physical-Intelligence/real-time-chunking-kinetix
+  - OpenVLA - https://openvla.github.io/
+    - https://huggingface.co/openvla
+    - https://arxiv.org/abs/2406.09246
+  - smolVLA
+    - https://learnopencv.com/smolvla-lerobot-vision-language-action-model/
+    - https://arxiv.org/abs/2506.01844
 
-RTC - Chunking - https://github.com/Physical-Intelligence/real-time-chunking-kinetix
-
-
-SO-101 - Assemby and setup
+- SO-101 - Assemby and setup
   - Video : https://www.youtube.com/watch?v=70GuJf2jbYk
+  - https://huggingface.co/docs/lerobot/so101
+  - https://github.com/huggingface/lerobot/blob/main/examples/12_use_so101.md
 
 
-HF - leRobot - https://www.youtube.com/watch?v=L0uxfZMlkag
+- HF - leRobot - https://www.youtube.com/watch?v=L0uxfZMlkag
+
 
 
 - Items
@@ -24,10 +31,6 @@ HF - leRobot - https://www.youtube.com/watch?v=L0uxfZMlkag
 
 ​ - NVIDIA Jetson Orin Nano Developer Kits
   -https://www.nvidia.com/en-gb/autonomous-machines/embedded-systems/jetson-orin/nano-super-developer-kit/
-
-
-
-
 
 - Automatica - Munich
   - https://automatica-munich.com/en/trade-fair/tickets/
