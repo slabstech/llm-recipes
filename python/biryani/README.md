@@ -1,5 +1,7 @@
 Biryani bot
 
+- SO 101 - https://huggingface.co/docs/lerobot/so101
+
 SO 101 - https://github.com/huggingface/lerobot/blob/main/examples/12_use_so101.md
 
 RTC - Chunking - https://github.com/Physical-Intelligence/real-time-chunking-kinetix
