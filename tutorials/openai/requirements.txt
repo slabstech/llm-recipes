@@ -2,3 +2,5 @@ fastapi
 uvicorn
 vllm
 pydantic
+torch
+transformers

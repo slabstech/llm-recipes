@@ -1,5 +1,6 @@
 openai - API
 
+
 - Setup Project
     ```bash
     python3.10 -m venv venv
@@ -8,7 +9,8 @@ openai - API
     ```
 - Terminal 1
     ```bash
-    vllm serve meta-llama/Llama-2-7b-chat-hf --host 0.0.0.0 --port 8000
+    export CUDA_VISIBLE_DEVICES=""
+    vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 8000
     ```
 - Terminal 2
     ```bash
