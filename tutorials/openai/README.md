@@ -28,3 +28,13 @@ Add - daemon.json to /etc/docker/
 
 
  vllm serve google/gemma-3-4b-it     --served-model-name gemma3     --host 0.0.0.0     --port 8000     --gpu-memory-utilization 0.9     --tensor-parallel-size 1     --max-model-len 16384     --dtype bfloat16 
+
+
+Step	Command/Notes
+Install Tools - 	sudo apt-get install build-essential cmake libnuma-dev
+Clone - 	git clone https://github.com/vllm-project/vllm.git
+Requirements -	pip install -r requirements-build.txt
+pip install -r requirements-gpu.txt
+Build Wheel	- VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
+Install	pip install dist/*.whl
+
