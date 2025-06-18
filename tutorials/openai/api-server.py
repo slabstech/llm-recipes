@@ -11,11 +11,10 @@ app = FastAPI(title="OpenAI-Compatible Chat Completions API with vLLM")
 
 # Configuration for vLLM
 VLLM_MODEL = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Replace with your model
-VLLM_HOST = "http://localhost:8000"  # vLLM server endpoint
 
 # Initialize vLLM client
 try:
-    llm = LLM(model=VLLM_MODEL, api_endpoint=VLLM_HOST)
+    llm = LLM(model=VLLM_MODEL)  # Removed api_endpoint
 except Exception as e:
     print(f"Failed to initialize vLLM client: {e}")
     raise
