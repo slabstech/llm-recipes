@@ -9,7 +9,7 @@ openai - API
     ```
 - Terminal 1
     ```bash
-    export CUDA_VISIBLE_DEVICES=""
+    sudo docker run --runtime nvidia -it --rm -p 8000:8000 slabstech/dwani-vllm
     vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 8000
     ```
 - Terminal 2
@@ -20,3 +20,11 @@ openai - API
     ```bash
     python client.py
     ```
+
+
+Add - daemon.json to /etc/docker/
+- sudo systemctl restart docker
+
+
+
+ vllm serve google/gemma-3-4b-it     --served-model-name gemma3     --host 0.0.0.0     --port 8000     --gpu-memory-utilization 0.9     --tensor-parallel-size 1     --max-model-len 16384     --dtype bfloat16 

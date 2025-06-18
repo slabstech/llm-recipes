@@ -4,6 +4,7 @@ from typing import List, Dict, Optional
 from vllm import LLM, SamplingParams
 import uvicorn
 import json
+import time
 
 # Initialize FastAPI app
 app = FastAPI(title="OpenAI-Compatible Chat Completions API with vLLM")
