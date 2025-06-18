@@ -1,5 +1,9 @@
 openai - API
 
+https://github.com/dwani-ai/vllm-arm64/releases/download/v0.0.1/vllm_arm64-1.0.0-cp310-cp310-linux_aarch64.whl
+
+https://github.com/dwani-ai/vllm-arm64
+
 
 - Setup Project
     ```bash
@@ -9,7 +13,7 @@ openai - API
     ```
 - Terminal 1
     ```bash
-    sudo docker run --runtime nvidia -it --rm -p 8000:8000 slabstech/dwani-vllm
+    sudo docker run --runtime nvidia -it --rm -p 8000:8000 dwani/vllm-arm64:latest
     vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 8000
     ```
 - Terminal 2
@@ -26,10 +30,6 @@ Add - daemon.json to /etc/docker/
 - sudo systemctl restart docker
 
 
-docker pull slabstech/dwani-vllm:latest
-sudo docker tag slabstech/dwani-vllm:latest dwani/vllm-arm64:latest
-
-sudo docker push dwani/vllm-arm64:latest
 
  vllm serve google/gemma-3-4b-it     --served-model-name gemma3     --host 0.0.0.0     --port 8000     --gpu-memory-utilization 0.9     --tensor-parallel-size 1     --max-model-len 16384     --dtype bfloat16 
 
@@ -49,23 +49,23 @@ sudo ./cmake-3.31.8-linux-aarch64.sh --prefix=/usr/local --exclude-subdir
 
 pip uninstall torch torchvision torchaudio
 
-pip install torch==2.7.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+pip install torch==2.7.0 torchaudio==2.7.0 torchvision --index-url https://download.pytorch.org/whl/cu128
 
 
 
 git clone https://github.com/vllm-project/vllm.git
 
-
+cd vllm
 python use_existing_torch.py 
 
 pip install --upgrade setuptools twine setuptools-scm
 
 
 pip install -r requirements/cuda.txt
-export MAX_JOBS=1
+export MAX_JOBS=4
 pip install -vvv -e . --no-build-isolation
 
-VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
+VLLM_TARGET_DEVICE=cuda python setup.py bdist_wheel
 pip install dist/*.whl
 ```
 
