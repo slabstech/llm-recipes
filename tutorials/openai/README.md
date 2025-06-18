@@ -34,18 +34,33 @@ Step	Command/Notes
 
 
 ```bash
-Install Tools - 	
-sudo apt-get install build-essential cmake libnuma-dev
-Clone - 	
+
+sudo apt-get install build-essential libnuma-dev
+
+sudo apt remove cmake
+
+wget https://github.com/Kitware/CMake/releases/download/v3.31.8/cmake-3.31.8-linux-aarch64.sh
+chmod +x cmake-3.31.8-linux-aarch64.sh
+sudo ./cmake-3.31.8-linux-aarch64.sh --prefix=/usr/local --exclude-subdir
+
+pip uninstall torch torchvision torchaudio
+
+pip install torch==2.7.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+
+
+
 git clone https://github.com/vllm-project/vllm.git
-Requirements -	
-pip install -r requirements/cuda.txt
-Build Wheel	- 
+
+
+python use_existing_torch.py 
+
 pip install twine setuptools-scm
 pip install --upgrade setuptools
-pip install -e .
+
+pip install -r requirements/cuda.txt
+pip install -vvv -e . --no-build-isolation
+
 VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
-Install -	
 pip install dist/*.whl
 ```
 
