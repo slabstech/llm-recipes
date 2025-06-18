@@ -1,7 +1,5 @@
 openai - API
 
-https://github.com/dwani-ai/vllm-arm64/releases/download/v0.0.1/vllm_arm64-1.0.0-cp310-cp310-linux_aarch64.whl
-
 https://github.com/dwani-ai/vllm-arm64
 
 
@@ -9,7 +7,10 @@ https://github.com/dwani-ai/vllm-arm64
     ```bash
     python3.10 -m venv venv
     source venv/bin/activate
-    pip install -r requirements.txt
+    pip install fastapi uvicorn pydantic
+    pip install torch==2.7.0 torchaudio==2.7.0 torchvision --index-url https://download.pytorch.org/whl/cu128
+    pip install https://github.com/dwani-ai/vllm-arm64/releases/download/v0.0.1/vllm-0.9.2.dev144+g9206d0ff0.d20250618-cp310-cp310-linux_aarch64.whl
+    #pip install -r requirements.txt
     ```
 - Terminal 1
     ```bash
