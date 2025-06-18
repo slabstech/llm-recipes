@@ -6,7 +6,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="meta-llama/Llama-2-7b-chat-hf",
+    model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
     messages=[
         {"role": "user", "content": "Hello, how are you?"}
     ],

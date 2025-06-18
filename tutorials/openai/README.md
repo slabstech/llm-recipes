@@ -27,6 +27,15 @@ https://github.com/dwani-ai/vllm-arm64
     ```
 
 
+curl -X POST http://localhost:8001/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+
 Add - daemon.json to /etc/docker/
 - sudo systemctl restart docker
 

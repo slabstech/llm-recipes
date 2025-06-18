@@ -10,7 +10,7 @@ import time
 app = FastAPI(title="OpenAI-Compatible Chat Completions API with vLLM")
 
 # Configuration for vLLM
-VLLM_MODEL = "meta-llama/Llama-2-7b-chat-hf"  # Replace with your model
+VLLM_MODEL = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Replace with your model
 VLLM_HOST = "http://localhost:8000"  # vLLM server endpoint
 
 # Initialize vLLM client
