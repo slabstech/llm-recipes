@@ -54,10 +54,11 @@ git clone https://github.com/vllm-project/vllm.git
 
 python use_existing_torch.py 
 
-pip install twine setuptools-scm
-pip install --upgrade setuptools
+pip install --upgrade setuptools twine setuptools-scm
+
 
 pip install -r requirements/cuda.txt
+export MAX_JOBS=1
 pip install -vvv -e . --no-build-isolation
 
 VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
