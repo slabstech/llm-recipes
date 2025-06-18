@@ -31,10 +31,17 @@ Add - daemon.json to /etc/docker/
 
 
 Step	Command/Notes
-Install Tools - 	sudo apt-get install build-essential cmake libnuma-dev
-Clone - 	git clone https://github.com/vllm-project/vllm.git
-Requirements -	pip install -r requirements-build.txt
-pip install -r requirements-gpu.txt
-Build Wheel	- VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
-Install	pip install dist/*.whl
 
+
+```bash
+Install Tools - 	
+sudo apt-get install build-essential cmake libnuma-dev
+Clone - 	
+git clone https://github.com/vllm-project/vllm.git
+Requirements -	
+pip install -r requirements/cuda.txt
+Build Wheel	- 
+VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
+Install -	
+pip install dist/*.whl
+```
