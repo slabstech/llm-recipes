@@ -41,7 +41,17 @@ git clone https://github.com/vllm-project/vllm.git
 Requirements -	
 pip install -r requirements/cuda.txt
 Build Wheel	- 
+pip install twine setuptools-scm
+pip install --upgrade setuptools
+pip install -e .
 VLLM_TARGET_DEVICE=gpu python setup.py bdist_wheel
 Install -	
 pip install dist/*.whl
 ```
+
+
+Ignoring importlib_metadata: markers 'python_version < "3.10"' don't match your environment
+Ignoring six: markers 'python_version > "3.11"' don't match your environment
+Ignoring setuptools: markers 'python_version > "3.11"' don't match your environment
+Ignoring numba: markers 'python_version == "3.9"' don't match your environment
+Ignoring xformers: markers 'platform_system == "Linux" and platform_machine == "x86_64"' don't match your environment
