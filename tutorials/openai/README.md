@@ -35,6 +35,19 @@ curl -X POST http://localhost:8001/v1/chat/completions \
   }'
 ```
 
+```bash
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions \
+  -H "Content-Type: application/json"\ 
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{
+    "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
+
 Add - daemon.json to /etc/docker/
 - sudo systemctl restart docker
 
