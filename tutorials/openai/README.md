@@ -15,17 +15,47 @@ https://github.com/dwani-ai/vllm-arm64
 
 - To run a vllm server via docker container
     ```bash
-    sudo docker run --runtime nvidia -it --rm -p 8000:8000 dwani/vllm-arm64:latest
-    vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.5
+    sudo docker run --runtime nvidia -it --rm -p 9000:9000 dwani/vllm-arm64:latest
+
+    vllm serve google/gemma-3-4b-it --host 0.0.0.0 --port 9000 --gpu-memory-utilization 0.8
+
+    vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 9000 --gpu-memory-utilization 0.5
     ```
+
 
 - Send request to vllm server
     ```bash
     python client.py
     ```
 
+- gemma3
 ```bash
-curl -X POST http://localhost:8001/v1/chat/completions \
+curl -X POST http://localhost:9000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "google/gemma-3-4b-it",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
+```bash
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions \
+  -H "Content-Type: application/json"\ 
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{
+    "model": "google/gemma-3-4b-it",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
+- tinyllama
+
+```bash
+curl -X POST http://localhost:9000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
