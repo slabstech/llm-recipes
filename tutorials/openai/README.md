@@ -58,10 +58,7 @@ curl -X POST http://localhost:9000/v1/chat/completions \
 
 
 ```bash
-curl -X POST https://dwani- vllm. hf. space/v1/chat/completions \
-  -H "Content-Type: application/json"\ 
-  -H "X-API-Key: YOUR_API_KEY_HERE" \
-  -d '{
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" -d '{
     "model": "google/gemma-3-4b-it",
     "messages": [
       {"role": "user", "content": "Tell me a joke about programming"}
