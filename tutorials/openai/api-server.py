@@ -14,7 +14,7 @@ VLLM_MODEL = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Replace with your model
 
 # Initialize vLLM client
 try:
-    llm = LLM(model=VLLM_MODEL)  # Removed api_endpoint
+    llm = LLM(model=VLLM_MODEL, gpu_memory_utilization=0.5)  
 except Exception as e:
     print(f"Failed to initialize vLLM client: {e}")
     raise

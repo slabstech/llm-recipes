@@ -2,32 +2,90 @@ openai - API
 
 https://github.com/dwani-ai/vllm-arm64
 
-
+- To run a vllm server via python library
 - Setup Project
     ```bash
     python3.10 -m venv venv
     source venv/bin/activate
-    pip install fastapi uvicorn pydantic
+    pip install fastapi uvicorn pydantic requests
     pip install torch==2.7.0 torchaudio==2.7.0 torchvision --index-url https://download.pytorch.org/whl/cu128
     pip install https://github.com/dwani-ai/vllm-arm64/releases/download/v0.0.1/vllm-0.9.2.dev144+g9206d0ff0.d20250618-cp310-cp310-linux_aarch64.whl
-    #pip install -r requirements.txt
-    ```
-- Terminal 1
-    ```bash
-    sudo docker run --runtime nvidia -it --rm -p 8000:8000 dwani/vllm-arm64:latest
-    vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 8000
-    ```
-- Terminal 2
-    ```bash
     python api-server.py
     ```
-- Terminal 3
+
+- To run a vllm server via docker container
+    ```bash
+    sudo docker run --runtime nvidia -it --rm -p 9000:9000 dwani/vllm-arm64:latest
+
+
+vllm serve google/gemma-3-4b-it --served-model-name gemma3 google/gemma-3-4b-it --host 0.0.0.0 --port 9000 --gpu-memory-utilization 0.8
+
+    vllm serve TinyLlama/TinyLlama-1.1B-Chat-v1.0 --host 0.0.0.0 --port 9000 --gpu-memory-utilization 0.5
+    ```
+
+
+- Send request to vllm server
     ```bash
     python client.py
     ```
 
+- gemma3
+```bash
+curl -X POST http://localhost:9000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "google/gemma-3-4b-it",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
 
-curl -X POST http://localhost:8001/v1/chat/completions \
+--
+
+```bash
+curl -X POST http://localhost:9000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemma3",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
+--
+
+
+```bash
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" -d '{
+    "model": "google/gemma-3-4b-it",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
+--
+
+```bash
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions \
+  -H "Content-Type: application/json"\ 
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{
+    "model": "gemma3",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+--
+
+
+- tinyllama
+
+```bash
+curl -X POST http://localhost:9000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
@@ -35,6 +93,20 @@ curl -X POST http://localhost:8001/v1/chat/completions \
       {"role": "user", "content": "Tell me a joke about programming"}
     ]
   }'
+```
+
+```bash
+curl -X POST https://dwani- vllm. hf. space/v1/chat/completions \
+  -H "Content-Type: application/json"\ 
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{
+    "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "messages": [
+      {"role": "user", "content": "Tell me a joke about programming"}
+    ]
+  }'
+```
+
 
 Add - daemon.json to /etc/docker/
 - sudo systemctl restart docker
