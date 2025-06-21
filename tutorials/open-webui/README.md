@@ -75,3 +75,20 @@ sudo systemctl status docker
 docker --version
 
 sudo usermod -aG docker $USER
+
+
+---
+
+api -server
+sudo apt update
+sudo apt upgrade -y
+sudo apt install git python3.11-venv
+
+
+git clone https://huggingface.co/spaces/dwani/dwani-api
+
+cd dwani-api
+
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
