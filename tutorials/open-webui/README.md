@@ -92,3 +92,13 @@ cd dwani-api
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+
+sudo apt install python3-pip
+sudo pip install -r requirements.txt
+
+sudo pip install --break-system-packages -r requirements.txt
+
+ sudo python3 src/server/main.py --host 0.0.0.0 --port 80
+
+ 
