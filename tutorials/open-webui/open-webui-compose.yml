@@ -1,0 +1,16 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "80:80"
+    environment:
+      - PORT=80
+      - DWANI_API_KEY=your_dwani_api_key_here
+      - DWANI_API_BASE_URL=https://your-dwani-api-base-url.com
+    volumes:
+      - open-webui-data:/app/backend/data
+    restart: unless-stopped
+
+volumes:
+  open-webui-data:
