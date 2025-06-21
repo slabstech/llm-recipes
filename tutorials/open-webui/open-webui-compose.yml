@@ -6,6 +6,8 @@ services:
       - "21000:21000"
     environment:
       - PORT=21000
+      - DWANI_API_KEY=your_dwani_api_key_here
+      - DWANI_API_BASE_URL=https://your-dwani-api-base-url.com
     volumes:
       - open-webui-data:/app/backend/data
     restart: unless-stopped
