@@ -23,3 +23,6 @@ export default {
 
 Add - Route
     - test dwani ai and select the worker
+
+
+https://gitingest.com/dwani-ai/dwani-ai.github.io/tree/ux-upgrade-v2
