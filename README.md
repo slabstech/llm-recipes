@@ -7,6 +7,9 @@ LLM Recipes is a collection of projects and tools for experimental usage of LLM
 
 ## Projects
 
+- Bhoomi
+ - [bhoomi-docs](robots/README.md)
+
 | Concept                                | Status     | Tech                        |
 |----------------------------------------|------------|-----------------------------|
 | [NoteBook LLama](python/notebooklm)    | Complete   | Python + TTS               |
