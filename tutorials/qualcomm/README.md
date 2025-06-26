@@ -1,9 +1,14 @@
 Qualcomm - Raise Summit Hackathon
 
+
+- qualcomm [challenge](challenge.md)
 AI Hub - https://app.aihub.qualcomm.com/docs/hub/getting_started.html
 
 https://github.com/quic
 
+
+- Hackathon submission
+  - https://lablab.ai/delivering-your-hackathon-solution
 
 - References
   - https://docs.qualcomm.com/bundle/publicresource/topics/80-62010-1/welcome.html?product=1601111740057789
