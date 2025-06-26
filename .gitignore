@@ -10,6 +10,7 @@ venv_2
 __pycache__/
 *.py[cod]
 *$py.class
+gemma-3n-E2B-it-ONNX/
 
 # C extensions
 *.so

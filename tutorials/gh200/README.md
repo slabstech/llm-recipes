@@ -36,7 +36,7 @@ mkdir hf_models
 ```bash
 huggingface-cli download google/gemma-3-27b-it-qat-q4_0-gguf --local-dir hf_models/
 
- ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 7881   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+ ./build/bin/llama-server   --model hf_models/gemma-3-27b-it-q4_0.gguf  --mmproj hf_models/mmproj-model-f16-27B.gguf  --host 0.0.0.0   --port 9000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
 ```
 
 - qwen3
@@ -69,7 +69,7 @@ huggingface-cli download Qwen/Qwen3-30B-A3B-GGUF --local-dir hf_models/
 ```bash
 huggingface-cli download ggml-org/moondream2-20250414-GGUF --local-dir hf_models/
 
-./build/bin/llama-server   --model hf_models/moondream2-text-model-f16_ct-vicuna.gguf --mmproj hf_models/moondream2-mmproj-f16-20250414.gguf --host 0.0.0.0 --port 7882   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+./build/bin/llama-server   --model hf_models/moondream2-text-model-f16_ct-vicuna.gguf --mmproj hf_models/moondream2-mmproj-f16-20250414.gguf --host 0.0.0.0 --port 9000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
 
 
 ```
@@ -138,3 +138,28 @@ pip install --no-build-isolation -e .
 - https://docs.lambda.ai/education/fine-tune-mochi-gh200/
 
 - https://docs.lambda.ai/public-cloud/on-demand/troubleshooting/#why-lambdas-gh200-specifications-differ-from-nvidias
+
+
+---
+
+pixtral
+
+huggingface-cli download bartowski/mistral-community_pixtral-12b-GGUF --include "mistral-community_pixtral-12b-Q4_K_M.gguf" --local-dir hf_models
+
+huggingface-cli download bartowski/mistral-community_pixtral-12b-GGUF --include "mistral-community_pixtral-12b-Q8_0.gguf" --local-dir hf_models
+
+
+./build/bin/llama-server --model hf_models/mistral-community_pixtral-12b-Q8_0.gguf --mmproj hf_models/pixtral-12b-mmproj.gguf --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+
+
+
+./build/bin/llama-server --model hf_models/mistral-community_pixtral-12b-Q8_0.gguf  --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+
+
+
+./build/bin/llama-server -hf ggml-org/pixtral-12b-GGUF --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+
+
+  ./build/bin/llama-server -hf ggml-org/Qwen2.5-VL-32B-Instruct-GGUF --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+
+https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md
