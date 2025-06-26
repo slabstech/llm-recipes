@@ -1,14 +1,20 @@
-from transformers import AutoProcessor, Gemma3nForConditionalGeneration
+from transformers import AutoProcessor, Gemma3nForConditionalGeneration, BitsAndBytesConfig
 import torch
 
 model_id = "google/gemma-3n-e2b-it"
 
-# Load model and move to CUDA
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+
 model = Gemma3nForConditionalGeneration.from_pretrained(
     model_id,
-    torch_dtype=torch.bfloat16,
+    quantization_config=bnb_config,
+    device_map="auto",  # Will try to fit as much as possible on GPU
 ).eval()
-model = model.to("cuda")
 
 processor = AutoProcessor.from_pretrained(model_id)
 

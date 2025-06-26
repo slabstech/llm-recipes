@@ -12,8 +12,8 @@ config = AutoConfig.from_pretrained(model_id)
 ## Load sessions
 model_dir          = "gemma-3n-E2B-it-ONNX/"
 embed_model_path   = os.path.join(model_dir, "onnx/embed_tokens_quantized.onnx")
-audio_model_path   = os.path.join(model_dir, "onnx/audio_encoder.onnx")
-vision_model_path  = os.path.join(model_dir, "onnx/vision_encoder.onnx")
+audio_model_path   = os.path.join(model_dir, "onnx/audio_encoder_q4.onnx")
+vision_model_path  = os.path.join(model_dir, "onnx/vision_encoder_quantized.onnx")
 decoder_model_path = os.path.join(model_dir, "onnx/decoder_model_merged_q4.onnx")
 vision_session     = onnxruntime.InferenceSession(vision_model_path)
 audio_session      = onnxruntime.InferenceSession(audio_model_path)

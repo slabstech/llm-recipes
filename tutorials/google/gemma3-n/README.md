@@ -1,12 +1,12 @@
 Gemma 3-n
 
-- pip install transformers pillow torch accelerate onnxruntime torchvision librosa
+- pip install transformers pillow torch accelerate onnxruntime torchvision librosa timm bitsandbytes
 - huggingface-cli download onnx-community/gemma-3n-E2B-it-ONNX --repo-type model --local-dir gemma-3n-E2B-it-ONNX
 
 - python onnx_gemma.py
 
 
-
+- python example.py
 
 - python gemma_3_example.py
 
