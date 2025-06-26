@@ -1,8 +1,14 @@
 Gemma 3-n
 
-- pip install transformers pillow torch accelerate
+- pip install transformers pillow torch accelerate onnxruntime
 
 - python gemma_3_example.py
+
+
+huggingface-cli download onnx-community/gemma-3n-E2B-it-ONNX --repo-type model --local-dir gemma-3n-E2B-it-ONNX
+
+- python onnx_gemma.py
+
 
 https://www.kaggle.com/competitions/google-gemma-3n-hackathon/rules
 
