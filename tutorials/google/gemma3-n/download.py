@@ -4,9 +4,9 @@ import os
 model_dir = "gemma-3n-E2B-it-ONNX/"
 
 files_to_download = [
-    "onnx/embed_tokens_quantized.onnx",
+    "onnx/embed_tokens_quantized.onnx",    "onnx/embed_tokens_quantized.onnx_data",
     "onnx/audio_encoder.onnx",
-    "onnx/vision_encoder.onnx",
+    "onnx/vision_encoder.onnx",    "onnx/vision_encoder.onnx_data",
     "onnx/decoder_model_merged_q4.onnx"
 ]
 

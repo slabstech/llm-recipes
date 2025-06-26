@@ -10,7 +10,7 @@ processor = AutoProcessor.from_pretrained(model_id)
 config = AutoConfig.from_pretrained(model_id)
 
 ## Load sessions
-model_dir          = "/path/to/model/files/"
+model_dir          = "gemma-3n-E2B-it-ONNX/"
 embed_model_path   = os.path.join(model_dir, "onnx/embed_tokens_quantized.onnx")
 audio_model_path   = os.path.join(model_dir, "onnx/audio_encoder.onnx")
 vision_model_path  = os.path.join(model_dir, "onnx/vision_encoder.onnx")
