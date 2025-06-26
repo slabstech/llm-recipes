@@ -160,6 +160,6 @@ huggingface-cli download bartowski/mistral-community_pixtral-12b-GGUF --include 
 ./build/bin/llama-server -hf ggml-org/pixtral-12b-GGUF --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
 
 
-./build/bin/llama-server -hf ggml-org/Qwen2.5-VL-32B-Instruct-GGUF --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
+  ./build/bin/llama-server -hf ggml-org/Qwen2.5-VL-32B-Instruct-GGUF --host 0.0.0.0 --port 9000 --n-gpu-layers 100 --threads 4 --ctx-size 4096 --batch-size 256
 
 https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md

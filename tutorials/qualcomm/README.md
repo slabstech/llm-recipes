@@ -1,5 +1,9 @@
 Qualcomm - Raise Summit Hackathon
 
+AI Hub - https://app.aihub.qualcomm.com/docs/hub/getting_started.html
+
+https://github.com/quic
+
 
 - References
   - https://docs.qualcomm.com/bundle/publicresource/topics/80-62010-1/welcome.html?product=1601111740057789

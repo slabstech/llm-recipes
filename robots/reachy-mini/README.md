@@ -5,7 +5,7 @@ Reachy-mini  - Pollen robotics
   - sudo apt-get install git-lfs
   - python -m venv venv
   - source venv/bin/activate
-  - pip install .[gradio] datasets scikit-learn torch
+  - pip install .[gradio] datasets scikit-learn torch transformers openai dwani
   - pip install .[all]
 
   - pip install "pollen-vision[vision] @ git+https://github.com/pollen-robotics/pollen-vision.git@main"
