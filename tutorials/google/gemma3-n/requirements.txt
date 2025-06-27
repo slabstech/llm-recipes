@@ -1,0 +1,10 @@
+transformers 
+pillow 
+torch 
+accelerate 
+onnxruntime 
+torchvision 
+librosa 
+timm 
+bitsandbytes 
+onnxruntime-gpu

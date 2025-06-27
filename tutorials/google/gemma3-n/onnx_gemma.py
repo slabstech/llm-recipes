@@ -15,10 +15,28 @@ embed_model_path   = os.path.join(model_dir, "onnx/embed_tokens_quantized.onnx")
 audio_model_path   = os.path.join(model_dir, "onnx/audio_encoder_q4.onnx")
 vision_model_path  = os.path.join(model_dir, "onnx/vision_encoder_quantized.onnx")
 decoder_model_path = os.path.join(model_dir, "onnx/decoder_model_merged_q4.onnx")
-vision_session     = onnxruntime.InferenceSession(vision_model_path)
-audio_session      = onnxruntime.InferenceSession(audio_model_path)
-embed_session      = onnxruntime.InferenceSession(embed_model_path)
-decoder_session    = onnxruntime.InferenceSession(decoder_model_path)
+
+
+available_providers = onnxruntime.get_available_providers()
+if 'CUDAExecutionProvider' in available_providers:
+    providers = ['CUDAExecutionProvider']
+    print("Using GPU (CUDAExecutionProvider)")
+else:
+    providers = ['CPUExecutionProvider']
+    print("Using CPU (CPUExecutionProvider)")
+
+
+# for server
+providers = ['CUDAExecutionProvider']
+
+## For local machine
+providers = ['CPUExecutionProvider']
+
+
+vision_session     = onnxruntime.InferenceSession(vision_model_path,providers = providers)
+audio_session      = onnxruntime.InferenceSession(audio_model_path,providers = providers)
+embed_session      = onnxruntime.InferenceSession(embed_model_path,providers = providers)
+decoder_session    = onnxruntime.InferenceSession(decoder_model_path,providers = providers)
 
 ## Set config values
 num_key_value_heads = config.text_config.num_key_value_heads
