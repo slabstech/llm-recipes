@@ -19,3 +19,9 @@ curl -X 'POST' \
   'https://dwani-whisper.hf.space/v1/models/Systran/faster-whisper-large-v3' \
   -H 'accept: application/json' \
   -d ''
+
+
+curl -X 'POST' \
+  'https://dwani-whisper.hf.space/v1/models/speaches-ai/Kokoro-82M-v1.0-ONNX' \
+  -H 'accept: application/json' \
+  -d ''
