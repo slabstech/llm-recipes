@@ -10,12 +10,12 @@ docker compose -f compose.cuda.yml up -d
 
 
 curl -X 'POST' \
-  'http://whiser-pser:8000/v1/models/Systran/faster-whisper-small' \
+  'https://dwani-whisper.hf.space/v1/models/Systran/faster-whisper-small' \
   -H 'accept: application/json' \
   -d ''
 
 
 curl -X 'POST' \
-  'http://whisper-server:8000/v1/models/Systran/faster-whisper-large-v3' \
+  'https://dwani-whisper.hf.space/v1/models/Systran/faster-whisper-large-v3' \
   -H 'accept: application/json' \
   -d ''
