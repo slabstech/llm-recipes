@@ -1,0 +1,10 @@
+dwani
+requests
+openai
+pytz 
+requests 
+opencv-python
+httpx
+sounddevice 
+wavio
+pyttsx3

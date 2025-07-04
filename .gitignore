@@ -11,7 +11,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 gemma-3n-E2B-it-ONNX/
-
+jfk.wav
 # C extensions
 *.so
 
