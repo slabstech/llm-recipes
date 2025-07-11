@@ -1,5 +1,7 @@
 CUDA
 
+- cuda - pdf : https://docs.nvidia.com/cuda/pdf/CUDA_C_Programming_Guide.pdf
+
 - Write a Simple Calculator in CUDA
 
   - Square Program  
@@ -7,6 +9,10 @@ CUDA
     - ./square
 
 - Write a Scientific Calculator in CUDA
+
+- https://developer.nvidia.com/blog/even-easier-introduction-cuda/
+
+
 
 
 - Reference
