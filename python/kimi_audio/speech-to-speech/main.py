@@ -11,7 +11,7 @@ def server_receive_handshake(audio_connection):
     return audio_connection
 
 
-def client_send_audio_chunk(audio_connection):
+def client_send_audio_chunk(audio_connection, audio_files):
     print("cleint send audio chunk")
     audio_connection_new = {"client_send_audio_chunk=1":"true"}
 
@@ -102,7 +102,13 @@ def main():
 
     print(audio_connection)
 
-    client_send_audio_chunk(audio_connection)
+    audio_file_name = 'kannada_sample.wav'
+    with open(audio_file_name, 'rb') as f:
+        audio_file = {
+                'file': (audio_file_name, f),
+    }
+        
+    client_send_audio_chunk(audio_connection, audio_file)
 
 
     print(audio_connection)
