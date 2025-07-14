@@ -47,7 +47,7 @@ def client_send_audio_chunk(audio_connection, audio_files):
     print("cleint send audio chunk")
     audio_connection_new = {"client_send_audio_chunk=1":"true"}
 
-    audio_path = "kannada_sample.wav"  # Replace with your audio file path
+    audio_path = audio_files['file'][0] # "kannada_sample.wav"  # Replace with your audio file path
     chunk_duration = 1  # seconds
     
     chunks, sr = create_audio_chunks(audio_path, chunk_duration)
@@ -196,6 +196,15 @@ def main():
     }
         
     client_send_audio_chunk(audio_connection, audio_file)
+
+    audio_file_name = 'english_sample.wav'
+    with open(audio_file_name, 'rb') as f:
+        audio_file = {
+            'file': (audio_file_name, f),
+    }
+        
+    client_send_audio_chunk(audio_connection, audio_file)
+
 
 '''
 
