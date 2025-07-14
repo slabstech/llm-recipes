@@ -103,6 +103,27 @@ def stream_audio_chunks(source, chunk_size=16000):
         # audio_chunk shape: (frames_per_chunk, channels)
         yield audio_chunk
 
+import openai
+import io
+
+
+def tensor_to_wav_bytes(tensor, sample_rate=16000):
+    """
+    Convert a (frames, channels) int16 tensor to WAV bytes.
+    """
+    # Ensure tensor is CPU and int16
+    if tensor.dtype != torch.int16:
+        tensor = tensor.to(torch.int16)
+    tensor = tensor.cpu()
+
+    # Use torchaudio to encode to WAV in-memory
+    buffer = io.BytesIO()
+    # torchaudio expects (channels, frames)
+    tensor = tensor.T
+    torchaudio.save(buffer, tensor, sample_rate=sample_rate, format="wav")
+    buffer.seek(0)
+    return buffer.read()
+
 def chunk_stream():
     audio_source = "kannada_sample.wav"  # Replace with your audio source
 
@@ -112,6 +133,17 @@ def chunk_stream():
     for i, chunk in enumerate(stream_audio_chunks(audio_source, chunk_size)):
         print(f"Chunk {i+1}: shape={chunk.shape}, dtype={chunk.dtype}")
         # Here you can process the chunk (e.g., feature extraction, model input, etc.)
+
+        wav_bytes = tensor_to_wav_bytes(chunk, sample_rate=16000)
+
+        # Send to OpenAI Whisper API
+        transcript = openai.Audio.transcribe(
+            model="whisper-1",
+            file=io.BytesIO(wav_bytes),
+            response_format="text"
+        )
+        
+        print(f"Transcription for chunk {i+1}: {transcript}")
 
 
 def server_receive_audio_chunk(audio_connection):
