@@ -35,14 +35,15 @@ def create_audio_chunks(file_path, chunk_duration_sec=1):
     
     return chunks, sample_rate
 
-'''
+
 def save_chunks(chunks, sample_rate, prefix="chunk"):
+
     for i, chunk in enumerate(chunks):
         # Save each chunk as a separate WAV file
         filename = f"{prefix}_{i+1}.wav"
         torchaudio.save(filename, chunk, sample_rate)
         print(f"Saved {filename} with shape {chunk.shape}")
-'''
+
 def client_send_audio_chunk(audio_connection, audio_files):
     print("cleint send audio chunk")
     audio_connection_new = {"client_send_audio_chunk=1":"true"}
@@ -53,13 +54,13 @@ def client_send_audio_chunk(audio_connection, audio_files):
     chunks, sr = create_audio_chunks(audio_path, chunk_duration)
     print(f"Total chunks created: {len(chunks)}")
     
-    #save_chunks(chunks, sr)
+    save_chunks(chunks, sr, audio_path)
 
 
     audio_connection |= audio_connection_new
     return audio_connection
 
-'''
+
 import torchaudio
 
 def stream_audio_chunks(source, chunk_size=16000):
@@ -83,7 +84,13 @@ def stream_audio_chunks(source, chunk_size=16000):
     # Start streaming chunks
     while True:
         # Fill buffer with decoded frames
-        reader.fill_buffer()
+        try:
+            reader.fill_buffer()
+        except RuntimeError as e:
+            if "End of file" in str(e):
+                break
+            else:
+                raise()
 
         # Pop chunks (list of tensors, one per output stream)
         chunks = reader.pop_chunks()
@@ -96,8 +103,8 @@ def stream_audio_chunks(source, chunk_size=16000):
         # audio_chunk shape: (frames_per_chunk, channels)
         yield audio_chunk
 
-if __name__ == "__main__":
-    audio_source = "your_audio_file_or_stream_here.wav"  # Replace with your audio source
+def chunk_stream():
+    audio_source = "kannada_sample.wav"  # Replace with your audio source
 
     # Example: chunk size of 1 second assuming 16 kHz sample rate
     chunk_size = 16000
@@ -106,7 +113,7 @@ if __name__ == "__main__":
         print(f"Chunk {i+1}: shape={chunk.shape}, dtype={chunk.dtype}")
         # Here you can process the chunk (e.g., feature extraction, model input, etc.)
 
-'''
+
 def server_receive_audio_chunk(audio_connection):
     print("server receive audio chunk")
     audio_connection_new = {"server_receive_audio_chunk=1":"true"}
@@ -197,13 +204,17 @@ def main():
         
     client_send_audio_chunk(audio_connection, audio_file)
 
-    audio_file_name = 'english_sample.wav'
+    chunk_stream()
+
+''' audio_file_name = 'english_sample.wav'
     with open(audio_file_name, 'rb') as f:
         audio_file = {
             'file': (audio_file_name, f),
     }
         
     client_send_audio_chunk(audio_connection, audio_file)
+'''
+   
 
 
 '''
