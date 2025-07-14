@@ -124,11 +124,19 @@ def tensor_to_wav_bytes(tensor, sample_rate=16000):
     buffer.seek(0)
     return buffer.read()
 
+from openai import OpenAI
+
+
 def chunk_stream():
-    audio_source = "kannada_sample.wav"  # Replace with your audio source
+    audio_source = "english_sample.wav"  # Replace with your audio source
 
     # Example: chunk size of 1 second assuming 16 kHz sample rate
     chunk_size = 16000
+
+    client = OpenAI(api_key = "dummy_key")
+    
+    # Override API base URL to your local Whisper server
+    client.api_base = "http://localhost:8000/v1"
 
     for i, chunk in enumerate(stream_audio_chunks(audio_source, chunk_size)):
         print(f"Chunk {i+1}: shape={chunk.shape}, dtype={chunk.dtype}")
@@ -137,13 +145,13 @@ def chunk_stream():
         wav_bytes = tensor_to_wav_bytes(chunk, sample_rate=16000)
 
         # Send to OpenAI Whisper API
-        transcript = openai.Audio.transcribe(
+        transcription = client.audio.transcriptions.create(
+            file=wav_bytes,
             model="whisper-1",
-            file=io.BytesIO(wav_bytes),
-            response_format="text"
-        )
-        
-        print(f"Transcription for chunk {i+1}: {transcript}")
+            response_format="text"  # optional, default is "json"
+        )        
+        print(f"Transcription for chunk {i+1}: {transcription}")
+
 
 
 def server_receive_audio_chunk(audio_connection):
