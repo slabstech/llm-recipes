@@ -197,6 +197,7 @@ def main():
         
     client_send_audio_chunk(audio_connection, audio_file)
 
+'''
 
     print(audio_connection)
 
@@ -248,6 +249,6 @@ def main():
     print(audio_connection)
 
     server_end_connection(audio_connection)
-    
+'''    
 if __name__ == "__main__":
     main()
