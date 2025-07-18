@@ -4,10 +4,10 @@ simulation  Agents
     - https://github.com/microsoft/autogen
 
 - Setup
-    - python3 -m venv pyautogenvenv
-        - Linux -  source pyautogenvenv/bin/activate
-        - Windows - .\pyautogenvenv\Scripts\activate
-    - pip install pyautogen
+    - python3 -m venv ag2venv
+        - Linux -  source ag2venv/bin/activate
+        - Windows - .\ag2venv\Scripts\activate
+    - pip install ag2
     - Docker setup - In a different directory
         - git clone --depth=1 https://github.com/microsoft/autogen
         - docker build -f .devcontainer/Dockerfile -t autogen_base_img https://github.com/microsoft/autogen.git#main
