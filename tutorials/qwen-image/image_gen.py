@@ -16,7 +16,7 @@ pipe = pipe.to(device)
 
 positive_magic = {
     "en": "Ultra HD, 4K, cinematic composition." # for english prompt,
-    "zh": "超清，4K，电影级构图" # for chinese prompt,
+
 }
 
 # Generate image
