@@ -1,5 +1,7 @@
 XR Hack 2025 - 
 
+https://docs.unity3d.com/hub/manual/index.html
+
 https://discord.gg/BS8na7szxu
 
 course - https://www.udemy.com/course/mixedreality/
