@@ -14,7 +14,7 @@ gemma-3n-E2B-it-ONNX/
 jfk.wav
 # C extensions
 *.so
-
+photo.jpg
 # Distribution / packaging
 .Python
 build/
