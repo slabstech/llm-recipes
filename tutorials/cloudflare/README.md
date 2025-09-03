@@ -9,6 +9,18 @@ sudo apt install cloudflared
 cloudflared login
 
 
+
+cloudflared tunnel --no-autoupdate run --token adadasdas
+
+<!-- 
 --
 
 create ~/cloudflared/config.yml
+
+cloudflared tunnel create dwani_laptop_2
+
+cloudflared tunnel --loglevel debug run dwani_laptop_2
+
+
+---
+-->
