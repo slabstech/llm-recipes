@@ -6,3 +6,9 @@ echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudf
 sudo apt update
 sudo apt install cloudflared
 
+cloudflared login
+
+
+--
+
+create ~/cloudflared/config.yml
