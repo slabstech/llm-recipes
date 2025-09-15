@@ -14,7 +14,12 @@ model = models.data[0].id
 
 
 tgt_lang = 'Hindi'
+
+tgt_lang = 'kannada'
+
 input_txt = 'Be the change you wish to see in the world.'
+
+input_txt = 'Towards a new century of nation building, Bharat 2047.'
 messages = [{"role": "system", "content": f"Translate the text below to {tgt_lang}."}, {"role": "user", "content": input_txt}]
 
 
