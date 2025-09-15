@@ -6,29 +6,39 @@ sarvam Translate
   - GGUF's
     - https://huggingface.co/mradermacher/sarvam-translate-GGUF/
     - Run with llama.cpp 
-        - git clone --depth 1 https://github.com/ggml-org/llama.cpp.git
-cd llama.cpp
+        - 
+        ```bash
+        git clone --depth 1 https://github.com/ggml-org/llama.cpp.git
+        cd llama.cpp
 
-cmake -B build -DGGML_CUDA=ON
+        cmake -B build -DGGML_CUDA=ON
 
-cmake --build build --config Release -j2
+        cmake --build build --config Release -j2
+        ```
 
-python3 -m venv venv
-source venv/bin/activate
-pip install huggingface_hub
-mkdir hf_models
+        - Text Only 
+            ```bash
+             ./build/bin/llama-server -hf mradermacher/sarvam-translate-GGUF:Q4_K_M --host 0.0.0.0 --port 8000 --n-gpu-layers 99 --ctx-size 1008 --alias gemma3 
+            ```
 
-huggingface-cli download mradermacher/sarvam-translate-GGUF sarvam-translate.mmproj-Q8_0.gguf --local-dir hf_models/ --local-dir-use-symlinks False
+        - Multimodal 
+            ```bash
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install huggingface_hub
+            mkdir hf_models
 
-huggingface-cli download mradermacher/sarvam-translate-GGUF sarvam-translate.Q8_0.gguf --local-dir hf_models/ --local-dir-use-symlinks False
+            hf download mradermacher/sarvam-translate-GGUF sarvam-translate.mmproj-Q8_0.gguf --local-dir hf_models/
 
- 
+            hf download mradermacher/sarvam-translate-GGUF sarvam-translate.Q8_0.gguf --local-dir hf_models/ 
+            
+            ./build/bin/llama-server   --model hf_models/sarvam-translate.Q8_0.gguf  --mmproj hf_models/sarvam-translate.mmproj-Q8_0.gguf  --host 0.0.0.0   --port 9000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256 
+            ```
 
-
-        - ./build/bin/llama-server -hf mradermacher/sarvam-translate-GGUF:Q4_K_M --host 0.0.0.0 --port 8000 --n-gpu-layers 99 --ctx-size 1008 --alias gemma3 
   - vLLM
-    - vllm serve sarvamai/sarvam-translate --port 8000 --dtype bfloat16 --max-model-len 8192
-
+    ```bash
+    vllm serve sarvamai/sarvam-translate --port 8000 --dtype bfloat16 --max-model-len 8192
+    ```
 - Client
   - python client.py
 
@@ -38,4 +48,4 @@ huggingface-cli download mradermacher/sarvam-translate-GGUF sarvam-translate.Q8_
     - https://huggingface.co/mradermacher/sarvam-translate-GGUF
 
 - For Multimodal
-    - 
+    - In progress
