@@ -19,3 +19,8 @@ https://qwen.readthedocs.io/en/latest/deployment/vllm.html
 ASR ? - https://docs.vllm.ai/en/latest/models/supported_models.html#transcription
 
 https://modal.com/notebooks/modal-labs/_/nb-x2wXrLH7aqi7HGVQ8Fosh2
+
+
+https://pytorch.org/blog/disaggregated-inference-at-scale-with-pytorch-vllm/
+
+https://www.aleksagordic.com/blog/vllm
