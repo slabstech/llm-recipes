@@ -13,3 +13,4 @@ Prime Intellect
 
 - PRs should be submitted to https://github.com/PrimeIntellect-ai/prime-environments 
 
+https://docs.google.com/spreadsheets/d/13UDfRDjgIZXsMI2s9-Lmn8KSMMsgk2_zsfju6cx_pNU/edit?pli=1&gid=0#gid=0
