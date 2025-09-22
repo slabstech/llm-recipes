@@ -31,8 +31,10 @@ sarvam Translate
             hf download mradermacher/sarvam-translate-GGUF sarvam-translate.mmproj-Q8_0.gguf --local-dir hf_models/
 
             hf download mradermacher/sarvam-translate-GGUF sarvam-translate.Q8_0.gguf --local-dir hf_models/ 
-            
-            ./build/bin/llama-server   --model hf_models/sarvam-translate.Q8_0.gguf  --mmproj hf_models/sarvam-translate.mmproj-Q8_0.gguf  --host 0.0.0.0   --port 9000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256 
+                        
+            ./build/bin/llama-server   --model hf_models/sarvam-translate.Q4_K_M.gguf --mmproj hf_models/sarvam-translate.mmproj-Q8_0.gguf  --host 0.0.0.0   --port 8000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256
+
+            ./build/bin/llama-server   --model hf_models/sarvam-translate.Q8_0.gguf  --mmproj hf_models/sarvam-translate.mmproj-Q8_0.gguf  --host 0.0.0.0   --port 8000   --n-gpu-layers 100   --threads 4   --ctx-size 4096   --batch-size 256 
             ```
 
   - vLLM
