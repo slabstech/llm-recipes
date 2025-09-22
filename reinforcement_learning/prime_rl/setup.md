@@ -24,3 +24,9 @@ https://modal.com/notebooks/modal-labs/_/nb-x2wXrLH7aqi7HGVQ8Fosh2
 https://pytorch.org/blog/disaggregated-inference-at-scale-with-pytorch-vllm/
 
 https://www.aleksagordic.com/blog/vllm
+
+
+https://github.com/vllm-project/production-stack
+
+
+https://docs.vllm.ai/projects/production-stack/en/latest/
