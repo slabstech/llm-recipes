@@ -1,3 +1,40 @@
+Setup Cloudflare
+
+- Steps
+
+  - Install cloudflared
+    - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
+
+    - Ubuntu/linux
+      - 
+```bash
+      wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+      sudo apt install -f ./cloudflared-linux-amd64.deb
+
+      cloudflared login
+
+```
+
+- Go to ZeroTrust in Cloudflare website
+  - Click Networks
+    - Click Tunnels
+      - Create a tunnel
+        - Name your runnel
+          - Insall and run connector step
+            - sudo cloudflared service install <TOEKN>
+          - Click Neext
+            - Publish Application PAge
+              - Hostname ? 
+                - Service - http://localhost:18888
+
+    - via Docker ?
+      - https://hub.docker.com/r/cloudflare/cloudflared
+
+     
+---
+
+LLM Instructions
+
 To serve API requests from your laptop using Cloudflare Tunnels, you’ll need to set up a secure connection between your local machine and Cloudflare’s network using the `cloudflared` daemon. This allows you to expose your locally running API to the internet without opening ports on your router or firewall. Below is a step-by-step guide to achieve this:
 
 ---
