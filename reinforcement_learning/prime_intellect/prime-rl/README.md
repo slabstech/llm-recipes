@@ -63,3 +63,16 @@ LiquidAI/LFM2-350M
 facebook/MobileLLM-R1-140M  - does not support - flash-attn
 
 HuggingFaceTB/SmolLM-135M
+
+
+---
+sudo apt install tmux
+
+Running - reverse-text
+
+uv run python -c "import reverse_text"
+
+
+ uv run inference --model.name HuggingFaceTB/SmolLM2-135M-Instruct
+
+uv run vf-eval reverse-text -m HuggingFaceTB/SmolLM2-135M-Instruct -b http://localhost:8000/v1 -n 20 --max-tokens 1024
