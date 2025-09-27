@@ -76,3 +76,6 @@ uv run python -c "import reverse_text"
  uv run inference --model.name HuggingFaceTB/SmolLM2-135M-Instruct
 
 uv run vf-eval reverse-text -m HuggingFaceTB/SmolLM2-135M-Instruct -b http://localhost:8000/v1 -n 20 --max-tokens 1024
+
+
+uv run sft @ examples/reverse_text/sft/train.toml
